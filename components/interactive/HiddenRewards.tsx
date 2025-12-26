@@ -105,6 +105,7 @@ interface RewardContextType {
   showRewardsPanel: boolean;
   setShowRewardsPanel: (show: boolean) => void;
   totalDiscovered: number;
+  collectedRewards: Reward[];
 }
 
 const RewardContext = createContext<RewardContextType | null>(null);
@@ -192,13 +193,15 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
 
       const updated = { ...reward, discovered: true, discoveredAt: new Date() };
       setNotification(updated);
-      setTimeout(() => setNotification(null), 6000);
+      // Don't auto-hide - user must dismiss or it goes to collection
+      setTimeout(() => setNotification(null), 8000);
 
       return prev.map(r => r.id === id ? updated : r);
     });
   }, []);
 
   const totalDiscovered = rewards.filter(r => r.discovered).length;
+  const collectedRewards = rewards.filter(r => r.discovered);
 
   return (
     <RewardContext.Provider value={{ 
@@ -206,60 +209,67 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
       discoverReward,
       showRewardsPanel,
       setShowRewardsPanel,
-      totalDiscovered
+      totalDiscovered,
+      collectedRewards
     }}>
       {children}
       
-      {/* Reward notification */}
+      {/* MONOCHROME Reward notification */}
       <AnimatePresence>
         {notification && (
           <motion.div
             initial={{ opacity: 0, y: -50, x: '-50%' }}
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: -50, x: '-50%' }}
-            className="fixed top-24 left-1/2 z-[200] pointer-events-none"
+            className="fixed top-24 left-1/2 z-[200]"
           >
-            <div className="bg-ink-chrome/95 backdrop-blur-xl border border-green-500/30 px-6 py-5 max-w-sm">
+            <div className="bg-ink-chrome/95 backdrop-blur-xl border border-engrave-line/30 px-6 py-5 max-w-sm">
               <div className="flex items-start gap-4">
-                <div className="text-green-400 mt-1">
+                <div className="text-engrave-line mt-1">
                   {notification.icon}
                 </div>
                 <div>
-                  <div className="font-mono text-[10px] text-green-400 tracking-widest mb-1">
-                    🎁 НАГРАДА НАЙДЕНА
+                  <div className="font-mono text-[10px] text-engrave-line tracking-widest mb-1">
+                    ◈ НАГРАДА НАЙДЕНА
                   </div>
                   <div className="font-mono text-sm text-engrave-fresco mb-1">
                     {notification.name}
                   </div>
-                  <div className="font-mono text-[10px] text-stone-graphite mb-3">
+                  <div className="font-mono text-[10px] text-stone-slate mb-3">
                     {notification.description}
                   </div>
-                  <div className="bg-green-500/10 border border-green-500/20 px-3 py-2">
-                    <div className="font-mono text-[9px] text-stone-graphite mb-1">
+                  <div className="bg-ink-deep/50 border border-stone-anthracite/30 px-3 py-2">
+                    <div className="font-mono text-[9px] text-stone-slate mb-1">
                       ВАША НАГРАДА:
                     </div>
-                    <div className="font-mono text-xs text-green-400">
+                    <div className="font-mono text-xs text-engrave-fresco">
                       {notification.benefit}
                     </div>
-                    <div className="font-mono text-[10px] text-engrave-line mt-2">
-                      Код: <span className="text-green-400">{notification.code}</span>
+                    <div className="font-mono text-[10px] text-stone-slate mt-2">
+                      Код: <span className="text-engrave-line select-all">{notification.code}</span>
                     </div>
                   </div>
                 </div>
               </div>
+              <button 
+                onClick={() => setNotification(null)}
+                className="absolute top-2 right-2 text-stone-slate hover:text-engrave-line text-xs"
+              >
+                ✕
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Rewards panel */}
+      {/* MONOCHROME Rewards panel */}
       <AnimatePresence>
         {showRewardsPanel && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] bg-ink-deep/80 backdrop-blur-md flex items-center justify-center p-4"
+            className="fixed inset-0 z-[150] bg-ink-deep/90 backdrop-blur-md flex items-center justify-center p-4"
             onClick={() => setShowRewardsPanel(false)}
           >
             <motion.div
@@ -271,13 +281,13 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
             >
               <div className="p-4 border-b border-stone-anthracite/30">
                 <div className="flex items-center gap-3">
-                  <Gift size={20} className="text-green-400" />
+                  <Gift size={20} className="text-engrave-line" />
                   <div>
                     <h2 className="font-mono text-lg text-engrave-fresco tracking-wider">
                       СКРЫТЫЕ НАГРАДЫ
                     </h2>
-                    <p className="font-mono text-[10px] text-stone-graphite mt-1">
-                      {totalDiscovered} / {rewards.length} найдено • Исследуй сайт для открытия
+                    <p className="font-mono text-[10px] text-stone-slate mt-1">
+                      {totalDiscovered} / {rewards.length} найдено
                     </p>
                   </div>
                 </div>
@@ -289,12 +299,12 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
                     key={reward.id}
                     className={`p-4 border transition-colors ${
                       reward.discovered 
-                        ? 'border-green-500/30 bg-green-500/5' 
+                        ? 'border-engrave-line/30 bg-engrave-line/5' 
                         : 'border-stone-anthracite/30 opacity-60'
                     }`}
                   >
                     <div className="flex items-start gap-4">
-                      <div className={reward.discovered ? 'text-green-400' : 'text-stone-graphite'}>
+                      <div className={reward.discovered ? 'text-engrave-line' : 'text-stone-anthracite'}>
                         {reward.icon}
                       </div>
                       <div className="flex-1">
@@ -303,27 +313,27 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
                             {reward.name}
                           </div>
                           {reward.discovered && (
-                            <span className="font-mono text-[8px] text-green-400">✓ НАЙДЕНО</span>
+                            <span className="font-mono text-[8px] text-engrave-line">✓ НАЙДЕНО</span>
                           )}
                         </div>
                         
                         {reward.discovered ? (
                           <>
-                            <div className="font-mono text-[10px] text-stone-graphite mt-1">
+                            <div className="font-mono text-[10px] text-stone-slate mt-1">
                               {reward.description}
                             </div>
-                            <div className="mt-2 bg-green-500/10 border border-green-500/20 px-2 py-1.5">
-                              <div className="font-mono text-[10px] text-green-400">
+                            <div className="mt-2 bg-ink-deep/50 border border-stone-anthracite/30 px-2 py-1.5">
+                              <div className="font-mono text-[10px] text-engrave-fresco">
                                 {reward.benefit}
                               </div>
-                              <div className="font-mono text-[9px] text-engrave-line mt-1">
-                                Код: <span className="text-green-400 select-all">{reward.code}</span>
+                              <div className="font-mono text-[9px] text-stone-slate mt-1">
+                                Код: <span className="text-engrave-line select-all">{reward.code}</span>
                               </div>
                             </div>
                           </>
                         ) : (
-                          <div className="font-mono text-[10px] text-stone-graphite mt-1">
-                            💡 Подсказка: {reward.triggerHint}
+                          <div className="font-mono text-[10px] text-stone-slate mt-1">
+                            ◈ Подсказка: {reward.triggerHint}
                           </div>
                         )}
                       </div>
@@ -333,8 +343,8 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="p-4 border-t border-stone-anthracite/30 bg-ink-deep/50">
-                <div className="font-mono text-[9px] text-stone-graphite text-center">
-                  Используйте коды при оформлении заказа или упомяните в сообщении
+                <div className="font-mono text-[9px] text-stone-slate text-center">
+                  Используйте коды при оформлении заказа
                 </div>
               </div>
             </motion.div>
@@ -344,4 +354,3 @@ export function RewardProvider({ children }: { children: React.ReactNode }) {
     </RewardContext.Provider>
   );
 }
-

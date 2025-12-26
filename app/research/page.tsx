@@ -120,8 +120,8 @@ export default function ResearchPage() {
               className="text-center mb-16"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 border border-stone-anthracite/30 mb-6">
-                <FlaskConical size={14} className="text-stone-graphite" />
-                <span className="font-mono text-[10px] text-stone-graphite tracking-widest">
+                <FlaskConical size={14} className="text-engrave-dim" />
+                <span className="font-mono text-[10px] text-stone-slate tracking-widest">
                   RESEARCH & DEVELOPMENT
                 </span>
               </div>
@@ -132,7 +132,7 @@ export default function ResearchPage() {
                 <span className="text-chrome">И РАЗРАБОТКИ</span>
               </h1>
               
-              <p className="font-mono text-sm text-stone-graphite max-w-2xl mx-auto leading-relaxed">
+              <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed">
                 Мы не просто выполняем проекты — мы исследуем новые технологии,
                 разрабатываем инновационные методологии и делимся знаниями с сообществом.
               </p>
@@ -156,7 +156,7 @@ export default function ResearchPage() {
                   <div className="font-mono text-2xl text-engrave-fresco mb-1">
                     {stat.value}
                   </div>
-                  <div className="font-mono text-[9px] text-stone-graphite tracking-widest">
+                  <div className="font-mono text-[9px] text-stone-slate tracking-widest">
                     {stat.label}
                   </div>
                 </motion.div>
@@ -168,7 +168,7 @@ export default function ResearchPage() {
         {/* Research Areas */}
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="font-mono text-[10px] text-stone-graphite tracking-[0.5em] mb-8">
+            <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── RESEARCH AREAS ───
             </div>
             
@@ -186,15 +186,15 @@ export default function ResearchPage() {
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="text-stone-graphite group-hover:text-engrave-line transition-colors">
+                    <div className="text-stone-slate group-hover:text-engrave-line transition-colors">
                       {area.icon}
                     </div>
                     <span className={`font-mono text-[8px] px-2 py-1 border ${
                       area.status === 'ACTIVE' 
-                        ? 'text-green-400 border-green-400/30 bg-green-400/5'
+                        ? 'text-engrave-line border-engrave-line/30 bg-engrave-line/5'
                         : area.status === 'RESEARCH'
-                        ? 'text-blue-400 border-blue-400/30 bg-blue-400/5'
-                        : 'text-yellow-400 border-yellow-400/30 bg-yellow-400/5'
+                        ? 'text-engrave-mid border-engrave-mid/30 bg-engrave-mid/5'
+                        : 'text-stone-slate border-stone-anthracite/30'
                     }`}>
                       {area.status}
                     </span>
@@ -204,12 +204,12 @@ export default function ResearchPage() {
                   <h3 className="font-mono text-base text-engrave-fresco mb-1">
                     {area.title}
                   </h3>
-                  <div className="font-mono text-[10px] text-stone-graphite tracking-wider mb-3">
+                  <div className="font-mono text-[10px] text-stone-slate tracking-wider mb-3">
                     {area.subtitle}
                   </div>
 
                   {/* Description */}
-                  <p className="font-mono text-[11px] text-stone-graphite leading-relaxed mb-4">
+                  <p className="font-mono text-[11px] text-stone-slate leading-relaxed mb-4">
                     {area.description}
                   </p>
 
@@ -218,7 +218,7 @@ export default function ResearchPage() {
                     {area.projects.map((project, j) => (
                       <span 
                         key={j}
-                        className="font-mono text-[9px] text-stone-graphite px-2 py-1 
+                        className="font-mono text-[9px] text-stone-slate px-2 py-1 
                                  bg-stone-anthracite/20 border border-stone-anthracite/30"
                       >
                         {project}
@@ -237,7 +237,7 @@ export default function ResearchPage() {
                         className="h-full bg-engrave-line/50"
                       />
                     </div>
-                    <span className="font-mono text-[9px] text-stone-graphite">
+                    <span className="font-mono text-[9px] text-stone-slate">
                       {area.progress}%
                     </span>
                   </div>
@@ -254,7 +254,7 @@ export default function ResearchPage() {
               <TerrainGrid className="w-full h-full" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center bg-ink-deep/80 px-8 py-6 border border-stone-anthracite/30">
-                  <div className="font-mono text-[10px] text-stone-graphite tracking-widest mb-2">
+                  <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
                     DATA LANDSCAPE
                   </div>
                   <div className="font-mono text-lg text-engrave-fresco">
@@ -270,7 +270,7 @@ export default function ResearchPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-              <div className="font-mono text-[10px] text-stone-graphite tracking-[0.5em]">
+              <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em]">
                 ─── PUBLICATIONS ───
               </div>
               <Link href="/research/publications" className="font-mono text-[10px] text-engrave-line 
@@ -292,17 +292,17 @@ export default function ResearchPage() {
                            hover:border-engrave-line/20 transition-all cursor-pointer"
                 >
                   <div className="flex items-center gap-4">
-                    <BookOpen size={16} className="text-stone-graphite group-hover:text-engrave-line transition-colors" />
+                    <BookOpen size={16} className="text-stone-slate group-hover:text-engrave-line transition-colors" />
                     <div>
                       <div className="font-mono text-sm text-engrave-fresco group-hover:text-white transition-colors">
                         {pub.title}
                       </div>
-                      <div className="font-mono text-[9px] text-stone-graphite">
+                      <div className="font-mono text-[9px] text-stone-slate">
                         {pub.type}
                       </div>
                     </div>
                   </div>
-                  <div className="font-mono text-[10px] text-stone-graphite">
+                  <div className="font-mono text-[10px] text-stone-slate">
                     {pub.date}
                   </div>
                 </motion.div>
@@ -324,7 +324,7 @@ export default function ResearchPage() {
               <h2 className="font-mono text-2xl md:text-3xl text-engrave-fresco mb-4">
                 ЕСТЬ ИССЛЕДОВАТЕЛЬСКАЯ ИДЕЯ?
               </h2>
-              <p className="font-mono text-sm text-stone-graphite max-w-xl mx-auto mb-8">
+              <p className="font-mono text-sm text-stone-slate max-w-xl mx-auto mb-8">
                 Мы открыты для коллабораций с университетами, научными институтами
                 и независимыми исследователями.
               </p>
@@ -361,4 +361,3 @@ export default function ResearchPage() {
     </div>
   );
 }
-

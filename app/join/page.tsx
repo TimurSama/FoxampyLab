@@ -112,9 +112,9 @@ export default function JoinPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 border border-green-500/30 bg-green-500/5 mb-6">
-                <Users size={14} className="text-green-400" />
-                <span className="font-mono text-[10px] text-green-400 tracking-widest">
+              <div className="inline-flex items-center gap-2 px-4 py-2 border border-engrave-line/30 bg-engrave-line/5 mb-6">
+                <Users size={14} className="text-engrave-line" />
+                <span className="font-mono text-[10px] text-engrave-line tracking-widest">
                   WE ARE HIRING
                 </span>
               </div>
@@ -125,26 +125,26 @@ export default function JoinPage() {
                 <span className="text-chrome">К ЛАБОРАТОРИИ</span>
               </h1>
               
-              <p className="font-mono text-sm text-stone-graphite max-w-2xl mx-auto leading-relaxed mb-8">
+              <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed mb-8">
                 Мы ищем талантливых людей, которые хотят создавать будущее.
                 Не важно, где ты находишься — важно, что ты можешь создать.
               </p>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 text-stone-graphite font-mono text-[10px]">
+              <div className="flex flex-wrap items-center justify-center gap-4 text-stone-slate font-mono text-[10px]">
                 <span className="flex items-center gap-2">
-                  <CheckCircle size={12} className="text-green-400" />
+                  <CheckCircle size={12} className="text-engrave-line" />
                   100% Remote
                 </span>
                 <span className="flex items-center gap-2">
-                  <CheckCircle size={12} className="text-green-400" />
+                  <CheckCircle size={12} className="text-engrave-line" />
                   Гибкий график
                 </span>
                 <span className="flex items-center gap-2">
-                  <CheckCircle size={12} className="text-green-400" />
+                  <CheckCircle size={12} className="text-engrave-line" />
                   Equity опции
                 </span>
                 <span className="flex items-center gap-2">
-                  <CheckCircle size={12} className="text-green-400" />
+                  <CheckCircle size={12} className="text-engrave-line" />
                   Интересные проекты
                 </span>
               </div>
@@ -155,7 +155,7 @@ export default function JoinPage() {
         {/* Values */}
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="font-mono text-[10px] text-stone-graphite tracking-[0.5em] mb-8 text-center">
+            <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8 text-center">
               ─── OUR VALUES ───
             </div>
             
@@ -172,7 +172,7 @@ export default function JoinPage() {
                   <h3 className="font-mono text-lg text-engrave-fresco mb-3">
                     {value.title}
                   </h3>
-                  <p className="font-mono text-[11px] text-stone-graphite leading-relaxed">
+                  <p className="font-mono text-[11px] text-stone-slate leading-relaxed">
                     {value.desc}
                   </p>
                 </motion.div>
@@ -184,7 +184,7 @@ export default function JoinPage() {
         {/* Open Roles */}
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="font-mono text-[10px] text-stone-graphite tracking-[0.5em] mb-8">
+            <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── OPEN ROLES ───
             </div>
             
@@ -207,7 +207,7 @@ export default function JoinPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-4">
                       <div className={`transition-colors ${
-                        selectedRole === role.id ? 'text-engrave-line' : 'text-stone-graphite'
+                        selectedRole === role.id ? 'text-engrave-line' : 'text-stone-slate'
                       }`}>
                         {role.icon}
                       </div>
@@ -215,23 +215,23 @@ export default function JoinPage() {
                         <h3 className="font-mono text-base text-engrave-fresco">
                           {role.title}
                         </h3>
-                        <div className="font-mono text-[10px] text-stone-graphite">
+                        <div className="font-mono text-[10px] text-stone-slate">
                           {role.subtitle}
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1">
-                      <span className="font-mono text-[8px] px-2 py-1 border border-green-500/30 text-green-400 bg-green-500/5">
+                      <span className="font-mono text-[8px] px-2 py-1 border border-engrave-line/30 text-engrave-line bg-engrave-line/5">
                         {role.openPositions} ОТКРЫТО
                       </span>
-                      <span className="font-mono text-[8px] text-stone-graphite">
+                      <span className="font-mono text-[8px] text-stone-slate">
                         {role.type}
                       </span>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="font-mono text-[11px] text-stone-graphite leading-relaxed mb-4">
+                  <p className="font-mono text-[11px] text-stone-slate leading-relaxed mb-4">
                     {role.description}
                   </p>
 
@@ -253,7 +253,7 @@ export default function JoinPage() {
                     animate={{ rotate: selectedRole === role.id ? 90 : 0 }}
                     className="flex items-center justify-end"
                   >
-                    <ArrowRight size={14} className="text-stone-graphite" />
+                    <ArrowRight size={14} className="text-stone-slate" />
                   </motion.div>
 
                   {/* Expanded content */}
@@ -278,7 +278,7 @@ export default function JoinPage() {
         {/* Benefits */}
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="font-mono text-[10px] text-stone-graphite tracking-[0.5em] mb-8 text-center">
+            <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8 text-center">
               ─── BENEFITS ───
             </div>
             
@@ -293,13 +293,13 @@ export default function JoinPage() {
                   whileHover={{ y: -4 }}
                   className="p-4 border border-stone-anthracite/30 bg-ink-chrome/20 text-center"
                 >
-                  <div className="text-stone-graphite mb-2 flex justify-center">
+                  <div className="text-stone-slate mb-2 flex justify-center">
                     {benefit.icon}
                   </div>
                   <div className="font-mono text-xs text-engrave-fresco mb-1">
                     {benefit.title}
                   </div>
-                  <div className="font-mono text-[9px] text-stone-graphite">
+                  <div className="font-mono text-[9px] text-stone-slate">
                     {benefit.desc}
                   </div>
                 </motion.div>
@@ -315,13 +315,13 @@ export default function JoinPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="p-8 md:p-12 border border-purple-500/30 bg-purple-500/5 text-center"
+              className="p-8 md:p-12 border border-stone-anthracite/30 bg-ink-chrome/20 text-center"
             >
-              <Heart size={32} className="text-purple-400 mx-auto mb-4" />
+              <Heart size={32} className="text-engrave-dim mx-auto mb-4" />
               <h2 className="font-mono text-2xl md:text-3xl text-engrave-fresco mb-4">
                 ДЛЯ ЭНТУЗИАСТОВ
               </h2>
-              <p className="font-mono text-sm text-stone-graphite max-w-xl mx-auto mb-6">
+              <p className="font-mono text-sm text-stone-slate max-w-xl mx-auto mb-6">
                 Не нашёл подходящую позицию, но хочешь быть частью лаборатории?
                 Мы всегда рады талантливым людям. Расскажи о себе и своих идеях.
               </p>
@@ -329,8 +329,8 @@ export default function JoinPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 border border-purple-500/50 text-purple-400 font-mono text-sm tracking-widest
-                           hover:bg-purple-500/10 transition-colors"
+                  className="px-8 py-4 border border-stone-anthracite/50 text-engrave-line font-mono text-sm tracking-widest
+                           hover:border-engrave-line/30 transition-colors"
                 >
                   ОТПРАВИТЬ PORTFOLIO
                 </motion.button>
@@ -351,7 +351,7 @@ export default function JoinPage() {
               <h2 className="font-mono text-xl text-engrave-fresco mb-4">
                 ЕСТЬ ВОПРОСЫ?
               </h2>
-              <p className="font-mono text-sm text-stone-graphite mb-6">
+              <p className="font-mono text-sm text-stone-slate mb-6">
                 Напиши нам напрямую: <span className="text-engrave-line">join@fractalix.lab</span>
               </p>
             </motion.div>
@@ -369,4 +369,3 @@ export default function JoinPage() {
     </div>
   );
 }
-

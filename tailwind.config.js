@@ -15,12 +15,18 @@ module.exports = {
         stone: {
           matte: '#1a1a1c',
           anthracite: '#2a2a2e',
-          graphite: '#3a3a40',
+          graphite: '#4a4a52',
+          // Better readable slate color
+          slate: '#9a9aa8',
         },
         engrave: {
           line: '#e8e8e8',
           fresco: '#f5f5f5',
+          // Medium tones for better hierarchy
+          mid: '#c8c8d0',
+          dim: '#8888a0',
         },
+        chrome: '#d0d0d8',
       },
       fontFamily: {
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
@@ -55,4 +61,3 @@ module.exports = {
   },
   plugins: [],
 }
-

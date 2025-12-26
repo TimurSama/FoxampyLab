@@ -95,7 +95,7 @@ export default function FanMenu() {
                         border transition-all duration-300
                         ${hoveredItem === item.id 
                           ? 'bg-engrave-line/10 border-engrave-line/50 text-engrave-fresco' 
-                          : 'bg-ink-chrome/90 border-stone-anthracite/50 text-stone-graphite'
+                          : 'bg-ink-chrome/90 border-stone-anthracite/50 text-stone-slate'
                         }
                         backdrop-blur-sm
                       `}
@@ -177,7 +177,7 @@ export default function FanMenu() {
               className="flex flex-col items-center"
             >
               <span className="text-engrave-line text-lg">◈</span>
-              <span className="font-mono text-[7px] tracking-[0.2em] text-stone-graphite">
+              <span className="font-mono text-[7px] tracking-[0.2em] text-stone-slate">
                 MENU
               </span>
             </motion.div>

@@ -1,229 +1,259 @@
 "use client";
 
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-import { motion } from 'framer-motion';
 
-// Simplified world map coordinates (major landmasses)
-const worldCoordinates = [
-  // North America
-  ...generateRegion(-170, -50, 25, 70, 0.8),
-  // South America
-  ...generateRegion(-80, -35, -55, 10, 0.7),
-  // Europe
-  ...generateRegion(-10, 40, 35, 70, 0.9),
-  // Africa
-  ...generateRegion(-20, 50, -35, 35, 0.7),
-  // Asia
-  ...generateRegion(60, 150, 10, 70, 0.6),
-  // Australia
-  ...generateRegion(110, 155, -40, -10, 0.8),
-];
+// Simplified continent data with heights
+// Format: [lat, lon, height] - height 0 = sea level, 1 = mountains
+const earthPoints: [number, number, number][] = [];
 
-function generateRegion(lonMin: number, lonMax: number, latMin: number, latMax: number, density: number) {
-  const points: [number, number][] = [];
-  const step = 3 / density;
+// Generate Earth geography points
+function generateEarthPoints() {
+  const points: [number, number, number][] = [];
   
-  for (let lon = lonMin; lon <= lonMax; lon += step) {
-    for (let lat = latMin; lat <= latMax; lat += step) {
-      if (Math.random() < density) {
-        points.push([lon, lat]);
+  // Simplified continent outlines with elevation
+  // North America
+  for (let lat = 25; lat < 70; lat += 3) {
+    for (let lon = -170; lon < -60; lon += 4) {
+      // Basic continent mask
+      const inContinent = 
+        // USA/Canada
+        (lat > 25 && lat < 70 && lon > -130 && lon < -60 && Math.random() > 0.3) ||
+        // Alaska
+        (lat > 55 && lat < 72 && lon > -170 && lon < -130 && Math.random() > 0.4);
+      
+      if (inContinent) {
+        // Add elevation - Rockies
+        let height = 0.3;
+        if (lon > -120 && lon < -100 && lat > 30 && lat < 60) height = 0.6 + Math.random() * 0.3;
+        // Appalachians
+        if (lon > -85 && lon < -75 && lat > 30 && lat < 45) height = 0.4;
+        
+        points.push([lat, lon, height]);
       }
     }
   }
+  
+  // South America
+  for (let lat = -60; lat < 15; lat += 3) {
+    for (let lon = -80; lon < -35; lon += 4) {
+      const inContinent = 
+        (lat > -60 && lat < 15 && lon > -80 && lon < -35 && Math.random() > 0.3);
+      
+      if (inContinent) {
+        // Andes
+        let height = 0.3;
+        if (lon > -75 && lon < -65) height = 0.7 + Math.random() * 0.3;
+        
+        points.push([lat, lon, height]);
+      }
+    }
+  }
+  
+  // Europe
+  for (let lat = 35; lat < 72; lat += 3) {
+    for (let lon = -10; lon < 60; lon += 4) {
+      const inContinent = Math.random() > 0.4;
+      
+      if (inContinent) {
+        // Alps
+        let height = 0.25;
+        if (lat > 44 && lat < 48 && lon > 5 && lon < 15) height = 0.6;
+        
+        points.push([lat, lon, height]);
+      }
+    }
+  }
+  
+  // Africa
+  for (let lat = -35; lat < 38; lat += 3) {
+    for (let lon = -20; lon < 55; lon += 4) {
+      const inContinent = Math.random() > 0.35;
+      
+      if (inContinent) {
+        // Kilimanjaro / Ethiopian highlands
+        let height = 0.25;
+        if (lat > -5 && lat < 10 && lon > 30 && lon < 45) height = 0.5 + Math.random() * 0.3;
+        // Atlas
+        if (lat > 30 && lat < 38 && lon > -10 && lon < 5) height = 0.4;
+        
+        points.push([lat, lon, height]);
+      }
+    }
+  }
+  
+  // Asia
+  for (let lat = 5; lat < 75; lat += 3) {
+    for (let lon = 60; lon < 180; lon += 4) {
+      const inContinent = Math.random() > 0.35;
+      
+      if (inContinent) {
+        // Himalayas
+        let height = 0.3;
+        if (lat > 25 && lat < 40 && lon > 70 && lon < 100) height = 0.8 + Math.random() * 0.2;
+        // Ural
+        if (lat > 45 && lat < 70 && lon > 55 && lon < 65) height = 0.4;
+        
+        points.push([lat, lon, height]);
+      }
+    }
+  }
+  
+  // Australia
+  for (let lat = -45; lat < -10; lat += 3) {
+    for (let lon = 110; lon < 155; lon += 4) {
+      const inContinent = Math.random() > 0.4;
+      
+      if (inContinent) {
+        let height = 0.2;
+        // Great Dividing Range
+        if (lon > 145 && lon < 155 && lat > -40 && lat < -20) height = 0.35;
+        
+        points.push([lat, lon, height]);
+      }
+    }
+  }
+  
+  // Antarctica
+  for (let lat = -90; lat < -65; lat += 4) {
+    for (let lon = -180; lon < 180; lon += 8) {
+      if (Math.random() > 0.3) {
+        points.push([lat, lon, 0.3 + Math.random() * 0.2]);
+      }
+    }
+  }
+  
   return points;
 }
 
-function latLonToXYZ(lat: number, lon: number, radius: number): [number, number, number] {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lon + 180) * (Math.PI / 180);
-  
-  const x = -radius * Math.sin(phi) * Math.cos(theta);
-  const y = radius * Math.cos(phi);
-  const z = radius * Math.sin(phi) * Math.sin(theta);
-  
-  return [x, y, z];
-}
-
-interface GlobeProps {
-  mousePos: { x: number; y: number };
-  isDragging: boolean;
-  dragRotation: { x: number; y: number };
-}
-
-function Globe({ mousePos, isDragging, dragRotation }: GlobeProps) {
-  const groupRef = useRef<THREE.Group>(null);
+function Globe({ className }: { className?: string }) {
   const pointsRef = useRef<THREE.Points>(null);
-  
-  const { positions, colors, count } = useMemo(() => {
-    const radius = 2;
+  const outerRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Generate points
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
     const positions: number[] = [];
     const colors: number[] = [];
     
-    // Add world map points
-    worldCoordinates.forEach(([lon, lat]) => {
-      const [x, y, z] = latLonToXYZ(lat, lon, radius);
+    const points = generateEarthPoints();
+    const radius = 1;
+    
+    points.forEach(([lat, lon, height]) => {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lon + 180) * (Math.PI / 180);
+      
+      // Apply height to radius
+      const r = radius + height * 0.15;
+      
+      const x = -r * Math.sin(phi) * Math.cos(theta);
+      const y = r * Math.cos(phi);
+      const z = r * Math.sin(phi) * Math.sin(theta);
+      
       positions.push(x, y, z);
-      colors.push(0.9, 0.9, 0.95); // White-ish
+      
+      // Color based on height
+      const brightness = 0.4 + height * 0.6;
+      colors.push(brightness, brightness, brightness);
     });
     
-    // Add ocean grid points (sparse)
-    for (let i = 0; i < 500; i++) {
-      const lat = Math.random() * 180 - 90;
-      const lon = Math.random() * 360 - 180;
-      const [x, y, z] = latLonToXYZ(lat, lon, radius);
-      positions.push(x, y, z);
-      colors.push(0.3, 0.3, 0.35); // Dim gray
-    }
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     
-    return {
-      positions: new Float32Array(positions),
-      colors: new Float32Array(colors),
-      count: positions.length / 3
-    };
+    return geo;
   }, []);
 
-  useFrame((state) => {
-    if (groupRef.current) {
-      if (isDragging) {
-        groupRef.current.rotation.x = dragRotation.x;
-        groupRef.current.rotation.y = dragRotation.y;
-      } else {
-        // Auto rotation + mouse influence
-        groupRef.current.rotation.y = state.clock.elapsedTime * 0.1 + mousePos.x * 0.3;
-        groupRef.current.rotation.x = mousePos.y * 0.2;
-      }
+  // Outer wireframe sphere
+  const wireframeGeometry = useMemo(() => {
+    return new THREE.IcosahedronGeometry(1.3, 2);
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (groupRef.current && !isDragging) {
+      groupRef.current.rotation.y = clock.elapsedTime * 0.1;
+    }
+    
+    // Subtle point animation
+    if (pointsRef.current) {
+      const material = pointsRef.current.material as THREE.PointsMaterial;
+      material.opacity = 0.7 + Math.sin(clock.elapsedTime) * 0.1;
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Globe points */}
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={count}
-            array={positions}
-            itemSize={3}
-          />
-          <bufferAttribute
-            attach="attributes-color"
-            count={count}
-            array={colors}
-            itemSize={3}
-          />
-        </bufferGeometry>
+      {/* Earth points */}
+      <points ref={pointsRef} geometry={geometry}>
         <pointsMaterial 
-          size={0.04}
+          size={0.02}
+          transparent
+          opacity={0.8}
           vertexColors
-          transparent 
-          opacity={0.9}
           sizeAttenuation
         />
       </points>
       
-      {/* Equator ring */}
+      {/* Outer wireframe */}
+      <mesh ref={outerRef} geometry={wireframeGeometry}>
+        <meshBasicMaterial 
+          color="#4a4a52" 
+          wireframe 
+          transparent 
+          opacity={0.15}
+        />
+      </mesh>
+      
+      {/* Core sphere */}
+      <mesh>
+        <sphereGeometry args={[0.95, 32, 32]} />
+        <meshBasicMaterial color="#0a0a0a" transparent opacity={0.5} />
+      </mesh>
+      
+      {/* Orbital ring */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[2, 0.003, 8, 64]} />
-        <meshBasicMaterial color="#3a3a40" transparent opacity={0.3} />
+        <ringGeometry args={[1.35, 1.38, 64]} />
+        <meshBasicMaterial color="#e8e8e8" transparent opacity={0.2} side={THREE.DoubleSide} />
       </mesh>
       
-      {/* Prime meridian */}
-      <mesh>
-        <torusGeometry args={[2, 0.003, 8, 64]} />
-        <meshBasicMaterial color="#3a3a40" transparent opacity={0.2} />
-      </mesh>
-      
-      {/* Axis */}
-      <mesh>
-        <cylinderGeometry args={[0.005, 0.005, 5, 8]} />
-        <meshBasicMaterial color="#606068" transparent opacity={0.3} />
+      {/* Second orbital ring */}
+      <mesh rotation={[Math.PI / 3, Math.PI / 4, 0]}>
+        <ringGeometry args={[1.4, 1.42, 64]} />
+        <meshBasicMaterial color="#e8e8e8" transparent opacity={0.1} side={THREE.DoubleSide} />
       </mesh>
     </group>
   );
 }
 
-interface PointGlobeProps {
-  className?: string;
-}
-
-export default function PointGlobe({ className = '' }: PointGlobeProps) {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [dragRotation, setDragRotation] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      
-      if (isDragging) {
-        setDragRotation({
-          x: (e.clientY - dragStart.y) * 0.01,
-          y: (e.clientX - dragStart.x) * 0.01
-        });
-      } else {
-        setMousePos({ x, y });
-      }
-    }
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setDragStart({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
+function Scene() {
   return (
-    <div 
-      ref={containerRef}
-      className={`relative ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 50 }}
-        gl={{ 
-          antialias: true, 
-          alpha: true,
-          powerPreference: 'high-performance'
-        }}
-        style={{ background: 'transparent', cursor: isDragging ? 'grabbing' : 'grab' }}
-      >
-        <Globe 
-          mousePos={mousePos}
-          isDragging={isDragging}
-          dragRotation={dragRotation}
-        />
-      </Canvas>
-
-      {/* Labels */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="font-mono text-[10px] text-stone-graphite tracking-[0.3em]"
-        >
-          GLOBAL PRESENCE
-        </motion.div>
-      </div>
-
-      {/* Corner brackets */}
-      <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-stone-graphite/30" />
-      <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-stone-graphite/30" />
-      <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-stone-graphite/30" />
-      <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-stone-graphite/30" />
-    </div>
+    <>
+      <ambientLight intensity={0.5} />
+      <Globe />
+      <OrbitControls 
+        enableZoom={false}
+        enablePan={false}
+        autoRotate
+        autoRotateSpeed={0.3}
+        minPolarAngle={Math.PI / 4}
+        maxPolarAngle={Math.PI / 1.5}
+      />
+    </>
   );
 }
 
+export default function PointGlobe({ className }: { className?: string }) {
+  return (
+    <div className={`w-full h-full relative ${className || ''}`}>
+      <Canvas
+        camera={{ position: [0, 0, 3], fov: 45 }}
+        gl={{ antialias: true, alpha: true }}
+      >
+        <Scene />
+      </Canvas>
+    </div>
+  );
+}
