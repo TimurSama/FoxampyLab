@@ -151,16 +151,17 @@ export default function Header() {
                 </Link>
 
                 {/* Vote for Design Button */}
-                <Link href="/vote" className="hidden md:block">
+                <Link href="/vote">
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-3 py-1.5 border border-stone-anthracite/50 
+                    className="flex items-center gap-2 px-2 md:px-3 py-1.5 border border-stone-anthracite/50 
                              hover:border-engrave-line/30 transition-colors"
                   >
                     <BarChart3 size={12} className="text-engrave-dim" />
-                    <span className="font-mono text-[9px] text-stone-slate tracking-widest">
-                      ВЫБРАТЬ ДИЗАЙН
+                    <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
+                      <span className="hidden sm:inline">ВЫБРАТЬ ДИЗАЙН</span>
+                      <span className="sm:hidden">ГОЛОС</span>
                     </span>
                   </motion.div>
                 </Link>
