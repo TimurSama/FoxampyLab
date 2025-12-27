@@ -242,7 +242,7 @@ function MainContent() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7, duration: 0.8 }}
-                className="relative h-[400px] md:h-[600px] pointer-events-auto cursor-pointer"
+                className="relative h-[300px] sm:h-[400px] md:h-[600px] pointer-events-auto cursor-pointer mt-8 md:mt-0"
                 onClick={handleSphereInteraction}
               >
                 <InteractiveSphere mousePos={mousePos} />
@@ -321,7 +321,7 @@ function MainContent() {
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="h-[400px] md:h-[500px]"
+                    className="h-[300px] sm:h-[400px] md:h-[500px]"
                   >
                     <WireframeBubbles />
                   </motion.div>
@@ -387,7 +387,7 @@ function MainContent() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="h-[400px] md:h-[500px] order-2 lg:order-1"
+                    className="h-[300px] sm:h-[400px] md:h-[500px] order-2 lg:order-1"
                   >
                     <MethodologyLayers />
                   </motion.div>

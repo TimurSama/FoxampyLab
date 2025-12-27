@@ -4,24 +4,53 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useRef, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Формулы для отображения
-const formulas = [
-  { text: 'V = 4/3 πr³', label: 'sphere volume' },
-  { text: 'E = mc²', label: 'energy-mass' },
-  { text: '∇ × E = -∂B/∂t', label: 'maxwell equation' },
-  { text: 'Σ = ∫∫ dA', label: 'surface integral' },
-  { text: 'F = G(m₁m₂)/r²', label: 'gravitation' },
-  { text: 'eiπ + 1 = 0', label: 'euler identity' },
+const sphereInfo = [
+  {
+    id: 1,
+    title: 'ТЕХНОЛОГИИ',
+    description: 'Мы используем современный стек: React, Next.js, Three.js, Solidity, Python. Постоянно изучаем новые инструменты.',
+    formula: 'V = 4/3 πr³',
+    formulaLabel: 'sphere volume',
+    color: '#e8e8e8', // engrave-line
+    opacity: 0.9
+  },
+  {
+    id: 2,
+    title: 'ИННОВАЦИИ',
+    description: 'Экспериментируем с AI, Blockchain, Spatial Computing. Создаём решения, которых ещё не существует.',
+    formula: 'E = mc²',
+    formulaLabel: 'energy-mass',
+    color: '#c8c8d0', // engrave-mid
+    opacity: 0.7
+  },
+  {
+    id: 3,
+    title: 'МЕТОДОЛОГИЯ',
+    description: 'Глубокий анализ, итеративная разработка, data-driven решения. Каждый проект начинается с исследования.',
+    formula: '∇ × E = -∂B/∂t',
+    formulaLabel: 'maxwell equation',
+    color: '#9a9aa8', // stone-slate
+    opacity: 0.6
+  },
+  {
+    id: 4,
+    title: 'СИНЕРГИЯ',
+    description: 'Междисциплинарный подход объединяет дизайн, код, исследования и маркетинг в единое целое.',
+    formula: 'Σ = ∫∫ dA',
+    formulaLabel: 'surface integral',
+    color: '#8888a0', // engrave-dim
+    opacity: 0.5
+  },
 ];
 
 interface SphereSceneProps {
   mousePos: { x: number; y: number };
-  isHovered: boolean;
-  onDoubleClick: () => void;
+  activeInfo: typeof sphereInfo[0];
 }
 
-function IcosahedronWireframe({ mousePos }: { mousePos: { x: number; y: number } }) {
+function IcosahedronWireframe({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
@@ -35,16 +64,16 @@ function IcosahedronWireframe({ mousePos }: { mousePos: { x: number; y: number }
     <mesh ref={meshRef}>
       <icosahedronGeometry args={[2.2, 1]} />
       <meshBasicMaterial 
-        color="#e8e8e8" 
+        color={activeInfo.color} 
         wireframe 
         transparent 
-        opacity={0.15}
+        opacity={activeInfo.opacity * 0.2}
       />
     </mesh>
   );
 }
 
-function OuterPolyhedron({ mousePos }: { mousePos: { x: number; y: number } }) {
+function OuterPolyhedron({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
@@ -58,18 +87,17 @@ function OuterPolyhedron({ mousePos }: { mousePos: { x: number; y: number } }) {
     <mesh ref={meshRef}>
       <dodecahedronGeometry args={[2.8, 0]} />
       <meshBasicMaterial 
-        color="#606068" 
+        color={activeInfo.color} 
         wireframe 
         transparent 
-        opacity={0.08}
+        opacity={activeInfo.opacity * 0.1}
       />
     </mesh>
   );
 }
 
-function ParticleCloud({ mousePos, isExploded }: { mousePos: { x: number; y: number }, isExploded: boolean }) {
+function ParticleCloud({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const velocitiesRef = useRef<Float32Array | null>(null);
   
   const { positions, originalPositions, count } = useMemo(() => {
     const count = 500;
@@ -97,37 +125,19 @@ function ParticleCloud({ mousePos, isExploded }: { mousePos: { x: number; y: num
     return { positions, originalPositions, count };
   }, []);
 
-  useEffect(() => {
-    if (isExploded && !velocitiesRef.current) {
-      velocitiesRef.current = new Float32Array(count * 3);
-      for (let i = 0; i < count * 3; i++) {
-        velocitiesRef.current[i] = (Math.random() - 0.5) * 0.3;
-      }
-    }
-  }, [isExploded, count]);
-
   useFrame((state) => {
     if (pointsRef.current) {
       const positionsAttr = pointsRef.current.geometry.attributes.position;
       const posArray = positionsAttr.array as Float32Array;
       
-      if (isExploded && velocitiesRef.current) {
-        // Explode animation
-        for (let i = 0; i < count * 3; i++) {
-          posArray[i] += velocitiesRef.current[i] * 0.1;
-          velocitiesRef.current[i] *= 0.98; // Damping
-        }
-      } else {
-        // Return to original with mouse influence
-        for (let i = 0; i < count; i++) {
-          const idx = i * 3;
-          const dx = mousePos.x * 0.5;
-          const dy = mousePos.y * 0.5;
-          
-          posArray[idx] += (originalPositions[idx] + dx - posArray[idx]) * 0.05;
-          posArray[idx + 1] += (originalPositions[idx + 1] + dy - posArray[idx + 1]) * 0.05;
-          posArray[idx + 2] += (originalPositions[idx + 2] - posArray[idx + 2]) * 0.05;
-        }
+      for (let i = 0; i < count; i++) {
+        const idx = i * 3;
+        const dx = mousePos.x * 0.5;
+        const dy = mousePos.y * 0.5;
+        
+        posArray[idx] += (originalPositions[idx] + dx - posArray[idx]) * 0.05;
+        posArray[idx + 1] += (originalPositions[idx + 1] + dy - posArray[idx + 1]) * 0.05;
+        posArray[idx + 2] += (originalPositions[idx + 2] - posArray[idx + 2]) * 0.05;
       }
       
       positionsAttr.needsUpdate = true;
@@ -148,17 +158,17 @@ function ParticleCloud({ mousePos, isExploded }: { mousePos: { x: number; y: num
         />
       </bufferGeometry>
       <pointsMaterial 
-        color="#f0f0f5" 
+        color={activeInfo.color} 
         size={0.03} 
         transparent 
-        opacity={0.6}
+        opacity={activeInfo.opacity * 0.7}
         sizeAttenuation
       />
     </points>
   );
 }
 
-function OrbitalRings({ mousePos }: { mousePos: { x: number; y: number } }) {
+function OrbitalRings({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
   const group = useRef<THREE.Group>(null);
   
   useFrame((state) => {
@@ -177,13 +187,25 @@ function OrbitalRings({ mousePos }: { mousePos: { x: number; y: number } }) {
   return (
     <group ref={group}>
       {rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} index={i} />
+        <OrbitalRing key={i} {...ring} index={i} activeInfo={activeInfo} />
       ))}
     </group>
   );
 }
 
-function OrbitalRing({ radius, rotation, speed, index }: { radius: number; rotation: number[]; speed: number; index: number }) {
+function OrbitalRing({ 
+  radius, 
+  rotation, 
+  speed, 
+  index, 
+  activeInfo 
+}: { 
+  radius: number; 
+  rotation: number[]; 
+  speed: number; 
+  index: number;
+  activeInfo: typeof sphereInfo[0];
+}) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
@@ -196,15 +218,15 @@ function OrbitalRing({ radius, rotation, speed, index }: { radius: number; rotat
     <mesh ref={meshRef} rotation={rotation as [number, number, number]}>
       <torusGeometry args={[radius, 0.005, 8, 64]} />
       <meshBasicMaterial 
-        color="#909098" 
+        color={activeInfo.color} 
         transparent 
-        opacity={0.3 - index * 0.08}
+        opacity={activeInfo.opacity * (0.3 - index * 0.08)}
       />
     </mesh>
   );
 }
 
-function InnerGlow() {
+function InnerGlow({ activeInfo }: { activeInfo: typeof sphereInfo[0] }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
@@ -218,7 +240,7 @@ function InnerGlow() {
     <mesh ref={meshRef}>
       <sphereGeometry args={[1.2, 32, 32]} />
       <meshBasicMaterial 
-        color="#1a1a1c" 
+        color="#0a0a0a" 
         transparent 
         opacity={0.8}
       />
@@ -226,28 +248,14 @@ function InnerGlow() {
   );
 }
 
-function SphereScene({ mousePos, isHovered, onDoubleClick }: SphereSceneProps) {
-  const [isExploded, setIsExploded] = useState(false);
-  const { gl } = useThree();
-
-  useEffect(() => {
-    const handleDblClick = () => {
-      setIsExploded(true);
-      setTimeout(() => setIsExploded(false), 2000);
-      onDoubleClick();
-    };
-    
-    gl.domElement.addEventListener('dblclick', handleDblClick);
-    return () => gl.domElement.removeEventListener('dblclick', handleDblClick);
-  }, [gl, onDoubleClick]);
-
+function SphereScene({ mousePos, activeInfo }: SphereSceneProps) {
   return (
     <group>
-      <InnerGlow />
-      <ParticleCloud mousePos={mousePos} isExploded={isExploded} />
-      <IcosahedronWireframe mousePos={mousePos} />
-      <OuterPolyhedron mousePos={mousePos} />
-      <OrbitalRings mousePos={mousePos} />
+      <InnerGlow activeInfo={activeInfo} />
+      <ParticleCloud mousePos={mousePos} activeInfo={activeInfo} />
+      <IcosahedronWireframe mousePos={mousePos} activeInfo={activeInfo} />
+      <OuterPolyhedron mousePos={mousePos} activeInfo={activeInfo} />
+      <OrbitalRings mousePos={mousePos} activeInfo={activeInfo} />
     </group>
   );
 }
@@ -257,25 +265,28 @@ interface InteractiveSphereProps {
 }
 
 export default function InteractiveSphere({ mousePos }: InteractiveSphereProps) {
-  const [formulaIndex, setFormulaIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [showHint, setShowHint] = useState(true);
 
+  const activeInfo = sphereInfo[currentIndex];
+
+  const nextInfo = () => {
+    setCurrentIndex((prev) => (prev + 1) % sphereInfo.length);
+  };
+
+  const prevInfo = () => {
+    setCurrentIndex((prev) => (prev === 0 ? sphereInfo.length - 1 : prev - 1));
+  };
+
+  // Auto-rotate every 8 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setFormulaIndex((prev) => (prev + 1) % formulas.length);
-    }, 5000);
+      if (!isHovered) {
+        setCurrentIndex((prev) => (prev + 1) % sphereInfo.length);
+      }
+    }, 8000);
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowHint(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleDoubleClick = () => {
-    setFormulaIndex((prev) => (prev + 1) % formulas.length);
-  };
+  }, [isHovered]);
 
   return (
     <div 
@@ -294,54 +305,70 @@ export default function InteractiveSphere({ mousePos }: InteractiveSphereProps) 
       >
         <SphereScene 
           mousePos={mousePos} 
-          isHovered={isHovered}
-          onDoubleClick={handleDoubleClick}
+          activeInfo={activeInfo}
         />
       </Canvas>
 
-      {/* Formula display */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={formulaIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5 }}
-            className="font-mono"
-          >
-            <div className="text-lg md:text-xl text-engrave-line tracking-wider">
-              {formulas[formulaIndex].text}
-            </div>
-            <div className="text-[9px] text-stone-graphite tracking-[0.3em] mt-1 uppercase">
-              {formulas[formulaIndex].label}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+      {/* Navigation */}
+      <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 md:gap-4 z-10">
+        <button
+          onClick={prevInfo}
+          className="p-2 border border-stone-anthracite/50 bg-ink-chrome/80 
+                   hover:border-engrave-line/30 transition-colors"
+        >
+          <ChevronLeft size={16} className="text-engrave-line" />
+        </button>
+        
+        <div className="flex gap-1">
+          {sphereInfo.map((info, i) => (
+            <button
+              key={info.id}
+              onClick={() => setCurrentIndex(i)}
+              className={`w-2 h-2 border transition-all ${
+                currentIndex === i
+                  ? 'bg-engrave-line border-engrave-line'
+                  : 'bg-stone-anthracite border-stone-anthracite/50'
+              }`}
+            />
+          ))}
+        </div>
+        
+        <button
+          onClick={nextInfo}
+          className="p-2 border border-stone-anthracite/50 bg-ink-chrome/80 
+                   hover:border-engrave-line/30 transition-colors"
+        >
+          <ChevronRight size={16} className="text-engrave-line" />
+        </button>
       </div>
 
-      {/* Interaction hint */}
-      <AnimatePresence>
-        {showHint && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute top-4 left-1/2 -translate-x-1/2 
-                       font-mono text-[9px] text-stone-graphite tracking-widest
-                       px-3 py-1 border border-stone-anthracite/30 bg-ink-deep/50"
-          >
-            DOUBLE-CLICK TO INTERACT
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Corner decorations */}
-      <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-stone-graphite/30" />
-      <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-stone-graphite/30" />
-      <div className="absolute bottom-0 left-0 w-6 h-6 border-b border-l border-stone-graphite/30" />
-      <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-stone-graphite/30" />
+      {/* Info Panel */}
+      <motion.div
+        key={activeInfo.id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="absolute top-2 left-2 right-2 md:top-4 md:left-4 md:right-auto md:w-80 
+                 bg-ink-chrome/95 border border-stone-anthracite/50 p-3 md:p-4 backdrop-blur-xl z-10"
+      >
+        <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
+          {currentIndex + 1} / {sphereInfo.length}
+        </div>
+        <h3 className="font-mono text-sm text-engrave-fresco mb-2">
+          {activeInfo.title}
+        </h3>
+        <p className="font-mono text-[10px] text-stone-slate leading-relaxed mb-3">
+          {activeInfo.description}
+        </p>
+        <div className="pt-3 border-t border-stone-anthracite/30">
+          <div className="font-mono text-lg text-engrave-line tracking-wider mb-1">
+            {activeInfo.formula}
+          </div>
+          <div className="font-mono text-[9px] text-stone-slate tracking-[0.3em] uppercase">
+            {activeInfo.formulaLabel}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
-
