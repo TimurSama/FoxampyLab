@@ -22,54 +22,54 @@ const designVariants: DesignVariant[] = [
     id: 'design-a',
     name: 'FRACTALIX v1',
     description: 'Минималистичный дизайн с акцентом на типографику и геометрические формы',
-    preview: '/Fractalix.lab',
+    preview: '/variants/a',
     features: ['Минимализм', 'Геометрия', '3D визуалы'],
-    path: '/Fractalix.lab',
+    path: '/variants/a',
     color: '#e8e8e8'
   },
   {
     id: 'design-b',
     name: 'FRACTALIX v2',
     description: 'Тёмная тема с неоновыми акцентами и динамичными анимациями',
-    preview: '/Fractalix.lab.2',
+    preview: '/variants/b',
     features: ['Неон', 'Анимации', 'Частицы'],
-    path: '/Fractalix.lab.2',
-    color: '#a0a0a0'
+    path: '/variants/b',
+    color: '#00ffff'
   },
   {
     id: 'design-c',
     name: 'FRACTALIX v3',
     description: 'Экспериментальный интерфейс с фокусом на интерактивность',
-    preview: '/Fractalix.lab.3',
+    preview: '/variants/c',
     features: ['Интерактив', 'Эксперименты', 'Кастомный курсор'],
-    path: '/Fractalix.lab.3',
+    path: '/variants/c',
     color: '#808080'
   },
   {
     id: 'design-d',
     name: 'CHROME EDITION',
     description: 'Металлический стиль с хром-эффектами и отражениями',
-    preview: '',
+    preview: '/variants/d',
     features: ['Chrome', 'Рефлексы', 'Металл'],
-    path: '',
+    path: '/variants/d',
     color: '#c0c0c0'
   },
   {
     id: 'design-e',
     name: 'MATRIX CORE',
     description: 'Киберпанк эстетика с матричным дождём и глитч-эффектами',
-    preview: '',
+    preview: '/variants/e',
     features: ['Глитч', 'Матрица', 'Терминал'],
-    path: '',
+    path: '/variants/e',
     color: '#00ff00'
   },
   {
     id: 'design-f',
     name: 'VOID ESSENCE',
     description: 'Глубокий чёрный с минимальными белыми акцентами',
-    preview: '',
+    preview: '/variants/f',
     features: ['Контраст', 'Void', 'Minimal'],
-    path: '',
+    path: '/variants/f',
     color: '#ffffff'
   },
 ];
@@ -201,20 +201,14 @@ export default function VotePage() {
                       
                       {/* Preview button */}
                       {variant.path && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); setPreviewVariant(variant); }}
-                          className="absolute top-2 right-2 p-2 bg-ink-deep/80 border border-stone-anthracite/50
-                                   opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <Eye size={14} className="text-engrave-line" />
-                        </button>
-                      )}
-                      
-                      {/* Coming soon badge */}
-                      {!variant.path && (
-                        <div className="absolute top-2 right-2 px-2 py-1 bg-ink-deep/80 border border-stone-anthracite/50">
-                          <span className="font-mono text-[8px] text-stone-slate">СКОРО</span>
-                        </div>
+                        <Link href={variant.path} onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="absolute top-2 right-2 p-2 bg-ink-deep/80 border border-stone-anthracite/50
+                                     opacity-0 group-hover:opacity-100 transition-opacity hover:border-engrave-line/30"
+                          >
+                            <Eye size={14} className="text-engrave-line" />
+                          </button>
+                        </Link>
                       )}
                     </div>
 
