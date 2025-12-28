@@ -5,6 +5,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Activity, Radio, Search, X, Lock, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLocale } from '@/contexts/LocaleContext';
 
 // Simple hash function for password verification
 function hashPassword(pass: string): string {
@@ -21,6 +23,7 @@ const ADMIN_HASH = 'a2f89c6'; // hash of 5511055
 
 export default function Header() {
   const router = useRouter();
+  const { t } = useLocale();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isGlitching, setIsGlitching] = useState(false);
@@ -159,8 +162,7 @@ export default function Header() {
                              hover:border-engrave-line/30 transition-colors"
                   >
                     <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                      <span className="hidden sm:inline">ИГРА</span>
-                      <span className="sm:hidden">GAME</span>
+                      {t('common.game')}
                     </span>
                   </motion.div>
                 </Link>
@@ -175,13 +177,13 @@ export default function Header() {
                   >
                     <BarChart3 size={12} className="text-engrave-dim" />
                     <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                      <span className="hidden sm:inline">ВЫБРАТЬ ДИЗАЙН</span>
-                      <span className="sm:hidden">ГОЛОС</span>
+                      <span className="hidden sm:inline">{t('common.vote')}</span>
+                      <span className="sm:hidden">{t('common.voteShort')}</span>
                     </span>
                   </motion.div>
                 </Link>
 
-                {/* Search + Status */}
+                {/* Search + Status + Language */}
                 <div className="flex items-center gap-3">
                   {/* Status indicator */}
                   <div className="hidden md:flex items-center gap-2 px-3 py-1 border border-engrave-line/20">
@@ -191,7 +193,7 @@ export default function Header() {
                       transition={{ duration: 2, repeat: Infinity }}
                     />
                     <span className="font-mono text-[10px] text-engrave-dim tracking-widest">
-                      ONLINE
+                      {t('common.online')}
                     </span>
                   </div>
 
@@ -203,7 +205,7 @@ export default function Header() {
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="поиск..."
+                          placeholder={t('common.search')}
                           autoFocus
                           className="w-32 md:w-48 px-3 py-1.5 bg-ink-chrome border border-stone-anthracite/50 
                                    font-mono text-xs text-engrave-fresco placeholder-stone-anthracite
@@ -227,6 +229,9 @@ export default function Header() {
                       </button>
                     )}
                   </div>
+
+                  {/* Language Switcher */}
+                  <LanguageSwitcher />
                 </div>
               </div>
 
@@ -237,7 +242,7 @@ export default function Header() {
                     <Activity size={10} className="text-engrave-dim" />
                     v3.0.1
                   </span>
-                  <span className="hidden sm:inline">PROTOCOL_ACTIVE</span>
+                  <span className="hidden sm:inline">{t('common.protocolActive')}</span>
                   <span className="hidden md:flex items-center gap-1">
                     <Radio size={10} className="text-engrave-dim" />
                     LAT:{coordinates.lat} LON:{coordinates.lon}
@@ -249,7 +254,7 @@ export default function Header() {
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 3, repeat: Infinity }}
                   >
-                    SIGNAL_STRONG
+                    {t('common.signalStrong')}
                   </motion.span>
                 </div>
               </div>
@@ -279,10 +284,10 @@ export default function Header() {
                 <Lock size={24} className="text-engrave-line" />
                 <div>
                   <h2 className="font-mono text-lg text-engrave-fresco tracking-wider">
-                    ADMIN ACCESS
+                    {t('common.adminAccess')}
                   </h2>
                   <p className="font-mono text-[10px] text-stone-slate">
-                    Введите пароль для доступа
+                    {t('common.enterPassword')}
                   </p>
                 </div>
               </div>
@@ -306,13 +311,13 @@ export default function Header() {
                     className="flex-1 py-3 border border-stone-anthracite/50 font-mono text-xs text-stone-slate
                              hover:border-engrave-line/20 transition-colors"
                   >
-                    ОТМЕНА
+                    {t('common.cancel')}
                   </button>
                   <button
                     type="submit"
                     className="flex-1 py-3 bg-engrave-fresco text-ink-deep font-mono text-xs tracking-widest"
                   >
-                    ВОЙТИ
+                    {t('common.login')}
                   </button>
                 </div>
               </form>

@@ -13,6 +13,7 @@ import BootSequence from '@/components/boot/BootSequence';
 import { RewardProvider, useRewards } from '@/components/interactive/HiddenRewards';
 import UserCabinet from '@/components/interactive/UserCabinet';
 import Link from 'next/link';
+import { useLocale } from '@/contexts/LocaleContext';
 import { 
   ArrowRight, 
   Layers, 
@@ -32,6 +33,7 @@ import {
 } from 'lucide-react';
 
 function MainContent() {
+  const { t } = useLocale();
   const [isBooting, setIsBooting] = useState(true);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [sphereClicked, setSphereClicked] = useState(false);
@@ -99,37 +101,37 @@ function MainContent() {
   }, [ctaHovered, discoverReward]);
 
   const services = [
-    { icon: <Layers size={24} />, name: 'ECOSYSTEMS', desc: 'Комплексная разработка проектов', href: '/services' },
-    { icon: <Code size={24} />, name: 'WEB/APP', desc: 'Сайты, SPA, мобильные приложения', href: '/services' },
-    { icon: <Rocket size={24} />, name: 'BLOCKCHAIN', desc: 'Смарт-контракты, dApps, Web3', href: '/services' },
-    { icon: <Palette size={24} />, name: 'DESIGN', desc: 'UI/UX, брендинг, айдентика', href: '/services' },
-    { icon: <TrendingUp size={24} />, name: 'MARKETING', desc: 'Продвижение, SMM, контент', href: '/services' },
-    { icon: <FileText size={24} />, name: 'DOCUMENTS', desc: 'Whitepaper, бизнес-план', href: '/services' },
-    { icon: <Film size={24} />, name: 'VIDEO', desc: 'Продакшн, моушн-дизайн', href: '/services' },
+    { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc'), href: '/services' },
+    { icon: <Code size={24} />, name: t('services.webapp'), desc: t('services.webappDesc'), href: '/services' },
+    { icon: <Rocket size={24} />, name: t('services.blockchain'), desc: t('services.blockchainDesc'), href: '/services' },
+    { icon: <Palette size={24} />, name: t('services.design'), desc: t('services.designDesc'), href: '/services' },
+    { icon: <TrendingUp size={24} />, name: t('services.marketing'), desc: t('services.marketingDesc'), href: '/services' },
+    { icon: <FileText size={24} />, name: t('services.documents'), desc: t('services.documentsDesc'), href: '/services' },
+    { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc'), href: '/services' },
   ];
 
   const metrics = [
-    { value: '50+', label: 'ПРОЕКТОВ' },
-    { value: '$2M+', label: 'ПРИВЛЕЧЕНО' },
-    { value: '98%', label: 'УСПЕХ' },
-    { value: '24/7', label: 'ПОДДЕРЖКА' },
+    { value: '50+', label: t('home.projects') },
+    { value: '$2M+', label: t('home.raised') },
+    { value: '98%', label: t('home.success') },
+    { value: '24/7', label: t('home.support') },
   ];
 
   const whyMultidisciplinary = [
     {
       icon: <Network size={20} />,
-      title: 'Кросс-опыление идей',
-      desc: 'Дизайнеры вдохновляют разработчиков, маркетологи находят инсайты в данных R&D'
+      title: t('home.whyItem1Title'),
+      desc: t('home.whyItem1Desc')
     },
     {
       icon: <Zap size={20} />,
-      title: 'Быстрые итерации',
-      desc: 'Все компетенции в одной команде — нет задержек на коммуникацию между агентствами'
+      title: t('home.whyItem2Title'),
+      desc: t('home.whyItem2Desc')
     },
     {
       icon: <Sparkles size={20} />,
-      title: 'Неожиданные решения',
-      desc: 'Блокчейн + видео = NFT-контент. Дизайн + AI = генеративное искусство'
+      title: t('home.whyItem3Title'),
+      desc: t('home.whyItem3Desc')
     },
   ];
 
@@ -168,25 +170,23 @@ function MainContent() {
                 className="relative z-20 md:pl-8 lg:pl-16"
               >
                 <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                  ─── DIGITAL LABORATORY ───
+                  ─── {t('home.tagline')} ───
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-mono font-light tracking-tight text-engrave-fresco mb-6">
-                  СОЗДАЁМ
+                  {t('home.title')}
                   <br />
-                  <span className="text-chrome">ЦИФРОВЫЕ</span>
+                  <span className="text-chrome">{t('home.titleHighlight')}</span>
                   <br />
-                  ВСЕЛЕННЫЕ
+                  {t('home.titleEnd')}
                 </h1>
                 
                 <p className="font-mono text-sm md:text-base text-stone-slate max-w-md mb-8 leading-relaxed">
-                  Междисциплинарная лаборатория, где сходятся технологии, 
-                  дизайн и бизнес. Мы не просто разрабатываем — мы исследуем, 
-                  экспериментируем и создаём решения, которых ещё не существует.
+                  {t('home.description')}
                 </p>
 
                 <div className="font-mono text-xs text-engrave-dim mb-10 border-l-2 border-stone-anthracite pl-4">
-                  Экосистемы · Блокчейн · Дизайн · Маркетинг · AI · R&D
+                  {t('home.tags')}
                 </div>
 
                 {/* CTA buttons */}
@@ -199,7 +199,7 @@ function MainContent() {
                       className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                                flex items-center gap-3 transition-all"
                     >
-                      УСЛУГИ
+                      {t('common.services')}
                       <ArrowRight size={16} />
                     </motion.button>
                   </Link>
@@ -212,7 +212,7 @@ function MainContent() {
                       className="px-8 py-4 border border-stone-anthracite text-engrave-line font-mono text-sm tracking-widest
                                hover:border-engrave-line/50 transition-all"
                     >
-                      СВЯЗАТЬСЯ
+                      {t('common.contact')}
                     </motion.button>
                   </Link>
                 </div>
@@ -264,7 +264,7 @@ function MainContent() {
                   transition={{ duration: 2, repeat: Infinity }}
                   className="font-mono text-[9px] text-stone-slate tracking-widest"
                 >
-                  SCROLL TO EXPLORE
+                  {t('common.scrollToExplore')}
                 </motion.div>
               </motion.div>
             </section>
@@ -279,14 +279,13 @@ function MainContent() {
                   className="text-center mb-12"
                 >
                   <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-4">
-                    ─── ПОЧЕМУ МЫ ───
+                    ─── {t('home.whyTitle')} ───
                   </div>
                   <h2 className="text-3xl md:text-4xl font-mono text-engrave-fresco tracking-tight mb-4">
-                    МЕЖДИСЦИПЛИНАРНЫЙ ПОДХОД
+                    {t('home.whySubtitle')}
                   </h2>
                   <p className="font-mono text-sm text-stone-slate leading-relaxed max-w-3xl mx-auto">
-                    Развиваясь во многих направлениях одновременно, мы находим решения там, 
-                    где узкие специалисты видят только стены.
+                    {t('home.whyDescription')}
                   </p>
                 </motion.div>
                 
@@ -335,7 +334,7 @@ function MainContent() {
                                bg-ink-chrome/95 border border-engrave-line/30 px-6 py-3 backdrop-blur-xl pointer-events-auto"
                     >
                       <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-1">
-                        СИНЕРГИЯ
+                        {t('home.synergy')}
                       </div>
                       <div className="font-mono text-lg text-engrave-fresco">
                         SYNERGY
@@ -356,10 +355,10 @@ function MainContent() {
                   className="text-center mb-16"
                 >
                   <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-4">
-                    ─── SERVICES ───
+                    ─── {t('home.servicesTitle')} ───
                   </div>
                   <h2 className="text-3xl md:text-4xl font-mono text-engrave-fresco tracking-tight">
-                    НАПРАВЛЕНИЯ РАБОТЫ
+                    {t('home.servicesSubtitle')}
                   </h2>
                 </motion.div>
 
@@ -386,7 +385,7 @@ function MainContent() {
                         </p>
                         <div className="mt-4 font-mono text-[9px] text-engrave-dim flex items-center gap-1 
                                       group-hover:text-engrave-line transition-colors">
-                          ПОДРОБНЕЕ <ChevronRight size={10} />
+                          {t('services.more')} <ChevronRight size={10} />
                         </div>
                       </motion.div>
                     </Link>
@@ -405,15 +404,13 @@ function MainContent() {
                   className="text-center mb-12"
                 >
                   <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-4">
-                    ─── METHODOLOGY ───
+                    ─── {t('home.methodologyTitle')} ───
                   </div>
                   <h2 className="text-3xl md:text-4xl font-mono text-engrave-fresco tracking-tight mb-4">
-                    ГЛУБИНА ИССЛЕДОВАНИЙ
+                    {t('home.methodologySubtitle')}
                   </h2>
                   <p className="font-mono text-sm text-stone-slate leading-relaxed max-w-3xl mx-auto">
-                    Каждый проект начинается с глубокого анализа. Мы изучаем рынок, 
-                    конкурентов, пользователей и технические возможности прежде чем 
-                    написать первую строчку кода.
+                    {t('home.methodologyDescription')}
                   </p>
                 </motion.div>
                 
@@ -429,14 +426,14 @@ function MainContent() {
                     className="absolute top-4 right-4 max-w-xs bg-ink-chrome/95 border border-stone-anthracite/50 p-4 backdrop-blur-xl pointer-events-auto"
                   >
                     <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-3">
-                      PROCESS
+                      {t('home.process')}
                     </div>
                     <div className="space-y-2">
                       {[
-                        { layer: 'LAYER 1', name: 'Исследование рынка', desc: 'Анализ конкурентов, трендов' },
-                        { layer: 'LAYER 2', name: 'Пользовательские исследования', desc: 'Jobs to be done, интервью' },
-                        { layer: 'LAYER 3', name: 'Техническое проектирование', desc: 'Архитектура, стек' },
-                        { layer: 'LAYER 4', name: 'Прототипирование', desc: 'MVP, итерации' },
+                        { layer: t('home.layer1'), name: t('home.layer1Name'), desc: t('home.layer1Desc') },
+                        { layer: t('home.layer2'), name: t('home.layer2Name'), desc: t('home.layer2Desc') },
+                        { layer: t('home.layer3'), name: t('home.layer3Name'), desc: t('home.layer3Desc') },
+                        { layer: t('home.layer4'), name: t('home.layer4Name'), desc: t('home.layer4Desc') },
                       ].map((item, i) => (
                         <div
                           key={i}
@@ -464,7 +461,7 @@ function MainContent() {
                         className="font-mono text-[9px] text-engrave-line flex items-center gap-2
                                  hover:text-engrave-fresco transition-colors"
                       >
-                        УЗНАТЬ БОЛЬШЕ <ArrowRight size={10} />
+                        {t('home.learnMore')} <ArrowRight size={10} />
                       </motion.button>
                     </Link>
                   </motion.div>
@@ -482,10 +479,10 @@ function MainContent() {
                   className="text-center mb-8"
                 >
                   <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-4">
-                    ─── GLOBAL ───
+                    ─── {t('home.globalTitle')} ───
                   </div>
                   <h2 className="text-3xl md:text-4xl font-mono text-engrave-fresco tracking-tight mb-4">
-                    ГЛОБАЛЬНОЕ ПРИСУТСТВИЕ
+                    {t('home.globalSubtitle')}
                   </h2>
                 </motion.div>
                 
@@ -505,16 +502,16 @@ function MainContent() {
                       className="absolute top-4 left-4 bg-ink-chrome/95 border border-stone-anthracite/50 p-4 backdrop-blur-xl pointer-events-auto"
                     >
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-2">
-                        COVERAGE
+                        {t('home.coverage')}
                       </div>
                       <div className="space-y-2">
                         <div>
                           <div className="font-mono text-xl text-engrave-fresco">50+</div>
-                          <div className="font-mono text-[9px] text-stone-slate">СТРАН</div>
+                          <div className="font-mono text-[9px] text-stone-slate">{t('home.countries')}</div>
                         </div>
                         <div className="pt-2 border-t border-stone-anthracite/30">
                           <div className="font-mono text-sm text-engrave-line">24/7</div>
-                          <div className="font-mono text-[9px] text-stone-slate">ПОДДЕРЖКА</div>
+                          <div className="font-mono text-[9px] text-stone-slate">{t('home.support')}</div>
                         </div>
                       </div>
                     </motion.div>
@@ -527,11 +524,10 @@ function MainContent() {
                       className="absolute top-4 right-4 max-w-xs bg-ink-chrome/95 border border-stone-anthracite/50 p-4 backdrop-blur-xl pointer-events-auto"
                     >
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-2">
-                        NETWORK
+                        {t('home.network')}
                       </div>
                       <p className="font-mono text-[10px] text-stone-slate leading-relaxed">
-                        Команда распределена в разных часовых поясах. 
-                        Работаем с клиентами по всему миру.
+                        {t('home.networkDescription')}
                       </p>
                     </motion.div>
                     
@@ -544,7 +540,7 @@ function MainContent() {
                     >
                       <div className="w-2 h-2 bg-engrave-line animate-pulse" />
                       <span className="font-mono text-[10px] text-stone-slate tracking-widest">
-                        AVAILABLE WORLDWIDE
+                        {t('home.availableWorldwide')}
                       </span>
                     </motion.div>
                   </div>
@@ -562,10 +558,10 @@ function MainContent() {
                   className="text-center mb-8"
                 >
                   <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-4">
-                    ─── VENTURES ───
+                    ─── {t('home.venturesTitle')} ───
                   </div>
                   <h2 className="text-3xl md:text-4xl font-mono text-engrave-fresco tracking-tight mb-4">
-                    ИНВЕСТИЦИОННЫЕ ВОЗМОЖНОСТИ
+                    {t('home.venturesSubtitle')}
                   </h2>
                 </motion.div>
 
@@ -585,16 +581,16 @@ function MainContent() {
                       className="absolute top-4 left-4 bg-ink-chrome/95 border border-stone-anthracite/50 p-4 backdrop-blur-xl pointer-events-auto"
                     >
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-3">
-                        PORTFOLIO
+                        {t('home.portfolio')}
                       </div>
                       <div className="space-y-3">
                         <div>
                           <div className="font-mono text-2xl text-engrave-fresco">$2M+</div>
-                          <div className="font-mono text-[9px] text-stone-slate">ПРИВЛЕЧЕНО</div>
+                          <div className="font-mono text-[9px] text-stone-slate">{t('home.raised')}</div>
                         </div>
                         <div className="pt-2 border-t border-stone-anthracite/30">
                           <div className="font-mono text-lg text-engrave-line">15+</div>
-                          <div className="font-mono text-[9px] text-stone-slate">ПРОЕКТОВ</div>
+                          <div className="font-mono text-[9px] text-stone-slate">{t('home.projects')}</div>
                         </div>
                       </div>
                     </motion.div>
@@ -607,15 +603,14 @@ function MainContent() {
                       className="absolute top-4 right-4 max-w-xs bg-ink-chrome/95 border border-stone-anthracite/50 p-4 backdrop-blur-xl pointer-events-auto"
                     >
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-2">
-                        ОПИСАНИЕ
+                        {t('home.description')}
                       </div>
                       <p className="font-mono text-[10px] text-stone-slate leading-relaxed mb-3">
-                        Портфолио проектов и стартапов с высоким потенциалом роста. 
-                        От блокчейн-решений до AI-платформ.
+                        {t('home.venturesDescription')}
                       </p>
                       <div className="flex items-center gap-2 pt-2 border-t border-stone-anthracite/30">
                         <div className="w-1.5 h-1.5 bg-engrave-line" />
-                        <span className="font-mono text-[9px] text-stone-slate">HIGH GROWTH</span>
+                        <span className="font-mono text-[9px] text-stone-slate">{t('home.highGrowth')}</span>
                       </div>
                     </motion.div>
                     
@@ -630,7 +625,7 @@ function MainContent() {
                                    font-mono text-sm text-engrave-fresco tracking-widest
                                    backdrop-blur-xl pointer-events-auto shadow-lg"
                         >
-                          СМОТРЕТЬ ПРОЕКТЫ
+                          {t('home.viewProjects')}
                         </motion.button>
                       </Link>
                     </div>
@@ -643,17 +638,17 @@ function MainContent() {
                       className="absolute bottom-4 left-4 bg-ink-chrome/95 border border-stone-anthracite/50 p-3 backdrop-blur-xl pointer-events-auto"
                     >
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-2">
-                        METRICS
+                        {t('home.metrics')}
                       </div>
                       <div className="flex items-center gap-4">
                         <div>
                           <div className="font-mono text-lg text-engrave-fresco">98%</div>
-                          <div className="font-mono text-[8px] text-stone-slate">УСПЕХ</div>
+                          <div className="font-mono text-[8px] text-stone-slate">{t('home.success')}</div>
                         </div>
                         <div className="w-px h-8 bg-stone-anthracite/30" />
                         <div>
                           <div className="font-mono text-lg text-engrave-line">5+</div>
-                          <div className="font-mono text-[8px] text-stone-slate">ЛЕТ</div>
+                          <div className="font-mono text-[8px] text-stone-slate">{t('home.years')}</div>
                         </div>
                       </div>
                     </motion.div>
@@ -676,14 +671,13 @@ function MainContent() {
                   >
                     <FlaskConical size={32} className="text-engrave-dim group-hover:text-engrave-line transition-colors mb-4" />
                     <h3 className="font-mono text-xl text-engrave-fresco mb-2 group-hover:text-white transition-colors">
-                      R&D ЛАБОРАТОРИЯ
+                      {t('home.rdTitle')}
                     </h3>
                     <p className="font-mono text-sm text-stone-slate mb-4">
-                      Научные исследования, эксперименты, публикации. 
-                      AI, Blockchain, Spatial Computing.
+                      {t('home.rdDescription')}
                     </p>
                     <span className="font-mono text-[10px] text-engrave-dim group-hover:text-engrave-line flex items-center gap-2 transition-colors">
-                      ИССЛЕДОВАТЬ <ArrowRight size={12} />
+                      {t('home.explore')} <ArrowRight size={12} />
                     </span>
                   </motion.div>
                 </Link>
@@ -699,14 +693,13 @@ function MainContent() {
                   >
                     <Users size={32} className="text-engrave-dim group-hover:text-engrave-line transition-colors mb-4" />
                     <h3 className="font-mono text-xl text-engrave-fresco mb-2 group-hover:text-white transition-colors">
-                      ПРИСОЕДИНИТЬСЯ
+                      {t('home.joinTitle')}
                     </h3>
                     <p className="font-mono text-sm text-stone-slate mb-4">
-                      Ищем разработчиков, дизайнеров, исследователей.
-                      Remote-first, equity опции.
+                      {t('home.joinDescription')}
                     </p>
                     <span className="font-mono text-[10px] text-engrave-dim group-hover:text-engrave-line flex items-center gap-2 transition-colors">
-                      СМОТРЕТЬ ВАКАНСИИ <ArrowRight size={12} />
+                      {t('home.viewVacancies')} <ArrowRight size={12} />
                     </span>
                   </motion.div>
                 </Link>
@@ -722,13 +715,12 @@ function MainContent() {
                   viewport={{ once: true }}
                 >
                   <h2 className="text-3xl md:text-5xl font-mono text-engrave-fresco tracking-tight mb-6">
-                    ГОТОВЫ СОЗДАТЬ
+                    {t('home.ctaTitle')}
                     <br />
-                    ЧТО-ТО ВЕЛИКОЕ?
+                    {t('home.ctaTitleEnd')}
                   </h2>
                   <p className="font-mono text-sm text-stone-slate max-w-xl mx-auto mb-10">
-                    Свяжитесь с нами для обсуждения вашего проекта.
-                    Первая консультация бесплатно.
+                    {t('home.ctaDescription')}
                   </p>
                   <Link href="/contact">
                     <motion.button
@@ -737,7 +729,7 @@ function MainContent() {
                       className="px-12 py-5 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                                flex items-center gap-3 mx-auto transition-all"
                     >
-                      НАЧАТЬ ПРОЕКТ
+                      {t('home.startProject')}
                       <ArrowRight size={16} />
                     </motion.button>
                   </Link>
@@ -749,7 +741,7 @@ function MainContent() {
             <footer className="py-8 px-4 border-t border-stone-anthracite/20">
               <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="font-mono text-[10px] text-stone-slate">
-                  © 2024 FRACTALIX.LAB — DIGITAL LABORATORY
+                  {t('home.footer')}
                 </div>
                 <div className="flex items-center gap-6">
                   <button 
@@ -758,13 +750,13 @@ function MainContent() {
                              hover:text-engrave-line transition-colors"
                   >
                     <Gift size={12} />
-                    НАГРАДЫ ({totalDiscovered}/{rewards.length})
+                    {t('home.rewards')} ({totalDiscovered}/{rewards.length})
                   </button>
                   <Link href="/research" className="font-mono text-[10px] text-stone-slate hover:text-engrave-line transition-colors">
                     R&D
                   </Link>
                   <Link href="/join" className="font-mono text-[10px] text-stone-slate hover:text-engrave-line transition-colors">
-                    ВАКАНСИИ
+                    {t('home.vacancies')}
                   </Link>
                 </div>
               </div>
