@@ -167,7 +167,7 @@ export default function Header() {
                   </motion.div>
                 </Link>
 
-                {/* Vote for Design Button */}
+                {/* All Designs Button */}
                 <Link href="/vote">
                   <motion.div
                     whileHover={{ scale: 1.02 }}
@@ -177,8 +177,8 @@ export default function Header() {
                   >
                     <BarChart3 size={12} className="text-engrave-dim" />
                     <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                      <span className="hidden sm:inline">{t('common.vote')}</span>
-                      <span className="sm:hidden">{t('common.voteShort')}</span>
+                      <span className="hidden sm:inline">ВСЕ ДИЗАЙНЫ</span>
+                      <span className="sm:hidden">ДИЗАЙНЫ</span>
                     </span>
                   </motion.div>
                 </Link>
