@@ -20,81 +20,83 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import FanMenu from '@/components/layout/FanMenu';
-
-const roles = [
-  {
-    id: 'dev',
-    icon: <Code size={28} />,
-    title: 'Developers',
-    subtitle: 'Разработчики',
-    skills: ['React/Next.js', 'Node.js', 'Solidity', 'Three.js', 'Python'],
-    description: 'Frontend, Backend, Blockchain, AI/ML разработчики для работы над передовыми проектами.',
-    openPositions: 3,
-    type: 'FULL-TIME / REMOTE'
-  },
-  {
-    id: 'design',
-    icon: <Palette size={28} />,
-    title: 'Designers',
-    subtitle: 'Дизайнеры',
-    skills: ['UI/UX', 'Motion Design', '3D', 'Branding', 'Figma'],
-    description: 'UI/UX дизайнеры, моушн-дизайнеры и 3D-художники для создания уникальных визуальных решений.',
-    openPositions: 2,
-    type: 'FULL-TIME / REMOTE'
-  },
-  {
-    id: 'research',
-    icon: <Cpu size={28} />,
-    title: 'Researchers',
-    subtitle: 'Исследователи',
-    skills: ['AI/ML', 'Blockchain', 'Data Science', 'Academic Writing'],
-    description: 'Исследователи для работы в R&D направлении. Публикации, эксперименты, инновации.',
-    openPositions: 2,
-    type: 'PART-TIME / REMOTE'
-  },
-  {
-    id: 'marketing',
-    icon: <TrendingUp size={28} />,
-    title: 'Growth',
-    subtitle: 'Маркетинг и рост',
-    skills: ['SMM', 'Content', 'Analytics', 'Community', 'PR'],
-    description: 'Маркетологи, контент-менеджеры, community менеджеры для развития проектов.',
-    openPositions: 1,
-    type: 'FULL-TIME / REMOTE'
-  }
-];
-
-const benefits = [
-  { icon: <Globe size={20} />, title: 'Remote-first', desc: 'Работай откуда угодно' },
-  { icon: <Rocket size={20} />, title: 'Cutting-edge', desc: 'Передовые технологии' },
-  { icon: <Heart size={20} />, title: 'Equity', desc: 'Долевое участие' },
-  { icon: <Coffee size={20} />, title: 'Гибкий график', desc: 'Work-life balance' },
-  { icon: <Zap size={20} />, title: 'Быстрый рост', desc: 'Карьерное развитие' },
-  { icon: <Star size={20} />, title: 'Интересные проекты', desc: 'Web3, AI, Metaverse' },
-];
-
-const values = [
-  {
-    title: 'ИССЛЕДУЙ',
-    desc: 'Мы поощряем эксперименты и не боимся ошибок. Каждый провал — это шаг к открытию.'
-  },
-  {
-    title: 'СОЗДАВАЙ',
-    desc: 'Не просто выполняй задачи — создавай что-то значимое. Каждый проект должен менять мир к лучшему.'
-  },
-  {
-    title: 'ДЕЛИСЬ',
-    desc: 'Знания умножаются, когда ими делишься. Мы верим в open source, публикации и менторство.'
-  },
-  {
-    title: 'РАСТИ',
-    desc: 'Постоянное обучение — наш приоритет. Курсы, конференции, внутренние воркшопы.'
-  }
-];
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function JoinPage() {
+  const { t } = useLocale();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [formStep, setFormStep] = useState(0);
+
+  const roles = [
+    {
+      id: 'dev',
+      icon: <Code size={28} />,
+      title: t('join.roles.dev.title'),
+      subtitle: t('join.roles.dev.subtitle'),
+      skills: ['React/Next.js', 'Node.js', 'Solidity', 'Three.js', 'Python'],
+      description: t('join.roles.dev.desc'),
+      openPositions: 3,
+      type: t('join.roles.dev.type')
+    },
+    {
+      id: 'design',
+      icon: <Palette size={28} />,
+      title: t('join.roles.design.title'),
+      subtitle: t('join.roles.design.subtitle'),
+      skills: ['UI/UX', 'Motion Design', '3D', 'Branding', 'Figma'],
+      description: t('join.roles.design.desc'),
+      openPositions: 2,
+      type: t('join.roles.design.type')
+    },
+    {
+      id: 'research',
+      icon: <Cpu size={28} />,
+      title: t('join.roles.research.title'),
+      subtitle: t('join.roles.research.subtitle'),
+      skills: ['AI/ML', 'Blockchain', 'Data Science', 'Academic Writing'],
+      description: t('join.roles.research.desc'),
+      openPositions: 2,
+      type: t('join.roles.research.type')
+    },
+    {
+      id: 'marketing',
+      icon: <TrendingUp size={28} />,
+      title: t('join.roles.marketing.title'),
+      subtitle: t('join.roles.marketing.subtitle'),
+      skills: ['SMM', 'Content', 'Analytics', 'Community', 'PR'],
+      description: t('join.roles.marketing.desc'),
+      openPositions: 1,
+      type: t('join.roles.marketing.type')
+    }
+  ];
+
+  const benefits = [
+    { icon: <Globe size={20} />, title: t('join.benefitsList.remoteFirst.title'), desc: t('join.benefitsList.remoteFirst.desc') },
+    { icon: <Rocket size={20} />, title: t('join.benefitsList.cuttingEdge.title'), desc: t('join.benefitsList.cuttingEdge.desc') },
+    { icon: <Heart size={20} />, title: t('join.benefitsList.equity.title'), desc: t('join.benefitsList.equity.desc') },
+    { icon: <Coffee size={20} />, title: t('join.benefitsList.flexible.title'), desc: t('join.benefitsList.flexible.desc') },
+    { icon: <Zap size={20} />, title: t('join.benefitsList.growth.title'), desc: t('join.benefitsList.growth.desc') },
+    { icon: <Star size={20} />, title: t('join.benefitsList.projects.title'), desc: t('join.benefitsList.projects.desc') },
+  ];
+
+  const values = [
+    {
+      title: t('join.values.explore.title'),
+      desc: t('join.values.explore.desc')
+    },
+    {
+      title: t('join.values.create.title'),
+      desc: t('join.values.create.desc')
+    },
+    {
+      title: t('join.values.share.title'),
+      desc: t('join.values.share.desc')
+    },
+    {
+      title: t('join.values.grow.title'),
+      desc: t('join.values.grow.desc')
+    }
+  ];
 
   return (
     <div className="relative min-h-screen bg-ink-deep">
@@ -115,37 +117,36 @@ export default function JoinPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 border border-engrave-line/30 bg-engrave-line/5 mb-6">
                 <Users size={14} className="text-engrave-line" />
                 <span className="font-mono text-[10px] text-engrave-line tracking-widest">
-                  WE ARE HIRING
+                  {t('join.weAreHiring')}
                 </span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                ПРИСОЕДИНЯЙСЯ
+                {t('join.title')}
                 <br />
-                <span className="text-chrome">К ЛАБОРАТОРИИ</span>
+                <span className="text-chrome">{t('join.subtitle')}</span>
               </h1>
               
               <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed mb-8">
-                Мы ищем талантливых людей, которые хотят создавать будущее.
-                Не важно, где ты находишься — важно, что ты можешь создать.
+                {t('join.description')}
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-4 text-stone-slate font-mono text-[10px]">
                 <span className="flex items-center gap-2">
                   <CheckCircle size={12} className="text-engrave-line" />
-                  100% Remote
+                  {t('join.benefits.remote')}
                 </span>
                 <span className="flex items-center gap-2">
                   <CheckCircle size={12} className="text-engrave-line" />
-                  Гибкий график
+                  {t('join.benefits.flexible')}
                 </span>
                 <span className="flex items-center gap-2">
                   <CheckCircle size={12} className="text-engrave-line" />
-                  Equity опции
+                  {t('join.benefits.equity')}
                 </span>
                 <span className="flex items-center gap-2">
                   <CheckCircle size={12} className="text-engrave-line" />
-                  Интересные проекты
+                  {t('join.benefits.interesting')}
                 </span>
               </div>
             </motion.div>
@@ -156,7 +157,7 @@ export default function JoinPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8 text-center">
-              ─── OUR VALUES ───
+              ─── {t('join.values.title')} ───
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -185,7 +186,7 @@ export default function JoinPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── OPEN ROLES ───
+              ─── {t('join.roles.title')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-4">
@@ -222,7 +223,7 @@ export default function JoinPage() {
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <span className="font-mono text-[8px] px-2 py-1 border border-engrave-line/30 text-engrave-line bg-engrave-line/5">
-                        {role.openPositions} ОТКРЫТО
+                        {role.openPositions} {t('join.roles.dev.open')}
                       </span>
                       <span className="font-mono text-[8px] text-stone-slate">
                         {role.type}
@@ -263,9 +264,9 @@ export default function JoinPage() {
                       animate={{ opacity: 1, height: 'auto' }}
                       className="mt-4 pt-4 border-t border-stone-anthracite/30"
                     >
-                      <button className="w-full py-3 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
+                      <button                       className="w-full py-3 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                                        hover:bg-engrave-line transition-colors">
-                        ОТКЛИКНУТЬСЯ
+                        {t('join.apply')}
                       </button>
                     </motion.div>
                   )}
@@ -279,7 +280,7 @@ export default function JoinPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8 text-center">
-              ─── BENEFITS ───
+              ─── {t('join.benefitsList.title')} ───
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -319,11 +320,10 @@ export default function JoinPage() {
             >
               <Heart size={32} className="text-engrave-dim mx-auto mb-4" />
               <h2 className="font-mono text-2xl md:text-3xl text-engrave-fresco mb-4">
-                ДЛЯ ЭНТУЗИАСТОВ
+                {t('join.enthusiasts.title')}
               </h2>
               <p className="font-mono text-sm text-stone-slate max-w-xl mx-auto mb-6">
-                Не нашёл подходящую позицию, но хочешь быть частью лаборатории?
-                Мы всегда рады талантливым людям. Расскажи о себе и своих идеях.
+                {t('join.enthusiasts.description')}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <motion.button
@@ -332,7 +332,7 @@ export default function JoinPage() {
                   className="px-8 py-4 border border-stone-anthracite/50 text-engrave-line font-mono text-sm tracking-widest
                            hover:border-engrave-line/30 transition-colors"
                 >
-                  ОТПРАВИТЬ PORTFOLIO
+                  {t('join.enthusiasts.button')}
                 </motion.button>
               </div>
             </motion.div>
@@ -349,10 +349,10 @@ export default function JoinPage() {
             >
               <MessageCircle size={32} className="text-engrave-line mx-auto mb-4" />
               <h2 className="font-mono text-xl text-engrave-fresco mb-4">
-                ЕСТЬ ВОПРОСЫ?
+                {t('join.questions.title')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Напиши нам напрямую: <span className="text-engrave-line">join@fractalix.lab</span>
+                {t('join.questions.description')} <span className="text-engrave-line">{t('join.questions.email')}</span>
               </p>
             </motion.div>
           </div>

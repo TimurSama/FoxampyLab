@@ -6,6 +6,7 @@ import { Vote, Check, ChevronLeft, Eye, X } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import FanMenu from '@/components/layout/FanMenu';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface DesignVariant {
   id: string;
@@ -17,67 +18,68 @@ interface DesignVariant {
   color: string;
 }
 
-const designVariants: DesignVariant[] = [
-  {
-    id: 'design-a',
-    name: 'FRACTALIX v1',
-    description: 'Минималистичный дизайн с акцентом на типографику и геометрические формы',
-    preview: '/variants/a',
-    features: ['Минимализм', 'Геометрия', '3D визуалы'],
-    path: '/variants/a',
-    color: '#e8e8e8'
-  },
-  {
-    id: 'design-b',
-    name: 'FRACTALIX v2',
-    description: 'Тёмная тема с неоновыми акцентами и динамичными анимациями',
-    preview: '/variants/b',
-    features: ['Неон', 'Анимации', 'Частицы'],
-    path: '/variants/b',
-    color: '#00ffff'
-  },
-  {
-    id: 'design-c',
-    name: 'FRACTALIX v3',
-    description: 'Экспериментальный интерфейс с фокусом на интерактивность',
-    preview: '/variants/c',
-    features: ['Интерактив', 'Эксперименты', 'Кастомный курсор'],
-    path: '/variants/c',
-    color: '#808080'
-  },
-  {
-    id: 'design-d',
-    name: 'CHROME EDITION',
-    description: 'Металлический стиль с хром-эффектами и отражениями',
-    preview: '/variants/d',
-    features: ['Chrome', 'Рефлексы', 'Металл'],
-    path: '/variants/d',
-    color: '#c0c0c0'
-  },
-  {
-    id: 'design-e',
-    name: 'MATRIX CORE',
-    description: 'Киберпанк эстетика с матричным дождём и глитч-эффектами',
-    preview: '/variants/e',
-    features: ['Глитч', 'Матрица', 'Терминал'],
-    path: '/variants/e',
-    color: '#00ff00'
-  },
-  {
-    id: 'design-f',
-    name: 'VOID ESSENCE',
-    description: 'Глубокий чёрный с минимальными белыми акцентами',
-    preview: '/variants/f',
-    features: ['Контраст', 'Void', 'Minimal'],
-    path: '/variants/f',
-    color: '#ffffff'
-  },
-];
-
 export default function VotePage() {
+  const { t } = useLocale();
   const [selectedVariants, setSelectedVariants] = useState<Set<string>>(new Set());
   const [hasVoted, setHasVoted] = useState(false);
   const [previewVariant, setPreviewVariant] = useState<DesignVariant | null>(null);
+
+  const designVariants: DesignVariant[] = [
+    {
+      id: 'design-a',
+      name: t('vote.variants.a.name'),
+      description: t('vote.variants.a.description'),
+      preview: '/variants/a',
+      features: String(t('vote.variants.a.features')).split(','),
+      path: '/variants/a',
+      color: '#e8e8e8'
+    },
+    {
+      id: 'design-b',
+      name: t('vote.variants.b.name'),
+      description: t('vote.variants.b.description'),
+      preview: '/variants/b',
+      features: String(t('vote.variants.b.features')).split(','),
+      path: '/variants/b',
+      color: '#00ffff'
+    },
+    {
+      id: 'design-c',
+      name: t('vote.variants.c.name'),
+      description: t('vote.variants.c.description'),
+      preview: '/variants/c',
+      features: String(t('vote.variants.c.features')).split(','),
+      path: '/variants/c',
+      color: '#808080'
+    },
+    {
+      id: 'design-d',
+      name: t('vote.variants.d.name'),
+      description: t('vote.variants.d.description'),
+      preview: '/variants/d',
+      features: String(t('vote.variants.d.features')).split(','),
+      path: '/variants/d',
+      color: '#c0c0c0'
+    },
+    {
+      id: 'design-e',
+      name: t('vote.variants.e.name'),
+      description: t('vote.variants.e.description'),
+      preview: '/variants/e',
+      features: String(t('vote.variants.e.features')).split(','),
+      path: '/variants/e',
+      color: '#00ff00'
+    },
+    {
+      id: 'design-f',
+      name: t('vote.variants.f.name'),
+      description: t('vote.variants.f.description'),
+      preview: '/variants/f',
+      features: String(t('vote.variants.f.features')).split(','),
+      path: '/variants/f',
+      color: '#ffffff'
+    },
+  ];
 
   useEffect(() => {
     const voted = localStorage.getItem('fractalix-voted');
@@ -118,7 +120,7 @@ export default function VotePage() {
           <Link href="/" className="inline-flex items-center gap-2 font-mono text-[10px] text-stone-slate 
                                    hover:text-engrave-line transition-colors mb-8">
             <ChevronLeft size={12} />
-            НАЗАД
+            {t('common.back')}
           </Link>
 
           {/* Header */}
@@ -128,16 +130,13 @@ export default function VotePage() {
             className="text-center mb-12"
           >
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-4">
-              ─── COMMUNITY VOTE ───
+              ─── {t('vote.title')} ───
             </div>
             <h1 className="text-4xl md:text-5xl font-mono text-engrave-fresco tracking-tight mb-4">
-              ВЫБЕРИТЕ
-              <br />
-              <span className="text-chrome">ДИЗАЙН</span>
+              {t('vote.subtitle')}
             </h1>
             <p className="font-mono text-sm text-stone-slate max-w-xl mx-auto">
-              Помогите нам выбрать лучший дизайн для сайта. 
-              Можно выбрать несколько вариантов.
+              {t('vote.description')}
             </p>
           </motion.div>
 
@@ -151,10 +150,10 @@ export default function VotePage() {
                 <Check size={40} className="text-engrave-line" />
               </div>
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                СПАСИБО ЗА ГОЛОС!
+                {t('vote.thankYou')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-8">
-                Мы учтём ваше мнение при выборе финального дизайна.
+                {t('vote.thankYouDesc')}
               </p>
               <Link href="/">
                 <motion.button
@@ -163,7 +162,7 @@ export default function VotePage() {
                   className="px-8 py-4 border border-stone-anthracite/50 font-mono text-sm text-engrave-line
                            hover:border-engrave-line/30 transition-colors"
                 >
-                  ВЕРНУТЬСЯ НА ГЛАВНУЮ
+                  {t('vote.backToHome')}
                 </motion.button>
               </Link>
             </motion.div>
@@ -235,14 +234,14 @@ export default function VotePage() {
                       </p>
                       
                       <div className="flex flex-wrap gap-2">
-                        {variant.features.map((feature, j) => (
-                          <span 
-                            key={j}
-                            className="font-mono text-[8px] px-2 py-1 border border-stone-anthracite/30 text-stone-slate"
-                          >
-                            {feature}
-                          </span>
-                        ))}
+                      {variant.features.map((feature, j) => (
+                        <span 
+                          key={j}
+                          className="font-mono text-[8px] px-2 py-1 border border-stone-anthracite/30 text-stone-slate"
+                        >
+                          {feature.trim()}
+                        </span>
+                      ))}
                       </div>
                     </div>
                   </motion.div>
@@ -264,11 +263,11 @@ export default function VotePage() {
                   }`}
                 >
                   <Vote size={18} />
-                  ОСТАВИТЬ ГОЛОС ({selectedVariants.size})
+                  {t('vote.voteButton')} ({selectedVariants.size})
                 </motion.button>
                 
                 <p className="font-mono text-[10px] text-stone-slate mt-4">
-                  Выбрано: {selectedVariants.size} из {designVariants.length}
+                  {t('vote.selected')}: {selectedVariants.size} {t('vote.of')} {designVariants.length}
                 </p>
               </div>
             </>
@@ -302,7 +301,7 @@ export default function VotePage() {
               
               <div className="aspect-video bg-ink-deep flex items-center justify-center">
                 <p className="font-mono text-sm text-stone-slate">
-                  Превью недоступно в текущей версии
+                  {t('vote.previewUnavailable')}
                 </p>
               </div>
               

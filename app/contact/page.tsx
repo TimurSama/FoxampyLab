@@ -12,8 +12,10 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import FanMenu from '@/components/layout/FanMenu';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ContactPage() {
+  const { t } = useLocale();
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -44,17 +46,15 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── CONTACT ───
+                ─── {t('contact.title')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                СВЯЗАТЬСЯ
-                <br />
-                С НАМИ
+                {t('contact.subtitle')}
               </h1>
               
               <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed">
-                Расскажите о вашем проекте. Первая консультация бесплатно.
+                {t('contact.description')}
               </p>
             </motion.div>
           </div>
@@ -71,7 +71,7 @@ export default function ContactPage() {
                 className="p-6 border border-stone-anthracite/30"
               >
                 <Mail size={24} className="text-engrave-line mb-4" />
-                <h3 className="font-mono text-sm text-engrave-fresco mb-2">EMAIL</h3>
+                <h3 className="font-mono text-sm text-engrave-fresco mb-2">{t('contact.email')}</h3>
                 <a href="mailto:hello@fractalix.lab" 
                    className="font-mono text-sm text-stone-slate hover:text-engrave-line transition-colors">
                   hello@fractalix.lab
@@ -85,7 +85,7 @@ export default function ContactPage() {
                 className="p-6 border border-stone-anthracite/30"
               >
                 <MessageCircle size={24} className="text-engrave-line mb-4" />
-                <h3 className="font-mono text-sm text-engrave-fresco mb-2">TELEGRAM</h3>
+                <h3 className="font-mono text-sm text-engrave-fresco mb-2">{t('contact.telegram')}</h3>
                 <a href="https://t.me/fractalix_lab" 
                    className="font-mono text-sm text-stone-slate hover:text-engrave-line transition-colors">
                   @fractalix_lab
@@ -99,9 +99,9 @@ export default function ContactPage() {
                 className="p-6 border border-stone-anthracite/30"
               >
                 <Clock size={24} className="text-engrave-line mb-4" />
-                <h3 className="font-mono text-sm text-engrave-fresco mb-2">RESPONSE TIME</h3>
+                <h3 className="font-mono text-sm text-engrave-fresco mb-2">{t('contact.responseTime')}</h3>
                 <p className="font-mono text-sm text-stone-slate">
-                  &lt; 24 часа
+                  {t('contact.responseTimeValue')}
                 </p>
               </motion.div>
 
@@ -112,9 +112,9 @@ export default function ContactPage() {
                 className="p-6 border border-stone-anthracite/30"
               >
                 <MapPin size={24} className="text-engrave-line mb-4" />
-                <h3 className="font-mono text-sm text-engrave-fresco mb-2">LOCATION</h3>
+                <h3 className="font-mono text-sm text-engrave-fresco mb-2">{t('contact.location')}</h3>
                 <p className="font-mono text-sm text-stone-slate">
-                  Remote-first, Worldwide
+                  {t('contact.locationValue')}
                 </p>
               </motion.div>
             </div>
@@ -129,10 +129,10 @@ export default function ContactPage() {
                 <div className="h-full flex flex-col items-center justify-center text-center">
                   <CheckCircle size={48} className="text-engrave-line mb-4" />
                   <h3 className="font-mono text-xl text-engrave-fresco mb-2">
-                    СООБЩЕНИЕ ОТПРАВЛЕНО
+                    {t('contact.sent')}
                   </h3>
                   <p className="font-mono text-sm text-stone-slate">
-                    Мы свяжемся с вами в течение 24 часов.
+                    {t('contact.sentDesc')}
                   </p>
                 </div>
               ) : (
@@ -140,7 +140,7 @@ export default function ContactPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                        ИМЯ *
+                        {t('common.name')} *
                       </label>
                       <input
                         type="text"
@@ -154,7 +154,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <label className="block font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                        EMAIL *
+                        {t('common.email')} *
                       </label>
                       <input
                         type="email"
@@ -171,7 +171,7 @@ export default function ContactPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                        ТИП ПРОЕКТА
+                        {t('contact.projectType')}
                       </label>
                       <select
                         value={formState.project}
@@ -180,18 +180,18 @@ export default function ContactPage() {
                                  text-engrave-fresco font-mono text-sm
                                  focus:border-engrave-line/50 focus:outline-none transition-colors"
                       >
-                        <option value="">Выберите...</option>
-                        <option value="ecosystem">Экосистема / Комплексный проект</option>
-                        <option value="web">Веб-сайт / Приложение</option>
-                        <option value="blockchain">Blockchain / Web3</option>
-                        <option value="design">Дизайн / Брендинг</option>
-                        <option value="marketing">Маркетинг</option>
-                        <option value="other">Другое</option>
+                        <option value="">{t('contact.projectTypeOptions.select')}</option>
+                        <option value="ecosystem">{t('contact.projectTypeOptions.ecosystem')}</option>
+                        <option value="web">{t('contact.projectTypeOptions.web')}</option>
+                        <option value="blockchain">{t('contact.projectTypeOptions.blockchain')}</option>
+                        <option value="design">{t('contact.projectTypeOptions.design')}</option>
+                        <option value="marketing">{t('contact.projectTypeOptions.marketing')}</option>
+                        <option value="other">{t('contact.projectTypeOptions.other')}</option>
                       </select>
                     </div>
                     <div>
                       <label className="block font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                        БЮДЖЕТ
+                        {t('contact.budget')}
                       </label>
                       <select
                         value={formState.budget}
@@ -200,25 +200,25 @@ export default function ContactPage() {
                                  text-engrave-fresco font-mono text-sm
                                  focus:border-engrave-line/50 focus:outline-none transition-colors"
                       >
-                        <option value="">Выберите...</option>
-                        <option value="5k">до $5,000</option>
-                        <option value="15k">$5,000 - $15,000</option>
-                        <option value="50k">$15,000 - $50,000</option>
-                        <option value="100k">$50,000+</option>
+                        <option value="">{t('contact.budgetOptions.select')}</option>
+                        <option value="5k">{t('contact.budgetOptions.5k')}</option>
+                        <option value="15k">{t('contact.budgetOptions.15k')}</option>
+                        <option value="50k">{t('contact.budgetOptions.50k')}</option>
+                        <option value="100k">{t('contact.budgetOptions.100k')}</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                      СООБЩЕНИЕ *
+                      {t('common.message')} *
                     </label>
                     <textarea
                       required
                       rows={5}
                       value={formState.message}
                       onChange={e => setFormState({...formState, message: e.target.value})}
-                      placeholder="Расскажите о вашем проекте..."
+                      placeholder={t('contact.messagePlaceholder')}
                       className="w-full px-4 py-3 bg-ink-deep border border-stone-anthracite/50 
                                text-engrave-fresco font-mono text-sm resize-none
                                focus:border-engrave-line/50 focus:outline-none transition-colors
@@ -233,7 +233,7 @@ export default function ContactPage() {
                     className="w-full py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center justify-center gap-2"
                   >
-                    ОТПРАВИТЬ <Send size={14} />
+                    {t('common.send')} <Send size={14} />
                   </motion.button>
                 </form>
               )}

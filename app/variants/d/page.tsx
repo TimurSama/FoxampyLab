@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
 import NeonRain from '@/components/variants/NeonRain';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VariantD() {
+  const { t } = useLocale();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -26,16 +28,16 @@ export default function VariantD() {
   }, []);
 
   const services = [
-    { icon: <Layers size={24} />, name: 'ECOSYSTEMS', desc: 'Comprehensive project development' },
-    { icon: <Code size={24} />, name: 'WEB/APP', desc: 'Websites, SPAs, mobile applications' },
-    { icon: <Rocket size={24} />, name: 'BLOCKCHAIN', desc: 'Smart contracts, dApps, Web3' },
-    { icon: <Palette size={24} />, name: 'DESIGN', desc: 'UI/UX, branding, identity' },
-    { icon: <TrendingUp size={24} />, name: 'MARKETING', desc: 'Promotion, SMM, content' },
-    { icon: <FileText size={24} />, name: 'DOCUMENTS', desc: 'Whitepaper, business plan' },
-    { icon: <Film size={24} />, name: 'VIDEO', desc: 'Production, motion design' },
+    { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc') },
+    { icon: <Code size={24} />, name: t('services.webapp'), desc: t('services.webappDesc') },
+    { icon: <Rocket size={24} />, name: t('services.blockchain'), desc: t('services.blockchainDesc') },
+    { icon: <Palette size={24} />, name: t('services.design'), desc: t('services.designDesc') },
+    { icon: <TrendingUp size={24} />, name: t('services.marketing'), desc: t('services.marketingDesc') },
+    { icon: <FileText size={24} />, name: t('services.documents'), desc: t('services.documentsDesc') },
+    { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc') },
   ];
 
-  const neonSigns = ['SERVICES', 'CONTACT', 'LAB', 'DIGITAL', 'FUTURE'];
+  const neonSigns = [t('common.services'), t('common.contact'), 'LAB', t('home.titleHighlight'), 'FUTURE'];
 
   return (
     <div 
@@ -100,7 +102,7 @@ export default function VariantD() {
             className="mb-8"
           >
             <div className="text-xs text-[#ff006e]/70 tracking-[0.5em] mb-6 font-bold uppercase">
-              ─── DIGITAL LABORATORY ───
+              ─── {t('home.tagline')} ───
             </div>
             <h1 className="text-6xl md:text-8xl font-black mb-8 text-white leading-tight uppercase tracking-tight"
               style={{ 
@@ -110,16 +112,14 @@ export default function VariantD() {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              CREATING
+              {t('home.title')}
               <br />
-              DIGITAL
+              {t('home.titleHighlight')}
               <br />
-              UNIVERSES
+              {t('home.titleEnd')}
             </h1>
             <p className="text-base text-white/90 max-w-2xl mx-auto leading-relaxed mb-10 font-medium">
-              An interdisciplinary laboratory where technology, design, and business converge.
-              <br />
-              <span className="text-[#ff006e]/80">We don't just develop—we research, experiment, and create solutions.</span>
+              {t('home.description')}
             </p>
           </motion.div>
 
@@ -137,7 +137,7 @@ export default function VariantD() {
                 className="px-10 py-4 bg-[#ff006e] text-white font-bold text-sm tracking-wider border-2 border-[#ff006e] hover:bg-[#ff3385] transition-all uppercase"
                 style={{ boxShadow: '0 0 20px rgba(255,0,110,0.4)' }}
               >
-                SERVICES
+                {t('common.services')}
               </motion.button>
             </Link>
             <Link href="/contact">
@@ -147,7 +147,7 @@ export default function VariantD() {
                 className="px-10 py-4 border-2 border-[#8338ec] text-[#8338ec] font-bold text-sm tracking-wider hover:bg-[#8338ec]/20 transition-all uppercase"
                 style={{ boxShadow: '0 0 20px rgba(131,56,236,0.3)' }}
               >
-                CONTACT
+                {t('common.contact')}
               </motion.button>
             </Link>
           </motion.div>
@@ -188,12 +188,12 @@ export default function VariantD() {
             className="text-center mb-16"
           >
             <div className="text-xs text-[#ff006e]/70 tracking-[0.5em] mb-6 font-bold uppercase">
-              ─── SERVICES ───
+              ─── {t('services.title')} ───
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4 uppercase tracking-tight"
               style={{ textShadow: '0 0 20px rgba(255,0,110,0.5)' }}
             >
-              WORK DIRECTIONS
+              {t('services.subtitle')}
             </h2>
           </motion.div>
 
@@ -222,7 +222,7 @@ export default function VariantD() {
                     {service.desc}
                   </p>
                   <div className="mt-4 text-[10px] text-[#ff006e]/50 flex items-center gap-1 group-hover:text-[#ff006e] transition-colors font-bold uppercase">
-                    MORE <ChevronRight size={10} />
+                    {t('services.more')} <ChevronRight size={10} />
                   </div>
                 </motion.div>
               </Link>
@@ -235,14 +235,14 @@ export default function VariantD() {
       <footer className="py-8 px-4 border-t border-[#ff006e]/20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-xs text-white/60 font-bold uppercase">
-            © 2024 FRACTALIX.LAB — DIGITAL LABORATORY
+            {t('home.footer')}
           </div>
           <Link href="/vote">
             <motion.button
               whileHover={{ scale: 1.05 }}
               className="text-xs text-[#ff006e]/60 hover:text-[#ff006e] transition-colors font-bold uppercase"
             >
-              VIEW ALL DESIGNS
+              {t('variants.viewAllDesigns')}
             </motion.button>
           </Link>
         </div>

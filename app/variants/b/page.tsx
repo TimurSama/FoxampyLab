@@ -4,8 +4,10 @@ import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VariantB() {
+  const { t } = useLocale();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,13 +27,13 @@ export default function VariantB() {
   }, []);
 
   const services = [
-    { icon: <Layers size={24} />, name: 'ECOSYSTEMS', desc: 'Comprehensive project development' },
-    { icon: <Code size={24} />, name: 'WEB/APP', desc: 'Websites, SPAs, mobile applications' },
-    { icon: <Rocket size={24} />, name: 'BLOCKCHAIN', desc: 'Smart contracts, dApps, Web3' },
-    { icon: <Palette size={24} />, name: 'DESIGN', desc: 'UI/UX, branding, identity' },
-    { icon: <TrendingUp size={24} />, name: 'MARKETING', desc: 'Promotion, SMM, content' },
-    { icon: <FileText size={24} />, name: 'DOCUMENTS', desc: 'Whitepaper, business plan' },
-    { icon: <Film size={24} />, name: 'VIDEO', desc: 'Production, motion design' },
+    { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc') },
+    { icon: <Code size={24} />, name: t('services.webapp'), desc: t('services.webappDesc') },
+    { icon: <Rocket size={24} />, name: t('services.blockchain'), desc: t('services.blockchainDesc') },
+    { icon: <Palette size={24} />, name: t('services.design'), desc: t('services.designDesc') },
+    { icon: <TrendingUp size={24} />, name: t('services.marketing'), desc: t('services.marketingDesc') },
+    { icon: <FileText size={24} />, name: t('services.documents'), desc: t('services.documentsDesc') },
+    { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc') },
   ];
 
   return (
@@ -94,19 +96,17 @@ export default function VariantB() {
             className="mb-8"
           >
             <div className="text-xs text-[#d4af37]/70 tracking-[0.5em] mb-6 font-serif">
-              ─── DIGITAL LABORATORY ───
+              ─── {t('home.tagline')} ───
             </div>
             <h1 className="text-6xl md:text-8xl font-light mb-8 text-[#d4af37] leading-tight font-serif">
-              CREATING
+              {t('home.title')}
               <br />
-              <span className="text-[#f4cf57] font-normal">DIGITAL</span>
+              <span className="text-[#f4cf57] font-normal">{t('home.titleHighlight')}</span>
               <br />
-              UNIVERSES
+              {t('home.titleEnd')}
             </h1>
             <p className="text-base text-[#d4af37]/90 max-w-2xl mx-auto leading-relaxed mb-10 font-serif">
-              An interdisciplinary laboratory where technology, design, and business converge.
-              <br />
-              <span className="text-[#d4af37]/70 italic">We don't just develop—we research, experiment, and create solutions.</span>
+              {t('home.description')}
             </p>
           </motion.div>
 
@@ -121,9 +121,9 @@ export default function VariantB() {
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-10 py-4 bg-gradient-to-r from-[#d4af37] to-[#f4cf57] text-[#1a1208] font-semibold text-sm tracking-widest border border-[#d4af37] hover:shadow-lg hover:shadow-[#d4af37]/30 transition-all font-serif"
+                  className="px-10 py-4 bg-gradient-to-r from-[#d4af37] to-[#f4cf57] text-[#1a1208] font-semibold text-sm tracking-widest border border-[#d4af37] hover:shadow-lg hover:shadow-[#d4af37]/30 transition-all font-serif"
               >
-                SERVICES
+                {t('common.services')}
               </motion.button>
             </Link>
             <Link href="/contact">
@@ -132,7 +132,7 @@ export default function VariantB() {
                 whileTap={{ scale: 0.98 }}
                 className="px-10 py-4 border-2 border-[#d4af37]/50 text-[#d4af37] font-semibold text-sm tracking-widest hover:border-[#d4af37] hover:bg-[#d4af37]/10 transition-all font-serif"
               >
-                CONTACT
+                {t('common.contact')}
               </motion.button>
             </Link>
           </motion.div>
@@ -189,7 +189,7 @@ export default function VariantB() {
                     {service.desc}
                   </p>
                   <div className="mt-6 text-xs text-[#d4af37]/50 flex items-center gap-2 group-hover:text-[#d4af37]/70 transition-colors font-serif">
-                    MORE <ChevronRight size={12} />
+                    {t('services.more')} <ChevronRight size={12} />
                   </div>
                 </motion.div>
               </Link>

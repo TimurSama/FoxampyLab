@@ -19,89 +19,91 @@ import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import FanMenu from '@/components/layout/FanMenu';
 import TerrainGrid from '@/components/visuals/TerrainGrid';
-
-const researchAreas = [
-  {
-    id: 'ai-ml',
-    icon: <Brain size={32} />,
-    title: 'AI & Machine Learning',
-    subtitle: 'Искусственный интеллект',
-    description: 'Разработка и интеграция AI-решений. Генеративные модели, компьютерное зрение, NLP.',
-    projects: ['AI-ассистенты', 'Предиктивная аналитика', 'Автоматизация процессов'],
-    status: 'ACTIVE',
-    progress: 78
-  },
-  {
-    id: 'blockchain-research',
-    icon: <Network size={32} />,
-    title: 'Blockchain & DLT',
-    subtitle: 'Распределённые системы',
-    description: 'Исследование новых консенсус-механизмов, Layer 2 решений, кроссчейн протоколов.',
-    projects: ['Zero-knowledge proofs', 'DeFi протоколы', 'DAO governance'],
-    status: 'ACTIVE',
-    progress: 65
-  },
-  {
-    id: 'spatial-computing',
-    icon: <Atom size={32} />,
-    title: 'Spatial Computing',
-    subtitle: 'Пространственные вычисления',
-    description: 'AR/VR/XR интерфейсы. Метавселенные. Цифровые двойники.',
-    projects: ['VR интерфейсы', 'AR навигация', 'Digital twins'],
-    status: 'RESEARCH',
-    progress: 45
-  },
-  {
-    id: 'generative',
-    icon: <Sparkles size={32} />,
-    title: 'Generative Systems',
-    subtitle: 'Генеративные системы',
-    description: 'Процедурная генерация контента. Эволюционные алгоритмы. Творческие AI.',
-    projects: ['Генеративный арт', 'Процедурный дизайн', 'Музыкальный AI'],
-    status: 'EXPERIMENTAL',
-    progress: 35
-  },
-  {
-    id: 'data-viz',
-    icon: <Microscope size={32} />,
-    title: 'Data Visualization',
-    subtitle: 'Визуализация данных',
-    description: 'Интерактивные дашборды. 3D визуализации. Realtime аналитика.',
-    projects: ['Финансовые дашборды', 'Геоаналитика', 'Научная визуализация'],
-    status: 'ACTIVE',
-    progress: 85
-  },
-  {
-    id: 'biotech',
-    icon: <Dna size={32} />,
-    title: 'BioTech Interface',
-    subtitle: 'Биотех интерфейсы',
-    description: 'Интерфейсы для биотех компаний. Визуализация научных данных.',
-    projects: ['Lab информационные системы', 'Визуализация молекул', 'Health tech'],
-    status: 'RESEARCH',
-    progress: 25
-  }
-];
-
-const publications = [
-  {
-    title: 'Фрактальные паттерны в UI дизайне',
-    type: 'RESEARCH PAPER',
-    date: '2024.12'
-  },
-  {
-    title: 'Оптимизация UX в DeFi приложениях',
-    type: 'CASE STUDY',
-    date: '2024.11'
-  },
-  {
-    title: 'Generative Art: от алгоритма к эстетике',
-    type: 'ARTICLE',
-    date: '2024.10'
-  }
-];
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ResearchPage() {
+  const { t } = useLocale();
+
+  const researchAreas = [
+    {
+      id: 'ai-ml',
+      icon: <Brain size={32} />,
+      title: t('research.areas.ai.title'),
+      subtitle: t('research.areas.ai.subtitle'),
+      description: t('research.areas.ai.desc'),
+      projects: String(t('research.areas.ai.projects')).split(','),
+      status: 'ACTIVE',
+      progress: 78
+    },
+    {
+      id: 'blockchain-research',
+      icon: <Network size={32} />,
+      title: t('research.areas.blockchain.title'),
+      subtitle: t('research.areas.blockchain.subtitle'),
+      description: t('research.areas.blockchain.desc'),
+      projects: String(t('research.areas.blockchain.projects')).split(','),
+      status: 'ACTIVE',
+      progress: 65
+    },
+    {
+      id: 'spatial-computing',
+      icon: <Atom size={32} />,
+      title: t('research.areas.spatial.title'),
+      subtitle: t('research.areas.spatial.subtitle'),
+      description: t('research.areas.spatial.desc'),
+      projects: String(t('research.areas.spatial.projects')).split(','),
+      status: 'RESEARCH',
+      progress: 45
+    },
+    {
+      id: 'generative',
+      icon: <Sparkles size={32} />,
+      title: t('research.areas.generative.title'),
+      subtitle: t('research.areas.generative.subtitle'),
+      description: t('research.areas.generative.desc'),
+      projects: String(t('research.areas.generative.projects')).split(','),
+      status: 'EXPERIMENTAL',
+      progress: 35
+    },
+    {
+      id: 'data-viz',
+      icon: <Microscope size={32} />,
+      title: t('research.areas.viz.title'),
+      subtitle: t('research.areas.viz.subtitle'),
+      description: t('research.areas.viz.desc'),
+      projects: String(t('research.areas.viz.projects')).split(','),
+      status: 'ACTIVE',
+      progress: 85
+    },
+    {
+      id: 'biotech',
+      icon: <Dna size={32} />,
+      title: t('research.areas.biotech.title'),
+      subtitle: t('research.areas.biotech.subtitle'),
+      description: t('research.areas.biotech.desc'),
+      projects: String(t('research.areas.biotech.projects')).split(','),
+      status: 'RESEARCH',
+      progress: 25
+    }
+  ];
+
+  const publications = [
+    {
+      title: 'Fractal patterns in UI design',
+      type: 'RESEARCH PAPER',
+      date: '2024.12'
+    },
+    {
+      title: 'UX optimization in DeFi applications',
+      type: 'CASE STUDY',
+      date: '2024.11'
+    },
+    {
+      title: 'Generative Art: from algorithm to aesthetics',
+      type: 'ARTICLE',
+      date: '2024.10'
+    }
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       {/* Background */}
@@ -122,29 +124,28 @@ export default function ResearchPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 border border-stone-anthracite/30 mb-6">
                 <FlaskConical size={14} className="text-engrave-dim" />
                 <span className="font-mono text-[10px] text-stone-slate tracking-widest">
-                  RESEARCH & DEVELOPMENT
+                  {t('research.badge')}
                 </span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                НАУЧНЫЕ ИССЛЕДОВАНИЯ
+                {t('research.title')}
                 <br />
-                <span className="text-chrome">И РАЗРАБОТКИ</span>
+                <span className="text-chrome">{t('research.subtitle')}</span>
               </h1>
               
               <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed">
-                Мы не просто выполняем проекты — мы исследуем новые технологии,
-                разрабатываем инновационные методологии и делимся знаниями с сообществом.
+                {t('research.description')}
               </p>
             </motion.div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
               {[
-                { value: '6', label: 'Направлений R&D' },
-                { value: '15+', label: 'Публикаций' },
-                { value: '3', label: 'Патента' },
-                { value: '12', label: 'Исследователей' },
+                { value: '6', label: t('research.stats.areas') },
+                { value: '15+', label: t('research.stats.publications') },
+                { value: '3', label: t('research.stats.patents') },
+                { value: '12', label: t('research.stats.researchers') },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -169,7 +170,7 @@ export default function ResearchPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── RESEARCH AREAS ───
+              ─── {t('research.areas.title')} ───
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -196,7 +197,7 @@ export default function ResearchPage() {
                         ? 'text-engrave-mid border-engrave-mid/30 bg-engrave-mid/5'
                         : 'text-stone-slate border-stone-anthracite/30'
                     }`}>
-                      {area.status}
+                      {t(`research.status.${area.status.toLowerCase()}`)}
                     </span>
                   </div>
 
@@ -221,7 +222,7 @@ export default function ResearchPage() {
                         className="font-mono text-[9px] text-stone-slate px-2 py-1 
                                  bg-stone-anthracite/20 border border-stone-anthracite/30"
                       >
-                        {project}
+                        {project.trim()}
                       </span>
                     ))}
                   </div>
@@ -255,10 +256,10 @@ export default function ResearchPage() {
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center bg-ink-deep/80 px-8 py-6 border border-stone-anthracite/30">
                   <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                    DATA LANDSCAPE
+                    {t('research.visualization.title')}
                   </div>
                   <div className="font-mono text-lg text-engrave-fresco">
-                    Визуализация исследовательских данных
+                    {t('research.visualization.subtitle')}
                   </div>
                 </div>
               </div>
@@ -271,11 +272,11 @@ export default function ResearchPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em]">
-                ─── PUBLICATIONS ───
+                ─── {t('research.publications.title')} ───
               </div>
               <Link href="/research/publications" className="font-mono text-[10px] text-engrave-line 
                         hover:text-engrave-fresco transition-colors flex items-center gap-2">
-                ВСЕ ПУБЛИКАЦИИ <ArrowRight size={12} />
+                {t('research.publications.all')} <ArrowRight size={12} />
               </Link>
             </div>
 
@@ -322,11 +323,10 @@ export default function ResearchPage() {
             >
               <Lightbulb size={32} className="text-engrave-line mx-auto mb-4" />
               <h2 className="font-mono text-2xl md:text-3xl text-engrave-fresco mb-4">
-                ЕСТЬ ИССЛЕДОВАТЕЛЬСКАЯ ИДЕЯ?
+                {t('research.collaboration.title')}
               </h2>
               <p className="font-mono text-sm text-stone-slate max-w-xl mx-auto mb-8">
-                Мы открыты для коллабораций с университетами, научными институтами
-                и независимыми исследователями.
+                {t('research.collaboration.description')}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <motion.button
@@ -334,7 +334,7 @@ export default function ResearchPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  ПРЕДЛОЖИТЬ КОЛЛАБОРАЦИЮ
+                  {t('research.collaboration.propose')}
                 </motion.button>
                 <Link href="/join">
                   <motion.button
@@ -342,7 +342,7 @@ export default function ResearchPage() {
                     whileTap={{ scale: 0.98 }}
                     className="px-8 py-4 border border-stone-anthracite text-engrave-line font-mono text-sm tracking-widest"
                   >
-                    ПРИСОЕДИНИТЬСЯ К R&D
+                    {t('research.collaboration.join')}
                   </motion.button>
                 </Link>
               </div>

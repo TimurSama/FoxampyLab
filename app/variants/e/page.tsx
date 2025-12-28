@@ -4,10 +4,12 @@ import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VariantE() {
+  const { t } = useLocale();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [glitchText, setGlitchText] = useState('CREATING');
+  const [glitchText, setGlitchText] = useState(t('home.title'));
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,9 +29,9 @@ export default function VariantE() {
 
   useEffect(() => {
     const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const original = t('home.title');
     const interval = setInterval(() => {
       if (Math.random() > 0.7) {
-        const original = 'CREATING';
         const glitched = original.split('').map((char, i) => {
           if (Math.random() > 0.8) {
             return glitchChars[Math.floor(Math.random() * glitchChars.length)];
@@ -41,16 +43,16 @@ export default function VariantE() {
       }
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [t]);
 
   const services = [
-    { icon: <Layers size={24} />, name: 'ECOSYSTEMS', desc: 'Comprehensive project development' },
-    { icon: <Code size={24} />, name: 'WEB/APP', desc: 'Websites, SPAs, mobile applications' },
-    { icon: <Rocket size={24} />, name: 'BLOCKCHAIN', desc: 'Smart contracts, dApps, Web3' },
-    { icon: <Palette size={24} />, name: 'DESIGN', desc: 'UI/UX, branding, identity' },
-    { icon: <TrendingUp size={24} />, name: 'MARKETING', desc: 'Promotion, SMM, content' },
-    { icon: <FileText size={24} />, name: 'DOCUMENTS', desc: 'Whitepaper, business plan' },
-    { icon: <Film size={24} />, name: 'VIDEO', desc: 'Production, motion design' },
+    { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc') },
+    { icon: <Code size={24} />, name: t('services.webapp'), desc: t('services.webappDesc') },
+    { icon: <Rocket size={24} />, name: t('services.blockchain'), desc: t('services.blockchainDesc') },
+    { icon: <Palette size={24} />, name: t('services.design'), desc: t('services.designDesc') },
+    { icon: <TrendingUp size={24} />, name: t('services.marketing'), desc: t('services.marketingDesc') },
+    { icon: <FileText size={24} />, name: t('services.documents'), desc: t('services.documentsDesc') },
+    { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc') },
   ];
 
   const colors = ['#00ff41', '#ff006e', '#00f5ff', '#ffbe0b', '#8338ec'];
@@ -135,7 +137,7 @@ export default function VariantE() {
             className="mb-8"
           >
             <div className="text-xs text-[#00ff41]/70 tracking-[0.5em] mb-6 font-bold uppercase">
-              ─── DIGITAL LABORATORY ───
+              ─── {t('home.tagline')} ───
             </div>
             <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight uppercase tracking-tight relative">
               <motion.span
@@ -156,19 +158,17 @@ export default function VariantE() {
                 className="block text-[#00f5ff]"
                 style={{ textShadow: '0 0 30px rgba(0,245,255,0.8)' }}
               >
-                DIGITAL
+                {t('home.titleHighlight')}
               </motion.span>
               <motion.span
                 className="block text-[#ff006e]"
                 style={{ textShadow: '0 0 30px rgba(255,0,110,0.8)' }}
               >
-                UNIVERSES
+                {t('home.titleEnd')}
               </motion.span>
             </h1>
             <p className="text-base text-white/90 max-w-2xl mx-auto leading-relaxed mb-10 font-medium">
-              An interdisciplinary laboratory where technology, design, and business converge.
-              <br />
-              <span className="text-[#00ff41]/80">We don't just develop—we research, experiment, and create solutions.</span>
+              {t('home.description')}
             </p>
           </motion.div>
 
@@ -197,7 +197,7 @@ export default function VariantE() {
                     ease: 'linear'
                   }}
                 />
-                <span className="relative">SERVICES</span>
+                <span className="relative">{t('common.services')}</span>
               </motion.button>
             </Link>
             <Link href="/contact">
@@ -207,7 +207,7 @@ export default function VariantE() {
                 className="px-10 py-4 border-2 border-[#ff006e] text-[#ff006e] font-black text-sm tracking-wider hover:bg-[#ff006e]/20 transition-all uppercase"
                 style={{ boxShadow: '0 0 20px rgba(255,0,110,0.3)' }}
               >
-                CONTACT
+                {t('common.contact')}
               </motion.button>
             </Link>
           </motion.div>
@@ -224,12 +224,12 @@ export default function VariantE() {
             className="text-center mb-16"
           >
             <div className="text-xs text-[#00ff41]/70 tracking-[0.5em] mb-6 font-bold uppercase">
-              ─── SERVICES ───
+              ─── {t('services.title')} ───
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4 uppercase tracking-tight"
               style={{ textShadow: '0 0 20px rgba(0,255,65,0.5)' }}
             >
-              WORK DIRECTIONS
+              {t('services.subtitle')}
             </h2>
           </motion.div>
 
@@ -276,14 +276,14 @@ export default function VariantE() {
       <footer className="py-8 px-4 border-t-2 border-[#00ff41]/20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-xs text-white/60 font-bold uppercase">
-            © 2024 FRACTALIX.LAB — DIGITAL LABORATORY
+            {t('home.footer')}
           </div>
           <Link href="/vote">
             <motion.button
               whileHover={{ scale: 1.05 }}
               className="text-xs text-[#00ff41]/60 hover:text-[#00ff41] transition-colors font-bold uppercase"
             >
-              VIEW ALL DESIGNS
+              {t('variants.viewAllDesigns')}
             </motion.button>
           </Link>
         </div>

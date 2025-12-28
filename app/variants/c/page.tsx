@@ -4,8 +4,10 @@ import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VariantC() {
+  const { t } = useLocale();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,13 +27,13 @@ export default function VariantC() {
   }, []);
 
   const services = [
-    { icon: <Layers size={24} />, name: 'ECOSYSTEMS', desc: 'Comprehensive project development' },
-    { icon: <Code size={24} />, name: 'WEB/APP', desc: 'Websites, SPAs, mobile applications' },
-    { icon: <Rocket size={24} />, name: 'BLOCKCHAIN', desc: 'Smart contracts, dApps, Web3' },
-    { icon: <Palette size={24} />, name: 'DESIGN', desc: 'UI/UX, branding, identity' },
-    { icon: <TrendingUp size={24} />, name: 'MARKETING', desc: 'Promotion, SMM, content' },
-    { icon: <FileText size={24} />, name: 'DOCUMENTS', desc: 'Whitepaper, business plan' },
-    { icon: <Film size={24} />, name: 'VIDEO', desc: 'Production, motion design' },
+    { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc') },
+    { icon: <Code size={24} />, name: t('services.webapp'), desc: t('services.webappDesc') },
+    { icon: <Rocket size={24} />, name: t('services.blockchain'), desc: t('services.blockchainDesc') },
+    { icon: <Palette size={24} />, name: t('services.design'), desc: t('services.designDesc') },
+    { icon: <TrendingUp size={24} />, name: t('services.marketing'), desc: t('services.marketingDesc') },
+    { icon: <FileText size={24} />, name: t('services.documents'), desc: t('services.documentsDesc') },
+    { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc') },
   ];
 
   return (
@@ -95,19 +97,17 @@ export default function VariantC() {
             className="mb-8"
           >
             <div className="text-xs text-[#8b0000]/70 tracking-[0.3em] mb-6 font-bold uppercase">
-              ─── DIGITAL LABORATORY ───
+              ─── {t('home.tagline')} ───
             </div>
             <h1 className="text-6xl md:text-8xl font-black mb-8 text-[#8b0000] leading-tight uppercase tracking-tight">
-              CREATING
+              {t('home.title')}
               <br />
-              <span className="text-[#cc0000] drop-shadow-[0_0_20px_rgba(204,0,0,0.5)]">DIGITAL</span>
+              <span className="text-[#cc0000] drop-shadow-[0_0_20px_rgba(204,0,0,0.5)]">{t('home.titleHighlight')}</span>
               <br />
-              UNIVERSES
+              {t('home.titleEnd')}
             </h1>
             <p className="text-base text-[#8b0000]/90 max-w-2xl mx-auto leading-tight mb-10 font-bold">
-              An interdisciplinary laboratory where technology, design, and business converge.
-              <br />
-              <span className="text-[#8b0000]/70">We don't just develop—we research, experiment, and create solutions.</span>
+              {t('home.description')}
             </p>
           </motion.div>
 
@@ -124,7 +124,7 @@ export default function VariantC() {
                 whileTap={{ scale: 0.98 }}
                 className="px-10 py-4 bg-[#8b0000] text-white font-black text-sm tracking-tight border-2 border-[#cc0000] hover:bg-[#cc0000] transition-all uppercase"
               >
-                SERVICES
+                {t('common.services')}
               </motion.button>
             </Link>
             <Link href="/contact">
@@ -133,7 +133,7 @@ export default function VariantC() {
                 whileTap={{ scale: 0.98 }}
                 className="px-10 py-4 border-2 border-[#8b0000] text-[#8b0000] font-black text-sm tracking-tight hover:border-[#cc0000] hover:text-[#cc0000] hover:bg-[#8b0000]/10 transition-all uppercase"
               >
-                CONTACT
+                {t('common.contact')}
               </motion.button>
             </Link>
           </motion.div>
@@ -162,10 +162,10 @@ export default function VariantC() {
             className="text-center mb-16"
           >
             <div className="text-xs text-[#8b0000]/70 tracking-[0.3em] mb-6 font-bold uppercase">
-              ─── SERVICES ───
+              ─── {t('services.title')} ───
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-[#8b0000] mb-4 uppercase tracking-tight">
-              WORK DIRECTIONS
+              {t('services.subtitle')}
             </h2>
           </motion.div>
 
@@ -190,7 +190,7 @@ export default function VariantC() {
                     {service.desc}
                   </p>
                   <div className="mt-4 text-[10px] text-[#8b0000]/50 flex items-center gap-1 group-hover:text-[#cc0000] transition-colors font-bold uppercase">
-                    MORE <ChevronRight size={10} />
+                    {t('services.more')} <ChevronRight size={10} />
                   </div>
                 </motion.div>
               </Link>
@@ -203,14 +203,14 @@ export default function VariantC() {
       <footer className="py-8 px-4 border-t-2 border-[#8b0000]/30">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-xs text-[#8b0000]/60 font-bold uppercase">
-            © 2024 FRACTALIX.LAB — DIGITAL LABORATORY
+            {t('home.footer')}
           </div>
           <Link href="/vote">
             <motion.button
               whileHover={{ scale: 1.05, x: 2 }}
               className="text-xs text-[#8b0000]/60 hover:text-[#cc0000] transition-colors font-bold uppercase"
             >
-              VIEW ALL DESIGNS
+              {t('variants.viewAllDesigns')}
             </motion.button>
           </Link>
         </div>

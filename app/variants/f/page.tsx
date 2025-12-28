@@ -4,8 +4,10 @@ import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VariantF() {
+  const { t } = useLocale();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,13 +27,13 @@ export default function VariantF() {
   }, []);
 
   const services = [
-    { icon: <Layers size={24} />, name: 'ECOSYSTEMS', desc: 'Comprehensive project development' },
-    { icon: <Code size={24} />, name: 'WEB/APP', desc: 'Websites, SPAs, mobile applications' },
-    { icon: <Rocket size={24} />, name: 'BLOCKCHAIN', desc: 'Smart contracts, dApps, Web3' },
-    { icon: <Palette size={24} />, name: 'DESIGN', desc: 'UI/UX, branding, identity' },
-    { icon: <TrendingUp size={24} />, name: 'MARKETING', desc: 'Promotion, SMM, content' },
-    { icon: <FileText size={24} />, name: 'DOCUMENTS', desc: 'Whitepaper, business plan' },
-    { icon: <Film size={24} />, name: 'VIDEO', desc: 'Production, motion design' },
+    { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc') },
+    { icon: <Code size={24} />, name: t('services.webapp'), desc: t('services.webappDesc') },
+    { icon: <Rocket size={24} />, name: t('services.blockchain'), desc: t('services.blockchainDesc') },
+    { icon: <Palette size={24} />, name: t('services.design'), desc: t('services.designDesc') },
+    { icon: <TrendingUp size={24} />, name: t('services.marketing'), desc: t('services.marketingDesc') },
+    { icon: <FileText size={24} />, name: t('services.documents'), desc: t('services.documentsDesc') },
+    { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc') },
   ];
 
   return (
@@ -149,7 +151,7 @@ export default function VariantF() {
             className="mb-8"
           >
             <div className="text-xs text-[#8a2be2]/70 tracking-[0.5em] mb-6 font-serif italic">
-              ─── DIGITAL LABORATORY ───
+              ─── {t('home.tagline')} ───
             </div>
             <motion.h1 
               className="text-6xl md:text-8xl font-light mb-8 text-white leading-tight font-serif"
@@ -168,16 +170,14 @@ export default function VariantF() {
                 ease: 'linear'
               }}
             >
-              CREATING
+              {t('home.title')}
               <br />
-              DIGITAL
+              {t('home.titleHighlight')}
               <br />
-              UNIVERSES
+              {t('home.titleEnd')}
             </motion.h1>
             <p className="text-base text-white/90 max-w-2xl mx-auto leading-relaxed mb-10 font-serif">
-              An interdisciplinary laboratory where technology, design, and business converge.
-              <br />
-              <span className="text-[#8a2be2]/80 italic">We don't just develop—we research, experiment, and create solutions.</span>
+              {t('home.description')}
             </p>
           </motion.div>
 
@@ -206,7 +206,7 @@ export default function VariantF() {
                     ease: 'linear'
                   }}
                 />
-                <span className="relative">SERVICES</span>
+                <span className="relative">{t('common.services')}</span>
               </motion.button>
             </Link>
             <Link href="/contact">
@@ -216,7 +216,7 @@ export default function VariantF() {
                 className="px-10 py-4 border-2 border-[#8a2be2]/50 text-[#8a2be2] font-semibold text-sm tracking-wider hover:border-[#8a2be2] hover:bg-[#8a2be2]/10 transition-all font-serif"
                 style={{ boxShadow: '0 0 20px rgba(138,43,226,0.3)' }}
               >
-                CONTACT
+                {t('common.contact')}
               </motion.button>
             </Link>
           </motion.div>
@@ -257,12 +257,12 @@ export default function VariantF() {
             className="text-center mb-16"
           >
             <div className="text-xs text-[#8a2be2]/70 tracking-[0.5em] mb-6 font-serif italic">
-              ─── SERVICES ───
+              ─── {t('services.title')} ───
             </div>
             <h2 className="text-4xl md:text-5xl font-light text-white mb-4 font-serif"
               style={{ textShadow: '0 0 30px rgba(138,43,226,0.5)' }}
             >
-              WORK DIRECTIONS
+              {t('services.subtitle')}
             </h2>
           </motion.div>
 
@@ -288,7 +288,7 @@ export default function VariantF() {
                     {service.desc}
                   </p>
                   <div className="mt-6 text-xs text-[#8a2be2]/50 flex items-center gap-2 group-hover:text-[#8a2be2]/70 transition-colors font-serif">
-                    MORE <ChevronRight size={12} />
+                    {t('services.more')} <ChevronRight size={12} />
                   </div>
                 </motion.div>
               </Link>
@@ -301,14 +301,14 @@ export default function VariantF() {
       <footer className="py-12 px-4 border-t border-[#8a2be2]/20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-sm text-white/60 font-serif italic">
-            © 2024 FRACTALIX.LAB — DIGITAL LABORATORY
+            {t('home.footer')}
           </div>
           <Link href="/vote">
             <motion.button
               whileHover={{ scale: 1.05 }}
               className="text-sm text-[#8a2be2]/60 hover:text-[#8a2be2] transition-colors font-serif italic"
             >
-              VIEW ALL DESIGNS
+              {t('variants.viewAllDesigns')}
             </motion.button>
           </Link>
         </div>

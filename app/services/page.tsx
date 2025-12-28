@@ -15,74 +15,76 @@ import {
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import FanMenu from '@/components/layout/FanMenu';
-
-const services = [
-  {
-    id: 'ecosystems',
-    icon: <Layers size={40} />,
-    title: 'ЭКОСИСТЕМЫ',
-    subtitle: 'Комплексная разработка',
-    description: 'Полный цикл создания цифровых продуктов. От исследования рынка и концепции до запуска и масштабирования. Архитектура, разработка, дизайн, маркетинг — всё в одной команде.',
-    features: ['Исследование и стратегия', 'Архитектура решения', 'MVP за 8 недель', 'Масштабирование'],
-    price: 'от $15,000'
-  },
-  {
-    id: 'web-app',
-    icon: <Code size={40} />,
-    title: 'WEB & APP',
-    subtitle: 'Сайты и приложения',
-    description: 'Высоконагруженные веб-приложения, корпоративные сайты, мобильные приложения. React, Next.js, React Native, Node.js.',
-    features: ['SPA / SSR / SSG', 'PWA приложения', 'Мобильные приложения', 'API интеграции'],
-    price: 'от $5,000'
-  },
-  {
-    id: 'blockchain',
-    icon: <Rocket size={40} />,
-    title: 'BLOCKCHAIN',
-    subtitle: 'Web3 решения',
-    description: 'Смарт-контракты, DeFi протоколы, NFT маркетплейсы, DAO, токеномика. Ethereum, Solana, Polygon, Arbitrum.',
-    features: ['Смарт-контракты', 'dApps', 'Токеномика', 'Аудит безопасности'],
-    price: 'от $10,000'
-  },
-  {
-    id: 'design',
-    icon: <Palette size={40} />,
-    title: 'ДИЗАЙН',
-    subtitle: 'UI/UX и брендинг',
-    description: 'Интерфейсы, которые конвертируют. Бренды, которые запоминаются. Исследование пользователей, прототипирование, дизайн-системы.',
-    features: ['UX исследования', 'UI дизайн', 'Брендинг', 'Дизайн-системы'],
-    price: 'от $3,000'
-  },
-  {
-    id: 'marketing',
-    icon: <TrendingUp size={40} />,
-    title: 'МАРКЕТИНГ',
-    subtitle: 'Рост и продвижение',
-    description: 'Data-driven маркетинг. SMM, контент-стратегия, performance, community building. Криптомаркетинг и Web3 PR.',
-    features: ['Контент-стратегия', 'SMM', 'Performance', 'Community'],
-    price: 'от $2,000/мес'
-  },
-  {
-    id: 'documents',
-    icon: <FileText size={40} />,
-    title: 'ДОКУМЕНТЫ',
-    subtitle: 'Whitepaper и питчи',
-    description: 'Whitepaper, Litepaper, бизнес-планы, pitch deck, токеномика. Для привлечения инвестиций и выхода на рынок.',
-    features: ['Whitepaper', 'Pitch Deck', 'Бизнес-план', 'Токеномика'],
-    price: 'от $2,500'
-  },
-  {
-    id: 'video',
-    icon: <Film size={40} />,
-    title: 'ВИДЕО',
-    subtitle: 'Продакшн',
-    description: 'Промо-ролики, эксплейнеры, моушн-дизайн, 3D визуализации. Для презентаций, лендингов и социальных сетей.',
-    features: ['Промо-ролики', 'Эксплейнеры', 'Motion design', '3D визуализация'],
-    price: 'от $1,500'
-  }
-];
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ServicesPage() {
+  const { t } = useLocale();
+
+  const services = [
+    {
+      id: 'ecosystems',
+      icon: <Layers size={40} />,
+      title: t('services.ecosystems'),
+      subtitle: t('services.ecosystemsSubtitle'),
+      description: t('services.ecosystemsDesc'),
+      features: String(t('services.ecosystemsFeatures')).split(','),
+      price: t('services.ecosystemsPrice')
+    },
+    {
+      id: 'web-app',
+      icon: <Code size={40} />,
+      title: t('services.webapp'),
+      subtitle: t('services.webappSubtitle'),
+      description: t('services.webappDesc'),
+      features: String(t('services.webappFeatures')).split(','),
+      price: t('services.webappPrice')
+    },
+    {
+      id: 'blockchain',
+      icon: <Rocket size={40} />,
+      title: t('services.blockchain'),
+      subtitle: t('services.blockchainSubtitle'),
+      description: t('services.blockchainDesc'),
+      features: String(t('services.blockchainFeatures')).split(','),
+      price: t('services.blockchainPrice')
+    },
+    {
+      id: 'design',
+      icon: <Palette size={40} />,
+      title: t('services.design'),
+      subtitle: t('services.designSubtitle'),
+      description: t('services.designDesc'),
+      features: String(t('services.designFeatures')).split(','),
+      price: t('services.designPrice')
+    },
+    {
+      id: 'marketing',
+      icon: <TrendingUp size={40} />,
+      title: t('services.marketing'),
+      subtitle: t('services.marketingSubtitle'),
+      description: t('services.marketingDesc'),
+      features: String(t('services.marketingFeatures')).split(','),
+      price: t('services.marketingPrice')
+    },
+    {
+      id: 'documents',
+      icon: <FileText size={40} />,
+      title: t('services.documents'),
+      subtitle: t('services.documentsSubtitle'),
+      description: t('services.documentsDesc'),
+      features: String(t('services.documentsFeatures')).split(','),
+      price: t('services.documentsPrice')
+    },
+    {
+      id: 'video',
+      icon: <Film size={40} />,
+      title: t('services.video'),
+      subtitle: t('services.videoSubtitle'),
+      description: t('services.videoDesc'),
+      features: String(t('services.videoFeatures')).split(','),
+      price: t('services.videoPrice')
+    }
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -98,18 +100,15 @@ export default function ServicesPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── SERVICES ───
+                ─── {t('services.title')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                НАПРАВЛЕНИЯ
-                <br />
-                РАБОТЫ
+                {t('services.subtitle')}
               </h1>
               
               <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed">
-                Полный спектр услуг для создания и развития цифровых продуктов.
-                От идеи до масштабирования.
+                {t('services.description')}
               </p>
             </motion.div>
           </div>
@@ -156,7 +155,7 @@ export default function ServicesPage() {
                           className="flex items-center gap-1.5 font-mono text-[10px] text-engrave-dim"
                         >
                           <CheckCircle size={10} />
-                          {feature}
+                          {feature.trim()}
                         </span>
                       ))}
                     </div>
@@ -173,7 +172,7 @@ export default function ServicesPage() {
                       className="font-mono text-[10px] text-engrave-line flex items-center gap-1
                                hover:text-engrave-fresco transition-colors"
                     >
-                      ПОДРОБНЕЕ <ArrowRight size={10} />
+                      {t('services.more')} <ArrowRight size={10} />
                     </motion.button>
                   </div>
                 </div>
@@ -192,10 +191,10 @@ export default function ServicesPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                НЕ НАШЛИ НУЖНУЮ УСЛУГУ?
+                {t('services.notFound')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Расскажите о вашем проекте — найдём решение.
+                {t('services.notFoundDesc')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -203,7 +202,7 @@ export default function ServicesPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('common.contact')}
                 </motion.button>
               </Link>
             </motion.div>

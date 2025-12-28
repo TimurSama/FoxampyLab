@@ -11,51 +11,53 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import FanMenu from '@/components/layout/FanMenu';
-
-const ventures = [
-  {
-    id: 'project-1',
-    name: 'DeFi Protocol',
-    category: 'BLOCKCHAIN',
-    stage: 'LIVE',
-    description: 'Децентрализованный протокол для yield farming и liquidity mining.',
-    metrics: { tvl: '$2.4M', users: '12K+', apy: '45%' },
-    raised: '$500K',
-    seeking: false
-  },
-  {
-    id: 'project-2',
-    name: 'NFT Marketplace',
-    category: 'WEB3',
-    stage: 'LIVE',
-    description: 'Маркетплейс для цифрового искусства с фокусом на генеративный арт.',
-    metrics: { volume: '$1.2M', artists: '500+', nfts: '15K' },
-    raised: '$300K',
-    seeking: false
-  },
-  {
-    id: 'project-3',
-    name: 'Metaverse Hub',
-    category: 'METAVERSE',
-    stage: 'BETA',
-    description: 'Социальная платформа для виртуальных событий и нетворкинга.',
-    metrics: { users: '5K', events: '200+', partners: '20' },
-    raised: '$150K',
-    seeking: true
-  },
-  {
-    id: 'project-4',
-    name: 'AI Assistant',
-    category: 'AI',
-    stage: 'DEVELOPMENT',
-    description: 'AI-ассистент для автоматизации бизнес-процессов.',
-    metrics: { accuracy: '94%', integrations: '15', beta: '50' },
-    raised: 'Seeking',
-    seeking: true
-  },
-];
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VenturesPage() {
+  const { t } = useLocale();
+
+  const ventures = [
+    {
+      id: 'project-1',
+      name: 'DeFi Protocol',
+      category: 'BLOCKCHAIN',
+      stage: 'LIVE',
+      description: 'Decentralized protocol for yield farming and liquidity mining.',
+      metrics: { tvl: '$2.4M', users: '12K+', apy: '45%' },
+      raised: '$500K',
+      seeking: false
+    },
+    {
+      id: 'project-2',
+      name: 'NFT Marketplace',
+      category: 'WEB3',
+      stage: 'LIVE',
+      description: 'Marketplace for digital art with focus on generative art.',
+      metrics: { volume: '$1.2M', artists: '500+', nfts: '15K' },
+      raised: '$300K',
+      seeking: false
+    },
+    {
+      id: 'project-3',
+      name: 'Metaverse Hub',
+      category: 'METAVERSE',
+      stage: 'BETA',
+      description: 'Social platform for virtual events and networking.',
+      metrics: { users: '5K', events: '200+', partners: '20' },
+      raised: '$150K',
+      seeking: true
+    },
+    {
+      id: 'project-4',
+      name: 'AI Assistant',
+      category: 'AI',
+      stage: 'DEVELOPMENT',
+      description: 'AI assistant for business process automation.',
+      metrics: { accuracy: '94%', integrations: '15', beta: '50' },
+      raised: 'Seeking',
+      seeking: true
+    },
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -71,17 +73,17 @@ export default function VenturesPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── VENTURES ───
+                ─── {t('ventures.title')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                ИНВЕСТИЦИОННОЕ
+                {t('ventures.title')}
                 <br />
-                ПОРТФОЛИО
+                {t('ventures.subtitle')}
               </h1>
               
               <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed">
-                Проекты и стартапы лаборатории. Некоторые открыты для инвестиций.
+                {t('ventures.description')}
               </p>
             </motion.div>
           </div>
@@ -91,10 +93,10 @@ export default function VenturesPage() {
         <section className="px-4 mb-16">
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { value: '4', label: 'Активных проекта' },
-              { value: '$950K', label: 'Привлечено' },
-              { value: '17K+', label: 'Пользователей' },
-              { value: '2', label: 'Ищут инвестиции' },
+              { value: '4', label: t('ventures.stats.active') },
+              { value: '$950K', label: t('ventures.stats.raised') },
+              { value: '17K+', label: t('ventures.stats.users') },
+              { value: '2', label: t('ventures.stats.seeking') },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -145,14 +147,14 @@ export default function VenturesPage() {
                             ? 'text-engrave-mid border-engrave-mid/30'
                             : 'text-stone-slate border-stone-anthracite/30'
                         }`}>
-                          {project.stage}
+                          {t(`ventures.stages.${project.stage.toLowerCase()}`)}
                         </span>
                       </div>
                     </div>
                     {project.seeking && (
                       <span className="font-mono text-[8px] px-2 py-1 bg-engrave-line/10 
                                      text-engrave-line border border-engrave-line/30">
-                        SEEKING INVESTMENT
+                        {t('ventures.seeking')}
                       </span>
                     )}
                   </div>
@@ -179,11 +181,11 @@ export default function VenturesPage() {
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t border-stone-anthracite/20">
                     <div className="font-mono text-xs text-stone-slate">
-                      Raised: <span className="text-engrave-line">{project.raised}</span>
+                      {t('ventures.raised')}: <span className="text-engrave-line">{project.raised}</span>
                     </div>
                     <button className="font-mono text-[10px] text-engrave-line flex items-center gap-1
                                      hover:text-engrave-fresco transition-colors">
-                      ПОДРОБНЕЕ <ArrowRight size={10} />
+                      {t('common.more')} <ArrowRight size={10} />
                     </button>
                   </div>
                 </div>
@@ -202,17 +204,17 @@ export default function VenturesPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                СТАТЬ ИНВЕСТОРОМ
+                {t('ventures.becomeInvestor.title')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6 max-w-xl mx-auto">
-                Хотите инвестировать в один из проектов или обсудить партнёрство?
+                {t('ventures.becomeInvestor.description')}
               </p>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
               >
-                СВЯЗАТЬСЯ
+                {t('ventures.becomeInvestor.button')}
               </motion.button>
             </motion.div>
           </div>
