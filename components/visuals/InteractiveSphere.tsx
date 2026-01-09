@@ -1,62 +1,46 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo, useState, Suspense } from 'react';
 import * as THREE from 'three';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Html } from '@react-three/drei';
+import { getOptimal3DQuality, isMobile } from '@/lib/device';
+import NeuralNodeCircle from './NeuralNodeCircle';
 
-const sphereInfo = [
-  {
-    id: 1,
-    title: 'ТЕХНОЛОГИИ',
-    description: 'Мы используем современный стек: React, Next.js, Three.js, Solidity, Python. Постоянно изучаем новые инструменты.',
-    formula: 'V = 4/3 πr³',
-    formulaLabel: 'sphere volume',
-    color: '#e8e8e8', // engrave-line
-    opacity: 0.9
-  },
-  {
-    id: 2,
-    title: 'ИННОВАЦИИ',
-    description: 'Экспериментируем с AI, Blockchain, Spatial Computing. Создаём решения, которых ещё не существует.',
-    formula: 'E = mc²',
-    formulaLabel: 'energy-mass',
-    color: '#c8c8d0', // engrave-mid
-    opacity: 0.7
-  },
-  {
-    id: 3,
-    title: 'МЕТОДОЛОГИЯ',
-    description: 'Глубокий анализ, итеративная разработка, data-driven решения. Каждый проект начинается с исследования.',
-    formula: '∇ × E = -∂B/∂t',
-    formulaLabel: 'maxwell equation',
-    color: '#9a9aa8', // stone-slate
-    opacity: 0.6
-  },
-  {
-    id: 4,
-    title: 'СИНЕРГИЯ',
-    description: 'Междисциплинарный подход объединяет дизайн, код, исследования и маркетинг в единое целое.',
-    formula: 'Σ = ∫∫ dA',
-    formulaLabel: 'surface integral',
-    color: '#8888a0', // engrave-dim
-    opacity: 0.5
-  },
+const directions = [
+  'БИЗНЕС И СТРАТЕГИРОВАНИЕ',
+  'ДИЗАЙН И АРХИТЕКТУРА',
+  'САЙТЫ И ПРИЛОЖЕНИЯ',
+  'ЭКОСИСТЕМЫ',
+  'МАРКЕТИНГ И БРЕНДИНГ',
+  'ВИДЕО И КИНО',
 ];
 
-interface SphereSceneProps {
-  mousePos: { x: number; y: number };
-  activeInfo: typeof sphereInfo[0];
-}
+const color = '#e8e8e8'; // engrave-line
 
-function IcosahedronWireframe({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
+function IcosahedronWireframe({ 
+  mousePos, 
+  scrollDelta 
+}: { 
+  mousePos: { x: number; y: number };
+  scrollDelta: { x: number; y: number };
+}) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const accumulatedRotation = useRef({ x: 0, y: 0 });
   
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1 + mousePos.y * 0.5;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.15 + mousePos.x * 0.5;
+      // Накопление вращения от скролла (с затуханием)
+      accumulatedRotation.current.y += scrollDelta.x * 0.2;
+      accumulatedRotation.current.x += scrollDelta.y * 0.2;
+      
+      // Затухание накопленного вращения
+      accumulatedRotation.current.x *= 0.95;
+      accumulatedRotation.current.y *= 0.95;
+      
+      // Базовая анимация + мышь (усилена в 2.5 раза) + скролл
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1 + mousePos.y * 1.25 + accumulatedRotation.current.x;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.15 + mousePos.x * 1.25 + accumulatedRotation.current.y;
     }
   });
 
@@ -64,22 +48,38 @@ function IcosahedronWireframe({ mousePos, activeInfo }: { mousePos: { x: number;
     <mesh ref={meshRef}>
       <icosahedronGeometry args={[2.2, 1]} />
       <meshBasicMaterial 
-        color={activeInfo.color} 
+        color={color} 
         wireframe 
         transparent 
-        opacity={activeInfo.opacity * 0.2}
+        opacity={0.2}
       />
     </mesh>
   );
 }
 
-function OuterPolyhedron({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
+function OuterPolyhedron({ 
+  mousePos, 
+  scrollDelta 
+}: { 
+  mousePos: { x: number; y: number };
+  scrollDelta: { x: number; y: number };
+}) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const accumulatedRotation = useRef({ x: 0, y: 0 });
   
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = -state.clock.elapsedTime * 0.05 + mousePos.y * 0.3;
-      meshRef.current.rotation.y = -state.clock.elapsedTime * 0.08 + mousePos.x * 0.3;
+      // Накопление вращения от скролла (противоположное направление для внешнего полиэдра)
+      accumulatedRotation.current.y -= scrollDelta.x * 0.15;
+      accumulatedRotation.current.x -= scrollDelta.y * 0.15;
+      
+      // Затухание
+      accumulatedRotation.current.x *= 0.95;
+      accumulatedRotation.current.y *= 0.95;
+      
+      // Базовая анимация + мышь (усилена в 2 раза) + скролл
+      meshRef.current.rotation.x = -state.clock.elapsedTime * 0.05 + mousePos.y * 0.9 + accumulatedRotation.current.x;
+      meshRef.current.rotation.y = -state.clock.elapsedTime * 0.08 + mousePos.x * 0.9 + accumulatedRotation.current.y;
     }
   });
 
@@ -87,20 +87,28 @@ function OuterPolyhedron({ mousePos, activeInfo }: { mousePos: { x: number; y: n
     <mesh ref={meshRef}>
       <dodecahedronGeometry args={[2.8, 0]} />
       <meshBasicMaterial 
-        color={activeInfo.color} 
+        color={color} 
         wireframe 
         transparent 
-        opacity={activeInfo.opacity * 0.1}
+        opacity={0.1}
       />
     </mesh>
   );
 }
 
-function ParticleCloud({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
+function ParticleCloud({ 
+  mousePos, 
+  scrollDelta 
+}: { 
+  mousePos: { x: number; y: number };
+  scrollDelta: { x: number; y: number };
+}) {
   const pointsRef = useRef<THREE.Points>(null);
+  const quality = getOptimal3DQuality();
   
   const { positions, originalPositions, count } = useMemo(() => {
-    const count = 500;
+    // Reduce particle count based on device performance
+    const count = quality === 'low' ? 150 : quality === 'medium' ? 300 : 500;
     const positions = new Float32Array(count * 3);
     const originalPositions = new Float32Array(count * 3);
     
@@ -125,25 +133,36 @@ function ParticleCloud({ mousePos, activeInfo }: { mousePos: { x: number; y: num
     return { positions, originalPositions, count };
   }, []);
 
+  const accumulatedRotation = useRef({ x: 0, y: 0 });
+
   useFrame((state) => {
     if (pointsRef.current) {
       const positionsAttr = pointsRef.current.geometry.attributes.position;
       const posArray = positionsAttr.array as Float32Array;
       
+      // Накопление вращения от скролла
+      accumulatedRotation.current.y += scrollDelta.x * 0.12;
+      accumulatedRotation.current.x += scrollDelta.y * 0.12;
+      accumulatedRotation.current.x *= 0.96;
+      accumulatedRotation.current.y *= 0.96;
+      
+      // Усиленное влияние мыши (в 2 раза)
+      const dx = mousePos.x * 1.0;
+      const dy = mousePos.y * 1.0;
+      
       for (let i = 0; i < count; i++) {
         const idx = i * 3;
-        const dx = mousePos.x * 0.5;
-        const dy = mousePos.y * 0.5;
         
-        posArray[idx] += (originalPositions[idx] + dx - posArray[idx]) * 0.05;
-        posArray[idx + 1] += (originalPositions[idx + 1] + dy - posArray[idx + 1]) * 0.05;
-        posArray[idx + 2] += (originalPositions[idx + 2] - posArray[idx + 2]) * 0.05;
+        posArray[idx] += (originalPositions[idx] + dx - posArray[idx]) * 0.08;
+        posArray[idx + 1] += (originalPositions[idx + 1] + dy - posArray[idx + 1]) * 0.08;
+        posArray[idx + 2] += (originalPositions[idx + 2] - posArray[idx + 2]) * 0.08;
       }
       
       positionsAttr.needsUpdate = true;
       
-      pointsRef.current.rotation.x = state.clock.elapsedTime * 0.02;
-      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.03;
+      // Базовая анимация + скролл
+      pointsRef.current.rotation.x = state.clock.elapsedTime * 0.02 + accumulatedRotation.current.x;
+      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.03 + accumulatedRotation.current.y;
     }
   });
 
@@ -158,75 +177,17 @@ function ParticleCloud({ mousePos, activeInfo }: { mousePos: { x: number; y: num
         />
       </bufferGeometry>
       <pointsMaterial 
-        color={activeInfo.color} 
-        size={0.03} 
+        color={color} 
+        size={quality === 'low' ? 0.04 : 0.03} 
         transparent 
-        opacity={activeInfo.opacity * 0.7}
+        opacity={0.7}
         sizeAttenuation
       />
     </points>
   );
 }
 
-function OrbitalRings({ mousePos, activeInfo }: { mousePos: { x: number; y: number }, activeInfo: typeof sphereInfo[0] }) {
-  const group = useRef<THREE.Group>(null);
-  
-  useFrame((state) => {
-    if (group.current) {
-      group.current.rotation.x = mousePos.y * 0.2;
-      group.current.rotation.z = mousePos.x * 0.2;
-    }
-  });
-
-  const rings = useMemo(() => [
-    { radius: 2.5, rotation: [0, 0, 0], speed: 0.5 },
-    { radius: 2.7, rotation: [Math.PI / 4, 0, 0], speed: -0.3 },
-    { radius: 2.9, rotation: [0, Math.PI / 4, Math.PI / 6], speed: 0.2 },
-  ], []);
-
-  return (
-    <group ref={group}>
-      {rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} index={i} activeInfo={activeInfo} />
-      ))}
-    </group>
-  );
-}
-
-function OrbitalRing({ 
-  radius, 
-  rotation, 
-  speed, 
-  index, 
-  activeInfo 
-}: { 
-  radius: number; 
-  rotation: number[]; 
-  speed: number; 
-  index: number;
-  activeInfo: typeof sphereInfo[0];
-}) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.z = state.clock.elapsedTime * speed;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef} rotation={rotation as [number, number, number]}>
-      <torusGeometry args={[radius, 0.005, 8, 64]} />
-      <meshBasicMaterial 
-        color={activeInfo.color} 
-        transparent 
-        opacity={activeInfo.opacity * (0.3 - index * 0.08)}
-      />
-    </mesh>
-  );
-}
-
-function InnerGlow({ activeInfo }: { activeInfo: typeof sphereInfo[0] }) {
+function InnerGlow() {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
@@ -248,127 +209,149 @@ function InnerGlow({ activeInfo }: { activeInfo: typeof sphereInfo[0] }) {
   );
 }
 
-function SphereScene({ mousePos, activeInfo }: SphereSceneProps) {
+function FloatingLabel({ 
+  text, 
+  index, 
+  mousePos,
+  scrollDelta 
+}: { 
+  text: string; 
+  index: number;
+  mousePos: { x: number; y: number };
+  scrollDelta: { x: number; y: number };
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const { camera } = useThree();
+  const [hovered, setHovered] = useState(false);
+  const accumulatedRotation = useRef({ x: 0, z: 0 });
+  
+  // Calculate position on sphere surface
+  const radius = useMemo(() => {
+    // Different orbits for each label
+    const baseRadius = 3.2;
+    const orbitOffset = (index % 3) * 0.3; // 3 different orbit levels
+    return baseRadius + orbitOffset;
+  }, [index]);
+  
+  const position = useMemo(() => {
+    const angle = (index / directions.length) * Math.PI * 2;
+    const verticalAngle = (index % 3) * (Math.PI / 6) - Math.PI / 6;
+    
+    const x = radius * Math.cos(angle) * Math.cos(verticalAngle);
+    const y = radius * Math.sin(verticalAngle);
+    const z = radius * Math.sin(angle) * Math.cos(verticalAngle);
+    
+    return [x, y, z] as [number, number, number];
+  }, [index, radius]);
+  
+  useFrame((state) => {
+    if (groupRef.current) {
+      // Накопление вращения от скролла
+      accumulatedRotation.current.x += scrollDelta.y * 0.1;
+      accumulatedRotation.current.z += scrollDelta.x * 0.1;
+      accumulatedRotation.current.x *= 0.96;
+      accumulatedRotation.current.z *= 0.96;
+      
+      // Rotate around sphere
+      const speed = 0.1 + (index % 3) * 0.05; // Different speeds
+      groupRef.current.rotation.y = state.clock.elapsedTime * speed;
+      
+      // Усиленное влияние мыши (в 2.5 раза)
+      groupRef.current.rotation.x = mousePos.y * 0.25 + accumulatedRotation.current.x;
+      groupRef.current.rotation.z = mousePos.x * 0.25 + accumulatedRotation.current.z;
+    }
+  });
+  
+  return (
+    <group ref={groupRef} position={position}>
+      <Html
+        center
+        distanceFactor={0.5}
+        style={{
+          pointerEvents: 'auto',
+          userSelect: 'none',
+        }}
+        transform
+        occlude
+      >
+        <div
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          className="font-mono text-[9px] md:text-[10px] text-engrave-fresco tracking-wider
+                     bg-ink-chrome/95 backdrop-blur-xl border border-stone-anthracite/50
+                     px-3 py-2 whitespace-nowrap transition-all
+                     hover:border-engrave-line/50 hover:text-engrave-line"
+          style={{
+            transform: hovered ? 'scale(1.1)' : 'scale(1)',
+          }}
+        >
+          {text}
+        </div>
+      </Html>
+    </group>
+  );
+}
+
+function SphereScene({ 
+  mousePos, 
+  scrollDelta 
+}: { 
+  mousePos: { x: number; y: number };
+  scrollDelta: { x: number; y: number };
+}) {
   return (
     <group>
-      <InnerGlow activeInfo={activeInfo} />
-      <ParticleCloud mousePos={mousePos} activeInfo={activeInfo} />
-      <IcosahedronWireframe mousePos={mousePos} activeInfo={activeInfo} />
-      <OuterPolyhedron mousePos={mousePos} activeInfo={activeInfo} />
-      <OrbitalRings mousePos={mousePos} activeInfo={activeInfo} />
+      <InnerGlow />
+      <NeuralNodeCircle scrollDelta={scrollDelta} />
+      <ParticleCloud mousePos={mousePos} scrollDelta={scrollDelta} />
+      <IcosahedronWireframe mousePos={mousePos} scrollDelta={scrollDelta} />
+      <OuterPolyhedron mousePos={mousePos} scrollDelta={scrollDelta} />
+      
+      {/* Floating labels */}
+      {directions.map((direction, index) => (
+        <FloatingLabel 
+          key={index}
+          text={direction}
+          index={index}
+          mousePos={mousePos}
+          scrollDelta={scrollDelta}
+        />
+      ))}
     </group>
   );
 }
 
 interface InteractiveSphereProps {
   mousePos: { x: number; y: number };
+  scrollDelta?: { x: number; y: number };
 }
 
-export default function InteractiveSphere({ mousePos }: InteractiveSphereProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const activeInfo = sphereInfo[currentIndex];
-
-  const nextInfo = () => {
-    setCurrentIndex((prev) => (prev + 1) % sphereInfo.length);
-  };
-
-  const prevInfo = () => {
-    setCurrentIndex((prev) => (prev === 0 ? sphereInfo.length - 1 : prev - 1));
-  };
-
-  // Auto-rotate every 8 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isHovered) {
-        setCurrentIndex((prev) => (prev + 1) % sphereInfo.length);
-      }
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [isHovered]);
-
+export default function InteractiveSphere({ 
+  mousePos, 
+  scrollDelta = { x: 0, y: 0 } 
+}: InteractiveSphereProps) {
+  const quality = getOptimal3DQuality();
+  const mobile = isMobile();
+  
   return (
-    <div 
-      className="relative w-full h-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="relative w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 7], fov: 45 }}
+        camera={{ position: [0, 0, 7], fov: mobile ? 50 : 45 }}
         gl={{ 
-          antialias: true, 
+          antialias: quality !== 'low', 
           alpha: true,
-          powerPreference: 'high-performance'
+          powerPreference: quality === 'low' ? 'low-power' : 'high-performance',
+          stencil: false,
+          depth: true,
         }}
+        dpr={quality === 'low' ? [1, 1.5] : [1, 2]}
         style={{ background: 'transparent' }}
+        performance={{ min: 0.5 }}
       >
-        <SphereScene 
-          mousePos={mousePos} 
-          activeInfo={activeInfo}
-        />
+        <Suspense fallback={null}>
+          <SphereScene mousePos={mousePos} scrollDelta={scrollDelta} />
+        </Suspense>
       </Canvas>
-
-      {/* Navigation */}
-      <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 md:gap-4 z-10">
-        <button
-          onClick={prevInfo}
-          className="p-2 border border-stone-anthracite/50 bg-ink-chrome/80 
-                   hover:border-engrave-line/30 transition-colors"
-        >
-          <ChevronLeft size={16} className="text-engrave-line" />
-        </button>
-        
-        <div className="flex gap-1">
-          {sphereInfo.map((info, i) => (
-            <button
-              key={info.id}
-              onClick={() => setCurrentIndex(i)}
-              className={`w-2 h-2 border transition-all ${
-                currentIndex === i
-                  ? 'bg-engrave-line border-engrave-line'
-                  : 'bg-stone-anthracite border-stone-anthracite/50'
-              }`}
-            />
-          ))}
-        </div>
-        
-        <button
-          onClick={nextInfo}
-          className="p-2 border border-stone-anthracite/50 bg-ink-chrome/80 
-                   hover:border-engrave-line/30 transition-colors"
-        >
-          <ChevronRight size={16} className="text-engrave-line" />
-        </button>
-      </div>
-
-      {/* Info Panel */}
-      <motion.div
-        key={activeInfo.id}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="absolute top-2 left-2 right-2 md:top-4 md:left-4 md:right-auto md:w-80 
-                 bg-ink-chrome/95 border border-stone-anthracite/50 p-3 md:p-4 backdrop-blur-xl z-10"
-      >
-        <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-          {currentIndex + 1} / {sphereInfo.length}
-        </div>
-        <h3 className="font-mono text-sm text-engrave-fresco mb-2">
-          {activeInfo.title}
-        </h3>
-        <p className="font-mono text-[10px] text-stone-slate leading-relaxed mb-3">
-          {activeInfo.description}
-        </p>
-        <div className="pt-3 border-t border-stone-anthracite/30">
-          <div className="font-mono text-lg text-engrave-line tracking-wider mb-1">
-            {activeInfo.formula}
-          </div>
-          <div className="font-mono text-[9px] text-stone-slate tracking-[0.3em] uppercase">
-            {activeInfo.formulaLabel}
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 }

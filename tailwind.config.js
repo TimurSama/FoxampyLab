@@ -16,15 +16,15 @@ module.exports = {
           matte: '#1a1a1c',
           anthracite: '#2a2a2e',
           graphite: '#4a4a52',
-          // Better readable slate color
-          slate: '#9a9aa8',
+          // Better readable slate color - improved contrast (WCAG AA compliant: 4.5:1+)
+          slate: '#b0b0c0', // Changed from #9a9aa8 for better contrast
         },
         engrave: {
           line: '#e8e8e8',
           fresco: '#f5f5f5',
-          // Medium tones for better hierarchy
-          mid: '#c8c8d0',
-          dim: '#8888a0',
+          // Medium tones for better hierarchy - improved contrast
+          mid: '#d0d0d8', // Changed from #c8c8d0 for better contrast
+          dim: '#a0a0b0', // Changed from #8888a0 for better contrast (WCAG AA)
         },
         chrome: '#d0d0d8',
       },

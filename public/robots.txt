@@ -1,0 +1,16 @@
+# robots.txt for FRACTALIX.LAB
+
+User-agent: *
+Allow: /
+
+# Disallow admin and game pages from indexing
+Disallow: /admin/
+Disallow: /game/
+
+# Sitemap
+Sitemap: https://yourusername.github.io/FoxampyLab/sitemap.xml
+
+
+
+
+
