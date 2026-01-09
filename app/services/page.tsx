@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import FanMenu from '@/components/layout/FanMenu';
 import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ServicesPage() {
@@ -209,8 +208,6 @@ export default function ServicesPage() {
           </div>
         </section>
       </main>
-
-      <FanMenu />
     </div>
   );
 }

@@ -11,7 +11,6 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
-import FanMenu from '@/components/layout/FanMenu';
 import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ContactPage() {
@@ -241,8 +240,6 @@ export default function ContactPage() {
           </div>
         </section>
       </main>
-
-      <FanMenu />
     </div>
   );
 }

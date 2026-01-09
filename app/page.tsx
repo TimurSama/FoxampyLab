@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/layout/Header';
-import FanMenu from '@/components/layout/FanMenu';
 import InteractiveSphere from '@/components/visuals/InteractiveSphere';
 import PointGlobe from '@/components/visuals/PointGlobe';
 import TerrainGrid from '@/components/visuals/TerrainGrid';
@@ -761,9 +760,6 @@ function MainContent() {
                 </div>
               </div>
             </footer>
-
-            {/* Fan Menu */}
-            <FanMenu />
 
             {/* User Cabinet */}
             <UserCabinet />

@@ -10,7 +10,6 @@ import {
   ExternalLink
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
-import FanMenu from '@/components/layout/FanMenu';
 import { useLocale } from '@/contexts/LocaleContext';
 
 export default function VenturesPage() {
@@ -220,8 +219,6 @@ export default function VenturesPage() {
           </div>
         </section>
       </main>
-
-      <FanMenu />
     </div>
   );
 }

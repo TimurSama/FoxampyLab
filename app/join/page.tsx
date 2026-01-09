@@ -19,7 +19,6 @@ import {
   MessageCircle
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
-import FanMenu from '@/components/layout/FanMenu';
 import { useLocale } from '@/contexts/LocaleContext';
 
 export default function JoinPage() {
@@ -359,8 +358,6 @@ export default function JoinPage() {
         </section>
       </main>
 
-      <FanMenu />
-      
       {/* Corner decorations */}
       <div className="fixed top-4 left-4 w-8 h-8 border-t border-l border-stone-anthracite/20 pointer-events-none" />
       <div className="fixed top-4 right-4 w-8 h-8 border-t border-r border-stone-anthracite/20 pointer-events-none" />
