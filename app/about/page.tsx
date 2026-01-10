@@ -18,100 +18,102 @@ import {
 import Header from '@/components/layout/Header';
 import Link from 'next/link';
 import { trackCTA } from '@/lib/analytics';
-
-const values = [
-  {
-    icon: <Lightbulb size={24} />,
-    title: 'ИННОВАЦИИ',
-    description: 'Экспериментируем с передовыми технологиями и создаём решения, которых ещё не существует.',
-  },
-  {
-    icon: <Target size={24} />,
-    title: 'ФОКУС НА РЕЗУЛЬТАТ',
-    description: 'Каждый проект нацелен на достижение конкретных бизнес-целей и измеримых результатов.',
-  },
-  {
-    icon: <Users size={24} />,
-    title: 'КОМАНДА ЭКСПЕРТОВ',
-    description: 'Объединяем специалистов из разных областей: разработка, дизайн, бизнес, наука.',
-  },
-  {
-    icon: <Zap size={24} />,
-    title: 'СКОРОСТЬ И КАЧЕСТВО',
-    description: 'Балансируем между быстрой реализацией и высоким качеством исполнения.',
-  },
-];
-
-const expertise = [
-  {
-    category: 'БИЗНЕС И СТРАТЕГИРОВАНИЕ',
-    icon: <TrendingUp size={20} />,
-    items: [
-      'Бизнес-моделирование',
-      'Стратегическое планирование',
-      'Unit-экономика',
-      'Анализ рынка',
-      'Инвестиционные стратегии',
-    ],
-  },
-  {
-    category: 'ДИЗАЙН И АРХИТЕКТУРА',
-    icon: <Palette size={20} />,
-    items: [
-      'UI/UX дизайн',
-      'Брендинг и идентичность',
-      'Архитектура систем',
-      '3D визуализация',
-      'Моушн-дизайн',
-    ],
-  },
-  {
-    category: 'САЙТЫ И ПРИЛОЖЕНИЯ',
-    icon: <Code size={20} />,
-    items: [
-      'Веб-разработка',
-      'Мобильные приложения',
-      'Full-stack решения',
-      'API и интеграции',
-      'DevOps и инфраструктура',
-    ],
-  },
-  {
-    category: 'ЭКОСИСТЕМЫ',
-    icon: <Layers size={20} />,
-    items: [
-      'WEB3 платформы',
-      'Блокчейн решения',
-      'Децентрализованные системы',
-      'Смарт-контракты',
-      'NFT и токенизация',
-    ],
-  },
-  {
-    category: 'МАРКЕТИНГ И БРЕНДИНГ',
-    icon: <Network size={20} />,
-    items: [
-      'Стратегия запуска',
-      'Контент-маркетинг',
-      'PR и коммуникации',
-      'Сообщество и партнёрства',
-      'Performance маркетинг',
-    ],
-  },
-  {
-    category: 'ВИДЕО И КИНО',
-    icon: <Film size={20} />,
-    items: [
-      'Видеопродакшн',
-      'Моушн-графика',
-      '3D анимация',
-      'Постпродакшн',
-      'Креативное производство',
-    ],
-  },
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function AboutPage() {
+  const { t } = useI18n();
+  
+  const values = [
+    {
+      icon: <Lightbulb size={24} />,
+      titleKey: 'about.values.innovation.title',
+      descriptionKey: 'about.values.innovation.description',
+    },
+    {
+      icon: <Target size={24} />,
+      titleKey: 'about.values.result.title',
+      descriptionKey: 'about.values.result.description',
+    },
+    {
+      icon: <Users size={24} />,
+      titleKey: 'about.values.team.title',
+      descriptionKey: 'about.values.team.description',
+    },
+    {
+      icon: <Zap size={24} />,
+      titleKey: 'about.values.speed.title',
+      descriptionKey: 'about.values.speed.description',
+    },
+  ];
+
+  const expertise = [
+    {
+      categoryKey: 'about.expertise.business.category',
+      icon: <TrendingUp size={20} />,
+      items: [
+        'about.expertise.business.item1',
+        'about.expertise.business.item2',
+        'about.expertise.business.item3',
+        'about.expertise.business.item4',
+        'about.expertise.business.item5',
+      ],
+    },
+    {
+      categoryKey: 'about.expertise.design.category',
+      icon: <Palette size={20} />,
+      items: [
+        'about.expertise.design.item1',
+        'about.expertise.design.item2',
+        'about.expertise.design.item3',
+        'about.expertise.design.item4',
+        'about.expertise.design.item5',
+      ],
+    },
+    {
+      categoryKey: 'about.expertise.webapp.category',
+      icon: <Code size={20} />,
+      items: [
+        'about.expertise.webapp.item1',
+        'about.expertise.webapp.item2',
+        'about.expertise.webapp.item3',
+        'about.expertise.webapp.item4',
+        'about.expertise.webapp.item5',
+      ],
+    },
+    {
+      categoryKey: 'about.expertise.ecosystems.category',
+      icon: <Layers size={20} />,
+      items: [
+        'about.expertise.ecosystems.item1',
+        'about.expertise.ecosystems.item2',
+        'about.expertise.ecosystems.item3',
+        'about.expertise.ecosystems.item4',
+        'about.expertise.ecosystems.item5',
+      ],
+    },
+    {
+      categoryKey: 'about.expertise.marketing.category',
+      icon: <Network size={20} />,
+      items: [
+        'about.expertise.marketing.item1',
+        'about.expertise.marketing.item2',
+        'about.expertise.marketing.item3',
+        'about.expertise.marketing.item4',
+        'about.expertise.marketing.item5',
+      ],
+    },
+    {
+      categoryKey: 'about.expertise.video.category',
+      icon: <Film size={20} />,
+      items: [
+        'about.expertise.video.item1',
+        'about.expertise.video.item2',
+        'about.expertise.video.item3',
+        'about.expertise.video.item4',
+        'about.expertise.video.item5',
+      ],
+    },
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" aria-hidden="true" />
@@ -128,18 +130,15 @@ export default function AboutPage() {
               className="text-center mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── ABOUT ───
+                ─── {t('about.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                ЛАБОРАТОРИЯ
-                <br />
-                <span className="text-chrome">РАЗРАБОТОК ИННОВАЦИЙ</span>
+                {t('about.title')}
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl mx-auto leading-relaxed">
-                Создаём решения на стыке технологий, бизнеса и творчества. 
-                От концепции до реализации — полный цикл разработки инновационных продуктов и экосистем.
+                {t('about.description')}
               </p>
             </motion.div>
           </div>
@@ -158,13 +157,10 @@ export default function AboutPage() {
                 <FlaskConical className="w-8 h-8 text-engrave-line flex-shrink-0 mt-1" />
                 <div>
                   <h2 className="font-mono text-xl text-engrave-fresco mb-4">
-                    МИССИЯ
+                    {t('about.mission.title')}
                   </h2>
                   <p className="font-mono text-sm text-stone-slate leading-relaxed">
-                    Разрабатывать инновационные решения, которые объединяют бизнес-стратегию, 
-                    креативное искусство и передовые технологии. Создавать экосистемы и продукты, 
-                    которые формируют будущее цифрового пространства и открывают новые возможности 
-                    для бизнеса и творчества.
+                    {t('about.mission.description')}
                   </p>
                 </div>
               </div>
@@ -182,7 +178,7 @@ export default function AboutPage() {
               className="mb-12 text-center"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ЦЕННОСТИ
+                {t('about.values.title')}
               </h2>
             </motion.div>
             
@@ -203,10 +199,10 @@ export default function AboutPage() {
                     </div>
                     <div>
                       <h3 className="font-mono text-base text-engrave-fresco mb-2">
-                        {value.title}
+                        {t(value.titleKey)}
                       </h3>
                       <p className="font-mono text-sm text-stone-slate leading-relaxed">
-                        {value.description}
+                        {t(value.descriptionKey)}
                       </p>
                     </div>
                   </div>
@@ -226,10 +222,10 @@ export default function AboutPage() {
               className="mb-12 text-center"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ЭКСПЕРТИЗА
+                {t('about.expertise.title')}
               </h2>
               <p className="font-mono text-sm text-stone-slate">
-                Направления работы и области компетенций
+                {t('about.expertise.subtitle')}
               </p>
             </motion.div>
             
@@ -248,18 +244,18 @@ export default function AboutPage() {
                       {area.icon}
                     </div>
                     <h3 className="font-mono text-sm text-engrave-fresco">
-                      {area.category}
+                      {t(area.categoryKey)}
                     </h3>
                   </div>
                   
                   <ul className="space-y-2">
-                    {area.items.map((item, j) => (
+                    {area.items.map((itemKey, j) => (
                       <li
                         key={j}
                         className="font-mono text-[10px] text-stone-slate flex items-center gap-2"
                       >
                         <span className="w-1 h-1 bg-engrave-dim" />
-                        {item}
+                        {t(itemKey)}
                       </li>
                     ))}
                   </ul>
@@ -279,34 +275,34 @@ export default function AboutPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ К СОТРУДНИЧЕСТВУ?
+                {t('about.cta.title')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и возможности создания инновационных решений.
+                {t('about.cta.description')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contact">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => trackCTA('Связаться', 'About Page')}
+                    onClick={() => trackCTA(t('about.cta.contactButton'), 'About Page')}
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              min-h-[44px] min-w-[120px]"
-                    aria-label="Связаться с нами"
+                    aria-label={t('common.contact')}
                   >
-                    СВЯЗАТЬСЯ
+                    {t('about.cta.contactButton')}
                   </motion.button>
                 </Link>
                 <Link href="/cases">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => trackCTA('Кейсы', 'About Page')}
+                    onClick={() => trackCTA(t('about.cta.casesButton'), 'About Page')}
                     className="px-8 py-4 border border-engrave-line text-engrave-fresco font-mono text-sm tracking-widest
                              min-h-[44px] min-w-[120px]"
-                    aria-label="Посмотреть кейсы"
+                    aria-label={t('header.menu.cases')}
                   >
-                    КЕЙСЫ
+                    {t('about.cta.casesButton')}
                   </motion.button>
                 </Link>
               </div>

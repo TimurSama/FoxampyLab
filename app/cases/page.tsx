@@ -5,114 +5,46 @@ import { ExternalLink, Code, Palette, TrendingUp, Layers, Network, Film, ArrowRi
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import { trackCTA } from '@/lib/analytics';
+import { useI18n } from '@/lib/i18n/context';
 
 interface Case {
   id: string;
-  title: string;
-  category: string;
-  description: string;
-  longDescription: string;
+  titleKey: string;
+  categoryKey: string;
+  descriptionKey: string;
   technologies: string[];
-  results: string[];
-  image?: string;
-  link?: string;
   icon: React.ReactNode;
 }
 
-const cases: Case[] = [
-  {
-    id: 'ecosystem-1',
-    title: 'WEB3 ЭКОСИСТЕМА',
-    category: 'Экосистемы',
-    description: 'Комплексная платформа для управления цифровыми активами и децентрализованными финансами.',
-    longDescription: 'Разработана полная экосистема включающая веб-приложение, мобильное приложение, смарт-контракты и маркетплейс. Реализована интеграция с несколькими блокчейн-сетями, система стейкинга и yield farming.',
-    technologies: ['React', 'Next.js', 'Solidity', 'Web3.js', 'Node.js', 'PostgreSQL'],
-    results: [
-      'Привлечено $950K инвестиций',
-      '17K+ активных пользователей',
-      'Транзакции на сумму $5M+',
-      'Интеграция с 3 блокчейн-сетями'
-    ],
-    icon: <Layers size={24} />,
-  },
-  {
-    id: 'branding-1',
-    title: 'РЕБРЕНДИНГ СТАРТАПА',
-    category: 'Брендинг',
-    description: 'Полный ребрендинг технологического стартапа с разработкой визуальной идентичности и коммуникационной стратегии.',
-    longDescription: 'Проведен глубокий анализ рынка и конкурентов, разработана новая визуальная идентичность, создан брендбук и гайдлайны. Реализована коммуникационная стратегия для запуска продукта.',
-    technologies: ['Figma', 'Adobe Creative Suite', 'Brand Strategy'],
-    results: [
-      'Увеличение узнаваемости бренда на 300%',
-      'Рост конверсий на 45%',
-      'Запуск успешного продукта',
-      'Положительные отзывы инвесторов'
-    ],
-    icon: <Palette size={24} />,
-  },
-  {
-    id: 'web-app-1',
-    title: 'КОРПОРАТИВНАЯ ПЛАТФОРМА',
-    category: 'Веб-приложения',
-    description: 'Высоконагруженная платформа для управления бизнес-процессами крупной компании.',
-    longDescription: 'Разработана комплексная платформа с модулями управления проектами, аналитикой, интеграциями с внешними сервисами. Реализована система ролей и прав доступа, дашборды с реальным временем обновления данных.',
-    technologies: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Redis', 'Docker'],
-    results: [
-      'Сокращение времени на задачи на 40%',
-      'Обработка 10K+ запросов в минуту',
-      'Интеграция с 15+ внешними сервисами',
-      '99.9% uptime'
-    ],
-    icon: <Code size={24} />,
-  },
-  {
-    id: 'strategy-1',
-    title: 'БИЗНЕС-СТРАТЕГИЯ ДЛЯ СТАРТАПА',
-    category: 'Бизнес и стратегирование',
-    description: 'Разработка бизнес-модели и стратегии выхода на рынок для технологического стартапа.',
-    longDescription: 'Проведен анализ рынка, конкурентов и пользователей. Разработана бизнес-модель, unit-экономика, стратегия монетизации. Создан roadmap развития на 2 года с ключевыми метриками и точками принятия решений.',
-    technologies: ['Market Research', 'Business Modeling', 'Financial Planning'],
-    results: [
-      'Привлечено $500K seed инвестиций',
-      'Валидация бизнес-модели',
-      'Запуск MVP за 3 месяца',
-      'Первые 1000 пользователей'
-    ],
-    icon: <TrendingUp size={24} />,
-  },
-  {
-    id: 'marketing-1',
-    title: 'КРИПТОМАРКЕТИНГ КАМПАНИЯ',
-    category: 'Маркетинг',
-    description: 'Комплексная маркетинговая кампания для запуска блокчейн-проекта.',
-    longDescription: 'Разработана стратегия запуска, контент-план, проведены PR-кампании, построено сообщество. Реализованы партнерства с инфлюенсерами и медиа. Организованы мероприятия и AMA сессии.',
-    technologies: ['Content Strategy', 'Community Building', 'PR', 'Performance Marketing'],
-    results: [
-      'Рост сообщества до 50K+ участников',
-      'Охват 2M+ пользователей',
-      'Успешный запуск токена',
-      'Партнерства с 20+ проектами'
-    ],
-    icon: <Network size={24} />,
-  },
-  {
-    id: 'video-1',
-    title: 'ВИДЕО ДЛЯ ЗАПУСКА ПРОДУКТА',
-    category: 'Видео',
-    description: 'Создание промо-ролика и эксплейнера для запуска нового продукта.',
-    longDescription: 'Разработана концепция, написан сценарий, проведена съемка и постпродакшн. Созданы версии для разных платформ (YouTube, Instagram, сайт). Добавлена анимация и моушн-дизайн.',
-    technologies: ['Video Production', 'Motion Design', 'Post-production', '3D Animation'],
-    results: [
-      '1M+ просмотров на YouTube',
-      'Рост конверсий на 60%',
-      'Вирусное распространение',
-      'Положительные отзывы'
-    ],
-    icon: <Film size={24} />,
-  },
-];
-
 export default function CasesPage() {
+  const { t } = useI18n();
+  
+  const cases: Case[] = [
+    {
+      id: 'web3-bank',
+      titleKey: 'cases.web3Bank.title',
+      categoryKey: 'cases.web3Bank.category',
+      descriptionKey: 'cases.web3Bank.description',
+      technologies: ['Solidity', 'Web3.js', 'Everscale', 'Ethereum', 'Smart Contracts', 'Bridge Technology'],
+      icon: <Layers size={24} />,
+    },
+    {
+      id: 'dao-ecology',
+      titleKey: 'cases.daoEcology.title',
+      categoryKey: 'cases.daoEcology.category',
+      descriptionKey: 'cases.daoEcology.description',
+      technologies: ['Blockchain', 'DeFi', 'AI/ML', 'Big Data', 'DAO Governance'],
+      icon: <Network size={24} />,
+    },
+    {
+      id: 'mail-services',
+      titleKey: 'cases.mailServices.title',
+      categoryKey: 'cases.mailServices.category',
+      descriptionKey: 'cases.mailServices.description',
+      technologies: ['React', 'Node.js', 'Mobile Development', 'API Integration', 'Service Management'],
+      icon: <Code size={24} />,
+    },
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" aria-hidden="true" />
@@ -129,17 +61,15 @@ export default function CasesPage() {
               className="text-center mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── PORTFOLIO ───
+                ─── {t('cases.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                КЕЙСЫ И
-                <br />
-                <span className="text-chrome">ПРОЕКТЫ</span>
+                {t('cases.title')}
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-2xl mx-auto leading-relaxed">
-                Примеры реализованных проектов, демонстрирующих наш подход к созданию инновационных решений.
+                {t('cases.description')}
               </p>
             </motion.div>
           </div>
@@ -166,18 +96,18 @@ export default function CasesPage() {
                         {caseItem.icon}
                       </div>
                       <span className="font-mono text-[9px] text-stone-slate tracking-widest">
-                        {caseItem.category}
+                        {t(caseItem.categoryKey)}
                       </span>
                     </div>
 
                     {/* Title */}
                     <h3 className="font-mono text-lg text-engrave-fresco mb-3">
-                      {caseItem.title}
+                      {t(caseItem.titleKey)}
                     </h3>
 
                     {/* Description */}
                     <p className="font-mono text-sm text-stone-slate leading-relaxed mb-4 flex-grow">
-                      {caseItem.description}
+                      {t(caseItem.descriptionKey)}
                     </p>
 
                     {/* Technologies */}
@@ -200,19 +130,10 @@ export default function CasesPage() {
                       </div>
                     </div>
 
-                    {/* Key Result */}
-                    {caseItem.results[0] && (
-                      <div className="mb-4 p-3 bg-ink-deep border border-stone-anthracite/20">
-                        <p className="font-mono text-[10px] text-engrave-dim mb-1">РЕЗУЛЬТАТ:</p>
-                        <p className="font-mono text-xs text-engrave-fresco">
-                          {caseItem.results[0]}
-                        </p>
-                      </div>
-                    )}
-
+                    {/* Technologies Only - No Results */}
                     {/* Link */}
-                    <div className="flex items-center gap-2 font-mono text-[10px] text-engrave-dim group-hover:text-engrave-line transition-colors">
-                      ПОДРОБНЕЕ <ArrowRight size={10} />
+                    <div className="flex items-center gap-2 font-mono text-[10px] text-engrave-dim group-hover:text-engrave-line transition-colors mt-auto">
+                      {t('cases.learnMore')} <ArrowRight size={10} />
                     </div>
                   </div>
                 </motion.div>
@@ -231,20 +152,20 @@ export default function CasesPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ЗАИНТЕРЕСОВАНЫ В СОТРУДНИЧЕСТВЕ?
+                {t('cases.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и возможности создания подобных решений.
+                {t('cases.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => trackCTA('Обсудить проект', 'Cases Page')}
+                  onClick={() => trackCTA(t('cases.ctaButton'), 'Cases Page')}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
-                  aria-label="Связаться с нами"
+                  aria-label={t('common.contact')}
                 >
-                  ОБСУДИТЬ ПРОЕКТ
+                  {t('cases.ctaButton')}
                 </motion.button>
               </Link>
             </motion.div>
