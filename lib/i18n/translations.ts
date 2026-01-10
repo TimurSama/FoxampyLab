@@ -142,18 +142,6 @@ export interface Translations {
     contact: string;
     cancel: string;
   };
-  cases?: {
-    tagline?: string;
-    title?: string;
-    description?: string;
-    learnMore?: string;
-    ctaTitle?: string;
-    ctaDescription?: string;
-    ctaButton?: string;
-    web3Bank?: any;
-    daoEcology?: any;
-    mailServices?: any;
-  };
   modals: {
     sendResearch: {
       title: string;
@@ -180,6 +168,116 @@ export interface Translations {
       descriptionPlaceholder: string;
       optional: string;
       confirm: string;
+    };
+  };
+  about: {
+    tagline: string;
+    title: string;
+    description: string;
+    mission: {
+      title: string;
+      description: string;
+    };
+    values: {
+      title: string;
+      innovation: {
+        title: string;
+        description: string;
+      };
+      result: {
+        title: string;
+        description: string;
+      };
+      team: {
+        title: string;
+        description: string;
+      };
+      speed: {
+        title: string;
+        description: string;
+      };
+    };
+    expertise: {
+      title: string;
+      subtitle: string;
+      business: {
+        category: string;
+        item1: string;
+        item2: string;
+        item3: string;
+        item4: string;
+        item5: string;
+      };
+      design: {
+        category: string;
+        item1: string;
+        item2: string;
+        item3: string;
+        item4: string;
+        item5: string;
+      };
+      webapp: {
+        category: string;
+        item1: string;
+        item2: string;
+        item3: string;
+        item4: string;
+        item5: string;
+      };
+      ecosystems: {
+        category: string;
+        item1: string;
+        item2: string;
+        item3: string;
+        item4: string;
+        item5: string;
+      };
+      marketing: {
+        category: string;
+        item1: string;
+        item2: string;
+        item3: string;
+        item4: string;
+        item5: string;
+      };
+      video: {
+        category: string;
+        item1: string;
+        item2: string;
+        item3: string;
+        item4: string;
+        item5: string;
+      };
+    };
+    cta: {
+      title: string;
+      description: string;
+      contactButton: string;
+      casesButton: string;
+    };
+  };
+  cases: {
+    tagline: string;
+    title: string;
+    description: string;
+    learnMore: string;
+    ctaTitle: string;
+    ctaDescription: string;
+    ctaButton: string;
+    web3Bank: {
+      title: string;
+      category: string;
+      description: string;
+    };
+    daoEcology: {
+      title: string;
+      category: string;
+      description: string;
+    };
+    mailServices: {
+      title: string;
+      category: string;
+      description: string;
     };
   };
 }
@@ -1212,6 +1310,116 @@ export const translations: Record<Language, Translations> = {
         confirm: 'تأكيد الحجز',
       },
     },
+    about: {
+      tagline: 'ABOUT',
+      title: 'INNOVATION DEVELOPMENT LABORATORY',
+      description: 'We create solutions at the intersection of technology, business, and creativity. From concept to implementation — full cycle development of innovative products and ecosystems.',
+      mission: {
+        title: 'MISSION',
+        description: 'Develop innovative solutions that combine business strategy, creative art, and cutting-edge technologies. Create ecosystems and products that shape the future of digital space and open new opportunities for business and creativity.',
+      },
+      values: {
+        title: 'VALUES',
+        innovation: {
+          title: 'INNOVATION',
+          description: 'We experiment with cutting-edge technologies and create solutions that don\'t exist yet.',
+        },
+        result: {
+          title: 'FOCUS ON RESULTS',
+          description: 'Every project is aimed at achieving specific business goals and measurable results.',
+        },
+        team: {
+          title: 'EXPERT TEAM',
+          description: 'We unite specialists from different fields: development, design, business, science.',
+        },
+        speed: {
+          title: 'SPEED AND QUALITY',
+          description: 'We balance between fast implementation and high quality execution.',
+        },
+      },
+      expertise: {
+        title: 'EXPERTISE',
+        subtitle: 'Areas of work and competencies',
+        business: {
+          category: 'BUSINESS & STRATEGY',
+          item1: 'Business modeling',
+          item2: 'Strategic planning',
+          item3: 'Unit economics',
+          item4: 'Market analysis',
+          item5: 'Investment strategies',
+        },
+        design: {
+          category: 'DESIGN & ARCHITECTURE',
+          item1: 'UI/UX design',
+          item2: 'Branding and identity',
+          item3: 'System architecture',
+          item4: '3D visualization',
+          item5: 'Motion design',
+        },
+        webapp: {
+          category: 'WEBSITES & APPLICATIONS',
+          item1: 'Web development',
+          item2: 'Mobile applications',
+          item3: 'Full-stack solutions',
+          item4: 'API and integrations',
+          item5: 'DevOps and infrastructure',
+        },
+        ecosystems: {
+          category: 'ECOSYSTEMS',
+          item1: 'WEB3 platforms',
+          item2: 'Blockchain solutions',
+          item3: 'Decentralized systems',
+          item4: 'Smart contracts',
+          item5: 'NFT and tokenization',
+        },
+        marketing: {
+          category: 'MARKETING & BRANDING',
+          item1: 'Launch strategy',
+          item2: 'Content marketing',
+          item3: 'PR and communications',
+          item4: 'Community and partnerships',
+          item5: 'Performance marketing',
+        },
+        video: {
+          category: 'VIDEO & FILM',
+          item1: 'Video production',
+          item2: 'Motion graphics',
+          item3: '3D animation',
+          item4: 'Post-production',
+          item5: 'Creative production',
+        },
+      },
+      cta: {
+        title: 'READY TO COLLABORATE?',
+        description: 'Let\'s discuss your project and opportunities to create innovative solutions.',
+        contactButton: 'CONTACT',
+        casesButton: 'CASES',
+      },
+    },
+    cases: {
+      tagline: 'PORTFOLIO',
+      title: 'CASES & PROJECTS',
+      description: 'Examples of implemented projects demonstrating our approach to creating innovative solutions.',
+      learnMore: 'LEARN MORE',
+      ctaTitle: 'INTERESTED IN COLLABORATION?',
+      ctaDescription: 'Let\'s discuss your project and opportunities to create similar solutions.',
+      ctaButton: 'DISCUSS PROJECT',
+      web3Bank: {
+        title: 'WEB3 BLOCKCHAIN BANK SYSTEM',
+        category: 'Blockchain',
+        description: 'Automated cross-chain system for estimating user reputation on the blockchain. The system analyzes user transactions to assign a credibility score. Technical solution: creation of fungible tokens on Everscale and their bridging to Ethereum where they transform into Non-Fungible Tokens (SBTs).',
+      },
+      daoEcology: {
+        title: 'DAO ECOLOGY PLATFORM (VODeco)',
+        category: 'Blockchain Ecosystem',
+        description: 'Special DAO system for collecting, analyzing, and providing universal access to environmental information, starting with water resources. Integrates AI for learning and finding solutions to save the environment. Blockchain and DeFi provide the DAO structure for selection, decision-making, and campaign management.',
+      },
+      mailServices: {
+        title: 'MAIL AND CLEANING SERVICES SYSTEM',
+        category: 'Service Platform',
+        description: 'Unified service platform for sending and delivering mail and parcels, cleaning clothes, renting lockers, and handling deliveries, all within a convenient user interface application.',
+      },
+    },
   },
   es: {
     header: {
@@ -1310,6 +1518,116 @@ export const translations: Record<Language, Translations> = {
         descriptionPlaceholder: 'Breve descripción de tu proyecto...',
         optional: 'Opcional',
         confirm: 'Confirmar Reserva',
+      },
+    },
+    about: {
+      tagline: 'ABOUT',
+      title: 'INNOVATION DEVELOPMENT LABORATORY',
+      description: 'We create solutions at the intersection of technology, business, and creativity. From concept to implementation — full cycle development of innovative products and ecosystems.',
+      mission: {
+        title: 'MISSION',
+        description: 'Develop innovative solutions that combine business strategy, creative art, and cutting-edge technologies. Create ecosystems and products that shape the future of digital space and open new opportunities for business and creativity.',
+      },
+      values: {
+        title: 'VALUES',
+        innovation: {
+          title: 'INNOVATION',
+          description: 'We experiment with cutting-edge technologies and create solutions that don\'t exist yet.',
+        },
+        result: {
+          title: 'FOCUS ON RESULTS',
+          description: 'Every project is aimed at achieving specific business goals and measurable results.',
+        },
+        team: {
+          title: 'EXPERT TEAM',
+          description: 'We unite specialists from different fields: development, design, business, science.',
+        },
+        speed: {
+          title: 'SPEED AND QUALITY',
+          description: 'We balance between fast implementation and high quality execution.',
+        },
+      },
+      expertise: {
+        title: 'EXPERTISE',
+        subtitle: 'Areas of work and competencies',
+        business: {
+          category: 'BUSINESS & STRATEGY',
+          item1: 'Business modeling',
+          item2: 'Strategic planning',
+          item3: 'Unit economics',
+          item4: 'Market analysis',
+          item5: 'Investment strategies',
+        },
+        design: {
+          category: 'DESIGN & ARCHITECTURE',
+          item1: 'UI/UX design',
+          item2: 'Branding and identity',
+          item3: 'System architecture',
+          item4: '3D visualization',
+          item5: 'Motion design',
+        },
+        webapp: {
+          category: 'WEBSITES & APPLICATIONS',
+          item1: 'Web development',
+          item2: 'Mobile applications',
+          item3: 'Full-stack solutions',
+          item4: 'API and integrations',
+          item5: 'DevOps and infrastructure',
+        },
+        ecosystems: {
+          category: 'ECOSYSTEMS',
+          item1: 'WEB3 platforms',
+          item2: 'Blockchain solutions',
+          item3: 'Decentralized systems',
+          item4: 'Smart contracts',
+          item5: 'NFT and tokenization',
+        },
+        marketing: {
+          category: 'MARKETING & BRANDING',
+          item1: 'Launch strategy',
+          item2: 'Content marketing',
+          item3: 'PR and communications',
+          item4: 'Community and partnerships',
+          item5: 'Performance marketing',
+        },
+        video: {
+          category: 'VIDEO & FILM',
+          item1: 'Video production',
+          item2: 'Motion graphics',
+          item3: '3D animation',
+          item4: 'Post-production',
+          item5: 'Creative production',
+        },
+      },
+      cta: {
+        title: 'READY TO COLLABORATE?',
+        description: 'Let\'s discuss your project and opportunities to create innovative solutions.',
+        contactButton: 'CONTACT',
+        casesButton: 'CASES',
+      },
+    },
+    cases: {
+      tagline: 'PORTFOLIO',
+      title: 'CASES & PROJECTS',
+      description: 'Examples of implemented projects demonstrating our approach to creating innovative solutions.',
+      learnMore: 'LEARN MORE',
+      ctaTitle: 'INTERESTED IN COLLABORATION?',
+      ctaDescription: 'Let\'s discuss your project and opportunities to create similar solutions.',
+      ctaButton: 'DISCUSS PROJECT',
+      web3Bank: {
+        title: 'WEB3 BLOCKCHAIN BANK SYSTEM',
+        category: 'Blockchain',
+        description: 'Automated cross-chain system for estimating user reputation on the blockchain. The system analyzes user transactions to assign a credibility score. Technical solution: creation of fungible tokens on Everscale and their bridging to Ethereum where they transform into Non-Fungible Tokens (SBTs).',
+      },
+      daoEcology: {
+        title: 'DAO ECOLOGY PLATFORM (VODeco)',
+        category: 'Blockchain Ecosystem',
+        description: 'Special DAO system for collecting, analyzing, and providing universal access to environmental information, starting with water resources. Integrates AI for learning and finding solutions to save the environment. Blockchain and DeFi provide the DAO structure for selection, decision-making, and campaign management.',
+      },
+      mailServices: {
+        title: 'MAIL AND CLEANING SERVICES SYSTEM',
+        category: 'Service Platform',
+        description: 'Unified service platform for sending and delivering mail and parcels, cleaning clothes, renting lockers, and handling deliveries, all within a convenient user interface application.',
       },
     },
   },
@@ -1412,6 +1730,116 @@ export const translations: Record<Language, Translations> = {
         confirm: 'Potwierdź Rezerwację',
       },
     },
+    about: {
+      tagline: 'ABOUT',
+      title: 'INNOVATION DEVELOPMENT LABORATORY',
+      description: 'We create solutions at the intersection of technology, business, and creativity. From concept to implementation — full cycle development of innovative products and ecosystems.',
+      mission: {
+        title: 'MISSION',
+        description: 'Develop innovative solutions that combine business strategy, creative art, and cutting-edge technologies. Create ecosystems and products that shape the future of digital space and open new opportunities for business and creativity.',
+      },
+      values: {
+        title: 'VALUES',
+        innovation: {
+          title: 'INNOVATION',
+          description: 'We experiment with cutting-edge technologies and create solutions that don\'t exist yet.',
+        },
+        result: {
+          title: 'FOCUS ON RESULTS',
+          description: 'Every project is aimed at achieving specific business goals and measurable results.',
+        },
+        team: {
+          title: 'EXPERT TEAM',
+          description: 'We unite specialists from different fields: development, design, business, science.',
+        },
+        speed: {
+          title: 'SPEED AND QUALITY',
+          description: 'We balance between fast implementation and high quality execution.',
+        },
+      },
+      expertise: {
+        title: 'EXPERTISE',
+        subtitle: 'Areas of work and competencies',
+        business: {
+          category: 'BUSINESS & STRATEGY',
+          item1: 'Business modeling',
+          item2: 'Strategic planning',
+          item3: 'Unit economics',
+          item4: 'Market analysis',
+          item5: 'Investment strategies',
+        },
+        design: {
+          category: 'DESIGN & ARCHITECTURE',
+          item1: 'UI/UX design',
+          item2: 'Branding and identity',
+          item3: 'System architecture',
+          item4: '3D visualization',
+          item5: 'Motion design',
+        },
+        webapp: {
+          category: 'WEBSITES & APPLICATIONS',
+          item1: 'Web development',
+          item2: 'Mobile applications',
+          item3: 'Full-stack solutions',
+          item4: 'API and integrations',
+          item5: 'DevOps and infrastructure',
+        },
+        ecosystems: {
+          category: 'ECOSYSTEMS',
+          item1: 'WEB3 platforms',
+          item2: 'Blockchain solutions',
+          item3: 'Decentralized systems',
+          item4: 'Smart contracts',
+          item5: 'NFT and tokenization',
+        },
+        marketing: {
+          category: 'MARKETING & BRANDING',
+          item1: 'Launch strategy',
+          item2: 'Content marketing',
+          item3: 'PR and communications',
+          item4: 'Community and partnerships',
+          item5: 'Performance marketing',
+        },
+        video: {
+          category: 'VIDEO & FILM',
+          item1: 'Video production',
+          item2: 'Motion graphics',
+          item3: '3D animation',
+          item4: 'Post-production',
+          item5: 'Creative production',
+        },
+      },
+      cta: {
+        title: 'READY TO COLLABORATE?',
+        description: 'Let\'s discuss your project and opportunities to create innovative solutions.',
+        contactButton: 'CONTACT',
+        casesButton: 'CASES',
+      },
+    },
+    cases: {
+      tagline: 'PORTFOLIO',
+      title: 'CASES & PROJECTS',
+      description: 'Examples of implemented projects demonstrating our approach to creating innovative solutions.',
+      learnMore: 'LEARN MORE',
+      ctaTitle: 'INTERESTED IN COLLABORATION?',
+      ctaDescription: 'Let\'s discuss your project and opportunities to create similar solutions.',
+      ctaButton: 'DISCUSS PROJECT',
+      web3Bank: {
+        title: 'WEB3 BLOCKCHAIN BANK SYSTEM',
+        category: 'Blockchain',
+        description: 'Automated cross-chain system for estimating user reputation on the blockchain. The system analyzes user transactions to assign a credibility score. Technical solution: creation of fungible tokens on Everscale and their bridging to Ethereum where they transform into Non-Fungible Tokens (SBTs).',
+      },
+      daoEcology: {
+        title: 'DAO ECOLOGY PLATFORM (VODeco)',
+        category: 'Blockchain Ecosystem',
+        description: 'Special DAO system for collecting, analyzing, and providing universal access to environmental information, starting with water resources. Integrates AI for learning and finding solutions to save the environment. Blockchain and DeFi provide the DAO structure for selection, decision-making, and campaign management.',
+      },
+      mailServices: {
+        title: 'MAIL AND CLEANING SERVICES SYSTEM',
+        category: 'Service Platform',
+        description: 'Unified service platform for sending and delivering mail and parcels, cleaning clothes, renting lockers, and handling deliveries, all within a convenient user interface application.',
+      },
+    },
   },
   fr: {
     header: {
@@ -1512,6 +1940,116 @@ export const translations: Record<Language, Translations> = {
         confirm: 'Confirmer la Réservation',
       },
     },
+    about: {
+      tagline: 'ABOUT',
+      title: 'INNOVATION DEVELOPMENT LABORATORY',
+      description: 'We create solutions at the intersection of technology, business, and creativity. From concept to implementation — full cycle development of innovative products and ecosystems.',
+      mission: {
+        title: 'MISSION',
+        description: 'Develop innovative solutions that combine business strategy, creative art, and cutting-edge technologies. Create ecosystems and products that shape the future of digital space and open new opportunities for business and creativity.',
+      },
+      values: {
+        title: 'VALUES',
+        innovation: {
+          title: 'INNOVATION',
+          description: 'We experiment with cutting-edge technologies and create solutions that don\'t exist yet.',
+        },
+        result: {
+          title: 'FOCUS ON RESULTS',
+          description: 'Every project is aimed at achieving specific business goals and measurable results.',
+        },
+        team: {
+          title: 'EXPERT TEAM',
+          description: 'We unite specialists from different fields: development, design, business, science.',
+        },
+        speed: {
+          title: 'SPEED AND QUALITY',
+          description: 'We balance between fast implementation and high quality execution.',
+        },
+      },
+      expertise: {
+        title: 'EXPERTISE',
+        subtitle: 'Areas of work and competencies',
+        business: {
+          category: 'BUSINESS & STRATEGY',
+          item1: 'Business modeling',
+          item2: 'Strategic planning',
+          item3: 'Unit economics',
+          item4: 'Market analysis',
+          item5: 'Investment strategies',
+        },
+        design: {
+          category: 'DESIGN & ARCHITECTURE',
+          item1: 'UI/UX design',
+          item2: 'Branding and identity',
+          item3: 'System architecture',
+          item4: '3D visualization',
+          item5: 'Motion design',
+        },
+        webapp: {
+          category: 'WEBSITES & APPLICATIONS',
+          item1: 'Web development',
+          item2: 'Mobile applications',
+          item3: 'Full-stack solutions',
+          item4: 'API and integrations',
+          item5: 'DevOps and infrastructure',
+        },
+        ecosystems: {
+          category: 'ECOSYSTEMS',
+          item1: 'WEB3 platforms',
+          item2: 'Blockchain solutions',
+          item3: 'Decentralized systems',
+          item4: 'Smart contracts',
+          item5: 'NFT and tokenization',
+        },
+        marketing: {
+          category: 'MARKETING & BRANDING',
+          item1: 'Launch strategy',
+          item2: 'Content marketing',
+          item3: 'PR and communications',
+          item4: 'Community and partnerships',
+          item5: 'Performance marketing',
+        },
+        video: {
+          category: 'VIDEO & FILM',
+          item1: 'Video production',
+          item2: 'Motion graphics',
+          item3: '3D animation',
+          item4: 'Post-production',
+          item5: 'Creative production',
+        },
+      },
+      cta: {
+        title: 'READY TO COLLABORATE?',
+        description: 'Let\'s discuss your project and opportunities to create innovative solutions.',
+        contactButton: 'CONTACT',
+        casesButton: 'CASES',
+      },
+    },
+    cases: {
+      tagline: 'PORTFOLIO',
+      title: 'CASES & PROJECTS',
+      description: 'Examples of implemented projects demonstrating our approach to creating innovative solutions.',
+      learnMore: 'LEARN MORE',
+      ctaTitle: 'INTERESTED IN COLLABORATION?',
+      ctaDescription: 'Let\'s discuss your project and opportunities to create similar solutions.',
+      ctaButton: 'DISCUSS PROJECT',
+      web3Bank: {
+        title: 'WEB3 BLOCKCHAIN BANK SYSTEM',
+        category: 'Blockchain',
+        description: 'Automated cross-chain system for estimating user reputation on the blockchain. The system analyzes user transactions to assign a credibility score. Technical solution: creation of fungible tokens on Everscale and their bridging to Ethereum where they transform into Non-Fungible Tokens (SBTs).',
+      },
+      daoEcology: {
+        title: 'DAO ECOLOGY PLATFORM (VODeco)',
+        category: 'Blockchain Ecosystem',
+        description: 'Special DAO system for collecting, analyzing, and providing universal access to environmental information, starting with water resources. Integrates AI for learning and finding solutions to save the environment. Blockchain and DeFi provide the DAO structure for selection, decision-making, and campaign management.',
+      },
+      mailServices: {
+        title: 'MAIL AND CLEANING SERVICES SYSTEM',
+        category: 'Service Platform',
+        description: 'Unified service platform for sending and delivering mail and parcels, cleaning clothes, renting lockers, and handling deliveries, all within a convenient user interface application.',
+      },
+    },
   },
   de: {
     header: {
@@ -1610,6 +2148,116 @@ export const translations: Record<Language, Translations> = {
         descriptionPlaceholder: 'Kurze Beschreibung Ihres Projekts...',
         optional: 'Optional',
         confirm: 'Buchung Bestätigen',
+      },
+    },
+    about: {
+      tagline: 'ABOUT',
+      title: 'INNOVATION DEVELOPMENT LABORATORY',
+      description: 'We create solutions at the intersection of technology, business, and creativity. From concept to implementation — full cycle development of innovative products and ecosystems.',
+      mission: {
+        title: 'MISSION',
+        description: 'Develop innovative solutions that combine business strategy, creative art, and cutting-edge technologies. Create ecosystems and products that shape the future of digital space and open new opportunities for business and creativity.',
+      },
+      values: {
+        title: 'VALUES',
+        innovation: {
+          title: 'INNOVATION',
+          description: 'We experiment with cutting-edge technologies and create solutions that don\'t exist yet.',
+        },
+        result: {
+          title: 'FOCUS ON RESULTS',
+          description: 'Every project is aimed at achieving specific business goals and measurable results.',
+        },
+        team: {
+          title: 'EXPERT TEAM',
+          description: 'We unite specialists from different fields: development, design, business, science.',
+        },
+        speed: {
+          title: 'SPEED AND QUALITY',
+          description: 'We balance between fast implementation and high quality execution.',
+        },
+      },
+      expertise: {
+        title: 'EXPERTISE',
+        subtitle: 'Areas of work and competencies',
+        business: {
+          category: 'BUSINESS & STRATEGY',
+          item1: 'Business modeling',
+          item2: 'Strategic planning',
+          item3: 'Unit economics',
+          item4: 'Market analysis',
+          item5: 'Investment strategies',
+        },
+        design: {
+          category: 'DESIGN & ARCHITECTURE',
+          item1: 'UI/UX design',
+          item2: 'Branding and identity',
+          item3: 'System architecture',
+          item4: '3D visualization',
+          item5: 'Motion design',
+        },
+        webapp: {
+          category: 'WEBSITES & APPLICATIONS',
+          item1: 'Web development',
+          item2: 'Mobile applications',
+          item3: 'Full-stack solutions',
+          item4: 'API and integrations',
+          item5: 'DevOps and infrastructure',
+        },
+        ecosystems: {
+          category: 'ECOSYSTEMS',
+          item1: 'WEB3 platforms',
+          item2: 'Blockchain solutions',
+          item3: 'Decentralized systems',
+          item4: 'Smart contracts',
+          item5: 'NFT and tokenization',
+        },
+        marketing: {
+          category: 'MARKETING & BRANDING',
+          item1: 'Launch strategy',
+          item2: 'Content marketing',
+          item3: 'PR and communications',
+          item4: 'Community and partnerships',
+          item5: 'Performance marketing',
+        },
+        video: {
+          category: 'VIDEO & FILM',
+          item1: 'Video production',
+          item2: 'Motion graphics',
+          item3: '3D animation',
+          item4: 'Post-production',
+          item5: 'Creative production',
+        },
+      },
+      cta: {
+        title: 'READY TO COLLABORATE?',
+        description: 'Let\'s discuss your project and opportunities to create innovative solutions.',
+        contactButton: 'CONTACT',
+        casesButton: 'CASES',
+      },
+    },
+    cases: {
+      tagline: 'PORTFOLIO',
+      title: 'CASES & PROJECTS',
+      description: 'Examples of implemented projects demonstrating our approach to creating innovative solutions.',
+      learnMore: 'LEARN MORE',
+      ctaTitle: 'INTERESTED IN COLLABORATION?',
+      ctaDescription: 'Let\'s discuss your project and opportunities to create similar solutions.',
+      ctaButton: 'DISCUSS PROJECT',
+      web3Bank: {
+        title: 'WEB3 BLOCKCHAIN BANK SYSTEM',
+        category: 'Blockchain',
+        description: 'Automated cross-chain system for estimating user reputation on the blockchain. The system analyzes user transactions to assign a credibility score. Technical solution: creation of fungible tokens on Everscale and their bridging to Ethereum where they transform into Non-Fungible Tokens (SBTs).',
+      },
+      daoEcology: {
+        title: 'DAO ECOLOGY PLATFORM (VODeco)',
+        category: 'Blockchain Ecosystem',
+        description: 'Special DAO system for collecting, analyzing, and providing universal access to environmental information, starting with water resources. Integrates AI for learning and finding solutions to save the environment. Blockchain and DeFi provide the DAO structure for selection, decision-making, and campaign management.',
+      },
+      mailServices: {
+        title: 'MAIL AND CLEANING SERVICES SYSTEM',
+        category: 'Service Platform',
+        description: 'Unified service platform for sending and delivering mail and parcels, cleaning clothes, renting lockers, and handling deliveries, all within a convenient user interface application.',
       },
     },
   },
