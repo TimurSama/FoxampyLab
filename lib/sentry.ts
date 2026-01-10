@@ -14,12 +14,13 @@ export const initSentry = () => {
   }
 
   // Dynamic import to reduce bundle size
-  import('@sentry/nextjs').then((Sentry) => {
+  // @ts-expect-error - Sentry is optional dependency
+  import('@sentry/nextjs').then((Sentry: any) => {
     Sentry.init({
       dsn: SENTRY_DSN,
       environment: process.env.NODE_ENV,
       tracesSampleRate: 0.1, // 10% of transactions
-      beforeSend(event) {
+      beforeSend(event: any) {
         // Filter out development errors
         if (event.environment === 'development') {
           return null;
