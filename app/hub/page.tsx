@@ -82,14 +82,13 @@ const projects: Project[] = [
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const { t, language } = useI18n();
-  // Для неанглийских языков используем английские версии (можно расширить позже)
-  const isEn = language === 'en' || language === 'ar' || language === 'es' || language === 'pl' || language === 'fr' || language === 'de';
+  // По умолчанию используем английский, для русского показываем русские версии
   
   const statusLabels = {
-    active: t.hub.statusActive,
-    pilot: t.hub.statusPilot,
-    beta: t.hub.statusBeta,
-    planning: t.hub.statusPlanning,
+    active: t('hub.statusActive'),
+    pilot: t('hub.statusPilot'),
+    beta: t('hub.statusBeta'),
+    planning: t('hub.statusPlanning'),
   };
 
   const statusColors = {
@@ -112,14 +111,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <div className="flex-1">
             <div className="inline-block px-3 py-1 mb-3 border border-stone-anthracite/30 bg-ink-deep/50">
               <span className="font-mono text-[10px] text-stone-slate tracking-wider">
-                {language === 'ru' ? project.category : project.categoryEn}
+                {language !== 'en' ? project.category : project.categoryEn}
               </span>
             </div>
             <h3 className="text-xl md:text-2xl font-mono text-engrave-fresco mb-2 group-hover:text-engrave-line transition-colors">
-              {language === 'ru' ? project.name : project.nameEn}
+              {language !== 'en' ? project.name : project.nameEn}
             </h3>
             <p className="font-mono text-sm text-stone-slate leading-relaxed">
-              {language === 'ru' ? project.description : project.descriptionEn}
+              {language !== 'en' ? project.description : project.descriptionEn}
             </p>
           </div>
         </div>
@@ -127,7 +126,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xs text-stone-slate">{t.hub.progress}</span>
+            <span className="font-mono text-xs text-stone-slate">{t('hub.progress')}</span>
             <span className="font-mono text-xs text-engrave-fresco">{project.progress}%</span>
           </div>
           <div className="h-2 bg-ink-deep border border-stone-anthracite/30 overflow-hidden">
@@ -146,7 +145,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <div className="flex items-center gap-2">
               <Target size={14} className="text-engrave-dim" />
               <span className="font-mono text-[10px] text-stone-slate uppercase tracking-wider">
-                {t.hub.investment}
+                {t('hub.investment')}
               </span>
             </div>
             <p className="font-mono text-sm text-engrave-fresco">
@@ -159,7 +158,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <div className="flex items-center gap-2">
               <TrendingUp size={14} className="text-engrave-dim" />
               <span className="font-mono text-[10px] text-stone-slate uppercase tracking-wider">
-                {t.hub.invested}
+                {t('hub.invested')}
               </span>
             </div>
             <p className="font-mono text-sm text-engrave-fresco">
@@ -172,7 +171,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <div className="flex items-center gap-2">
               <Calendar size={14} className="text-engrave-dim" />
               <span className="font-mono text-[10px] text-stone-slate uppercase tracking-wider">
-                {t.hub.status}
+                {t('hub.status')}
               </span>
             </div>
             <span className={`inline-block px-2 py-1 border font-mono text-[10px] tracking-wider ${
@@ -193,7 +192,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                      hover:border-engrave-line/50 hover:bg-engrave-line/10 transition-all
                      font-mono text-xs text-engrave-fresco tracking-wider group/link"
           >
-            {t.hub.viewProject}
+            {t('hub.viewProject')}
             <ExternalLink size={12} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
           </a>
         </div>
@@ -223,16 +222,16 @@ export default function HubPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 border border-stone-anthracite/30 mb-4">
                 <Users size={14} className="text-engrave-dim" />
                 <span className="font-mono text-[10px] text-stone-slate tracking-widest">
-                  {t.hub.openForInvestment}
+                  {t('hub.openForInvestment')}
                 </span>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-mono text-engrave-fresco tracking-tight leading-tight">
-                {t.hub.title}
+                {t('hub.title')}
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate leading-relaxed max-w-2xl mx-auto">
-                {t.hub.subtitle}
+                {t('hub.subtitle')}
               </p>
             </motion.div>
 

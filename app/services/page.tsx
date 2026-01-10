@@ -14,10 +14,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function ServicesPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const services = [
     {

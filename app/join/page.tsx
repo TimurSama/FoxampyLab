@@ -19,10 +19,10 @@ import {
   MessageCircle
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function JoinPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [formStep, setFormStep] = useState(0);
 

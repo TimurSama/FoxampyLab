@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
 import MatrixRain from '@/components/variants/MatrixRain';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function VariantA() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 

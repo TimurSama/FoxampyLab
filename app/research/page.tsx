@@ -18,10 +18,10 @@ import {
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import TerrainGrid from '@/components/visuals/TerrainGrid';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function ResearchPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const researchAreas = [
     {

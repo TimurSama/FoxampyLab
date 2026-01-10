@@ -9,10 +9,8 @@ import TerrainGrid from '@/components/visuals/TerrainGrid';
 import WireframeBubbles from '@/components/visuals/WireframeBubbles';
 import MethodologyLayers from '@/components/visuals/MethodologyLayers';
 import BootSequence from '@/components/boot/BootSequence';
-import { RewardProvider, useRewards } from '@/components/interactive/HiddenRewards';
-import UserCabinet from '@/components/interactive/UserCabinet';
 import Link from 'next/link';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 import { 
   ArrowRight, 
   Layers, 
@@ -22,7 +20,6 @@ import {
   TrendingUp, 
   FileText, 
   Film,
-  Gift,
   Users,
   FlaskConical,
   Sparkles,
@@ -32,7 +29,7 @@ import {
 } from 'lucide-react';
 
 function MainContent() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [isBooting, setIsBooting] = useState(true);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [sphereClicked, setSphereClicked] = useState(false);
@@ -41,7 +38,6 @@ function MainContent() {
   const [ctaHovered, setCtaHovered] = useState<Set<string>>(new Set());
   const [terrainInteracted, setTerrainInteracted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { discoverReward, setShowRewardsPanel, totalDiscovered, rewards } = useRewards();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsBooting(false), 2500);
@@ -63,41 +59,33 @@ function MainContent() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Handle sphere click reward
+  // Handle sphere click
   const handleSphereInteraction = useCallback(() => {
     if (!sphereClicked) {
       setSphereClicked(true);
-      discoverReward('FIRST_CLICK');
     }
-  }, [sphereClicked, discoverReward]);
+  }, [sphereClicked]);
 
-  // Handle globe rotation reward
+  // Handle globe rotation
   const handleGlobeRotation = useCallback(() => {
     if (!globeRotated) {
       setGlobeRotated(true);
-      discoverReward('GLOBE_EXPLORER');
     }
-  }, [globeRotated, discoverReward]);
+  }, [globeRotated]);
 
-  // Handle terrain interaction reward  
+  // Handle terrain interaction
   const handleTerrainInteraction = useCallback(() => {
     if (!terrainInteracted) {
       setTerrainInteracted(true);
-      discoverReward('TERRAIN_ARTIST');
     }
-  }, [terrainInteracted, discoverReward]);
+  }, [terrainInteracted]);
 
-  // Handle CTA hover reward
+  // Handle CTA hover
   const handleCtaHover = useCallback((ctaId: string) => {
     const newSet = new Set(ctaHovered);
     newSet.add(ctaId);
     setCtaHovered(newSet);
-    
-    // Check if all CTAs visited
-    if (newSet.size >= 3) {
-      discoverReward('CONTACT_READY');
-    }
-  }, [ctaHovered, discoverReward]);
+  }, [ctaHovered]);
 
   const services = [
     { icon: <Layers size={24} />, name: t('services.ecosystems'), desc: t('services.ecosystemsDesc'), href: '/services' },
@@ -109,12 +97,6 @@ function MainContent() {
     { icon: <Film size={24} />, name: t('services.video'), desc: t('services.videoDesc'), href: '/services' },
   ];
 
-  const metrics = [
-    { value: '50+', label: t('home.projects') },
-    { value: '$2M+', label: t('home.raised') },
-    { value: '98%', label: t('home.success') },
-    { value: '24/7', label: t('home.support') },
-  ];
 
   const whyMultidisciplinary = [
     {
@@ -217,27 +199,6 @@ function MainContent() {
                 </div>
 
                 {/* Metrics - Integrated in sphere area */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1, duration: 0.8 }}
-                  className="mt-8 md:mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
-                >
-                  {metrics.map((metric, i) => (
-                    <motion.div
-                      key={i}
-                      whileHover={{ scale: 1.05, borderColor: 'rgba(232, 232, 232, 0.3)' }}
-                      className="p-4 border border-stone-anthracite/30 bg-ink-chrome/30 backdrop-blur-sm text-left"
-                    >
-                      <div className="font-mono text-2xl md:text-3xl text-engrave-fresco mb-1">
-                        {metric.value}
-                      </div>
-                      <div className="font-mono text-[9px] text-stone-slate tracking-widest">
-                        {metric.label}
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
               </motion.div>
 
               {/* Right side - Interactive sphere */}
@@ -503,16 +464,6 @@ function MainContent() {
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-2">
                         {t('home.coverage')}
                       </div>
-                      <div className="space-y-2">
-                        <div>
-                          <div className="font-mono text-xl text-engrave-fresco">50+</div>
-                          <div className="font-mono text-[9px] text-stone-slate">{t('home.countries')}</div>
-                        </div>
-                        <div className="pt-2 border-t border-stone-anthracite/30">
-                          <div className="font-mono text-sm text-engrave-line">24/7</div>
-                          <div className="font-mono text-[9px] text-stone-slate">{t('home.support')}</div>
-                        </div>
-                      </div>
                     </motion.div>
                     
                     {/* Top right - Description */}
@@ -582,16 +533,6 @@ function MainContent() {
                       <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-3">
                         {t('home.portfolio')}
                       </div>
-                      <div className="space-y-3">
-                        <div>
-                          <div className="font-mono text-2xl text-engrave-fresco">$2M+</div>
-                          <div className="font-mono text-[9px] text-stone-slate">{t('home.raised')}</div>
-                        </div>
-                        <div className="pt-2 border-t border-stone-anthracite/30">
-                          <div className="font-mono text-lg text-engrave-line">15+</div>
-                          <div className="font-mono text-[9px] text-stone-slate">{t('home.projects')}</div>
-                        </div>
-                      </div>
                     </motion.div>
                     
                     {/* Top right - Description */}
@@ -629,28 +570,6 @@ function MainContent() {
                       </Link>
                     </div>
                     
-                    {/* Bottom left - Metrics */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="absolute bottom-4 left-4 bg-ink-chrome/95 border border-stone-anthracite/50 p-3 backdrop-blur-xl pointer-events-auto"
-                    >
-                      <div className="font-mono text-[8px] text-stone-slate tracking-widest mb-2">
-                        {t('home.metrics')}
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <div className="font-mono text-lg text-engrave-fresco">98%</div>
-                          <div className="font-mono text-[8px] text-stone-slate">{t('home.success')}</div>
-                        </div>
-                        <div className="w-px h-8 bg-stone-anthracite/30" />
-                        <div>
-                          <div className="font-mono text-lg text-engrave-line">5+</div>
-                          <div className="font-mono text-[8px] text-stone-slate">{t('home.years')}</div>
-                        </div>
-                      </div>
-                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -743,14 +662,6 @@ function MainContent() {
                   {t('home.footer')}
                 </div>
                 <div className="flex items-center gap-6">
-                  <button 
-                    onClick={() => setShowRewardsPanel(true)}
-                    className="flex items-center gap-2 font-mono text-[10px] text-stone-slate 
-                             hover:text-engrave-line transition-colors"
-                  >
-                    <Gift size={12} />
-                    {t('home.rewards')} ({totalDiscovered}/{rewards.length})
-                  </button>
                   <Link href="/research" className="font-mono text-[10px] text-stone-slate hover:text-engrave-line transition-colors">
                     R&D
                   </Link>
@@ -761,8 +672,6 @@ function MainContent() {
               </div>
             </footer>
 
-            {/* User Cabinet */}
-            <UserCabinet />
           </motion.div>
         )}
       </AnimatePresence>
@@ -777,9 +686,5 @@ function MainContent() {
 }
 
 export default function Home() {
-  return (
-    <RewardProvider>
-      <MainContent />
-    </RewardProvider>
-  );
+  return <MainContent />;
 }

@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Layers, Rocket, Code, Palette, TrendingUp, FileText, Film, ChevronRight } from 'lucide-react';
 import NeonRain from '@/components/variants/NeonRain';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function VariantD() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 

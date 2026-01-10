@@ -1,330 +1,209 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback } from 'react';
-import { Activity, Radio, Search, X, Lock, BarChart3 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Menu, X, Search, ChevronDown, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import LanguageSwitcher from './LanguageSwitcher';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
+import type { Language } from '@/lib/i18n/translations';
 
-// Simple hash function for password verification
-function hashPassword(pass: string): string {
-  let hash = 0;
-  for (let i = 0; i < pass.length; i++) {
-    const char = pass.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return Math.abs(hash).toString(16);
-}
-
-const ADMIN_HASH = 'a2f89c6'; // hash of 5511055
+const menuItemsConfig = [
+  { path: '/hub', label: 'HUB', labelEn: 'HUB' },
+  { path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
+  { path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
+  { path: '/cases', label: 'КЕЙСЫ', labelEn: 'CASES' },
+  { path: '/research', label: 'R&D', labelEn: 'R&D' },
+  { path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
+  { path: '/join', label: 'JOIN', labelEn: 'JOIN' },
+  { path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
+];
 
 export default function Header() {
   const router = useRouter();
-  const { t } = useLocale();
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [isGlitching, setIsGlitching] = useState(false);
-  const [coordinates, setCoordinates] = useState({ lat: '55.7558', lon: '37.6173' });
+  const { t, language, setLanguage } = useI18n();
+  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const { scrollY } = useScroll();
-  
-  const headerOpacity = useTransform(scrollY, [0, 100], [1, 0.95]);
-  const headerBlur = useTransform(scrollY, [0, 100], [0, 10]);
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const languageMenuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Get user's approximate location (optional)
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCoordinates({
-            lat: position.coords.latitude.toFixed(4),
-            lon: position.coords.longitude.toFixed(4)
-          });
-        },
-        () => {
-          // Use default Moscow coordinates if denied
-        }
-      );
-    }
-  }, []);
+  const languages: Language[] = ['en', 'ru', 'ar', 'es', 'pl', 'fr', 'de'];
+  const languageNames: Record<Language, string> = {
+    en: 'EN',
+    ru: 'RU',
+    ar: 'AR',
+    es: 'ES',
+    pl: 'PL',
+    fr: 'FR',
+    de: 'DE',
+  };
 
+  // Close menus on outside click
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
       }
-      setLastScrollY(currentScrollY);
+      if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
+        setLanguageMenuOpen(false);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  const handleLogoHover = () => {
-    setIsGlitching(true);
-    setTimeout(() => setIsGlitching(false), 300);
-  };
+  const handleMenuClick = useCallback((path: string) => {
+    setMenuOpen(false);
+    router.push(path);
+  }, [router]);
 
   const handleSearchSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Check for admin command
-    if (searchQuery.toLowerCase() === 'admin') {
-      setShowPasswordModal(true);
-      setSearchQuery('');
-      setSearchOpen(false);
-      return;
-    }
-
-    // Regular search - navigate to services or show results
     if (searchQuery.trim()) {
-      // Could implement actual search here
+      // Implement search logic here
       setSearchQuery('');
       setSearchOpen(false);
     }
   }, [searchQuery]);
 
-  const handlePasswordSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (hashPassword(password) === ADMIN_HASH) {
-      setShowPasswordModal(false);
-      setPassword('');
-      router.push('/admin');
-    } else {
-      setPasswordError(true);
-      setTimeout(() => setPasswordError(false), 1000);
-    }
-  }, [password, router]);
-
   return (
-    <>
-      <AnimatePresence>
-        {isVisible && (
-          <motion.header
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            style={{ opacity: headerOpacity }}
-            className="fixed top-0 left-0 right-0 z-50 safe-top"
-          >
-            <motion.div 
-              className="mx-4 md:mx-8 mt-4 border border-stone-anthracite/30 bg-ink-deep/80 backdrop-blur-xl"
-              style={{ backdropFilter: `blur(${headerBlur}px)` }}
+    <header className="fixed top-0 left-0 right-0 z-50 mt-2">
+      <div className="mx-4 md:mx-8 border border-stone-anthracite/30 bg-ink-deep/80 backdrop-blur-xl">
+        <div className="px-4 md:px-6 py-3 flex items-center justify-between relative">
+          {/* Burger Menu - Left */}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-3 border border-stone-anthracite/30 text-stone-slate 
+                       hover:text-engrave-line hover:border-engrave-line/20 transition-colors"
             >
-              {/* Main header row */}
-              <div className="px-4 md:px-6 py-3 flex items-center justify-between">
-                {/* Logo */}
-                <Link href="/">
-                  <motion.div 
-                    className="flex items-center gap-3 cursor-pointer group"
-                    onMouseEnter={handleLogoHover}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="relative">
-                      <motion.span 
-                        className={`font-mono text-sm md:text-base tracking-[0.2em] text-engrave-fresco transition-all ${isGlitching ? 'glitch-text' : ''}`}
-                      >
-                        ◈ FRACTALIX.LAB
-                      </motion.span>
-                      {isGlitching && (
-                        <>
-                          <span className="absolute inset-0 font-mono text-sm md:text-base tracking-[0.2em] text-stone-slate/50 translate-x-[2px]">
-                            ◈ FRACTALIX.LAB
-                          </span>
-                          <span className="absolute inset-0 font-mono text-sm md:text-base tracking-[0.2em] text-engrave-line/50 -translate-x-[2px]">
-                            ◈ FRACTALIX.LAB
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </motion.div>
-                </Link>
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
 
-                {/* Game Mode Button */}
-                <Link href="/game">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-2 md:px-3 py-1.5 border border-stone-anthracite/50 
-                             hover:border-engrave-line/30 transition-colors"
-                  >
-                    <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                      {t('common.game')}
-                    </span>
-                  </motion.div>
-                </Link>
+            {/* Dropdown Menu */}
+            <AnimatePresence>
+              {menuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full left-0 mt-2 bg-ink-chrome border border-stone-anthracite/50 
+                           backdrop-blur-xl min-w-[180px] z-50"
+                >
+                  {menuItemsConfig.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => handleMenuClick(item.path)}
+                      className="w-full px-4 py-2.5 text-left font-mono text-xs text-stone-slate 
+                               hover:bg-ink-deep hover:text-engrave-line transition-colors
+                               border-b border-stone-anthracite/20 last:border-b-0"
+                    >
+                      {language !== 'en' ? item.label : item.labelEn}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-                {/* All Designs Button */}
-                <Link href="/vote">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-2 md:px-3 py-1.5 border border-stone-anthracite/50 
-                             hover:border-engrave-line/30 transition-colors"
-                  >
-                    <BarChart3 size={12} className="text-engrave-dim" />
-                    <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                      <span className="hidden sm:inline">ВСЕ ДИЗАЙНЫ</span>
-                      <span className="sm:hidden">ДИЗАЙНЫ</span>
-                    </span>
-                  </motion.div>
-                </Link>
-
-                {/* Search + Status + Language */}
-                <div className="flex items-center gap-3">
-                  {/* Status indicator */}
-                  <div className="hidden md:flex items-center gap-2 px-3 py-1 border border-engrave-line/20">
-                    <motion.div 
-                      className="w-2 h-2 bg-engrave-line"
-                      animate={{ opacity: [1, 0.5, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    <span className="font-mono text-[10px] text-engrave-dim tracking-widest">
-                      {t('common.online')}
-                    </span>
-                  </div>
-
-                  {/* Search */}
-                  <div className="relative">
-                    {searchOpen ? (
-                      <form onSubmit={handleSearchSubmit} className="flex items-center">
-                        <input
-                          type="text"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder={t('common.search')}
-                          autoFocus
-                          className="w-32 md:w-48 px-3 py-1.5 bg-ink-chrome border border-stone-anthracite/50 
-                                   font-mono text-xs text-engrave-fresco placeholder-stone-anthracite
-                                   focus:border-engrave-line/30 focus:outline-none"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
-                          className="p-1.5 text-stone-slate hover:text-engrave-line ml-1"
-                        >
-                          <X size={14} />
-                        </button>
-                      </form>
-                    ) : (
-                      <button
-                        onClick={() => setSearchOpen(true)}
-                        className="p-2 border border-stone-anthracite/30 text-stone-slate 
-                                 hover:text-engrave-line hover:border-engrave-line/20 transition-colors"
-                      >
-                        <Search size={14} />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Language Switcher */}
-                  <LanguageSwitcher />
-                </div>
-              </div>
-
-              {/* Sub-header with system info */}
-              <div className="px-4 md:px-6 py-2 border-t border-stone-anthracite/20 flex items-center justify-between">
-                <div className="flex items-center gap-4 md:gap-6 font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                  <span className="flex items-center gap-1">
-                    <Activity size={10} className="text-engrave-dim" />
-                    v3.0.1
-                  </span>
-                  <span className="hidden sm:inline">{t('common.protocolActive')}</span>
-                  <span className="hidden md:flex items-center gap-1">
-                    <Radio size={10} className="text-engrave-dim" />
-                    LAT:{coordinates.lat} LON:{coordinates.lon}
-                  </span>
-                </div>
-                
-                <div className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-                  <motion.span
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  >
-                    {t('common.signalStrong')}
-                  </motion.span>
-                </div>
-              </div>
-            </motion.div>
-          </motion.header>
-        )}
-      </AnimatePresence>
-
-      {/* Admin Password Modal */}
-      <AnimatePresence>
-        {showPasswordModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-ink-deep/95 backdrop-blur-md flex items-center justify-center p-4"
-            onClick={() => setShowPasswordModal(false)}
-          >
+          {/* Logo - Center */}
+          <Link href="/" className="absolute left-1/2 -translate-x-1/2">
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className={`bg-ink-chrome border ${passwordError ? 'border-stone-slate' : 'border-stone-anthracite/50'} p-8 max-w-sm w-full transition-colors`}
+              className="font-mono text-sm md:text-base tracking-[0.2em] text-engrave-fresco cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <div className="flex items-center gap-3 mb-6">
-                <Lock size={24} className="text-engrave-line" />
-                <div>
-                  <h2 className="font-mono text-lg text-engrave-fresco tracking-wider">
-                    {t('common.adminAccess')}
-                  </h2>
-                  <p className="font-mono text-[10px] text-stone-slate">
-                    {t('common.enterPassword')}
-                  </p>
-                </div>
-              </div>
+              ◈ FRACTALIX.LAB
+            </motion.div>
+          </Link>
 
-              <form onSubmit={handlePasswordSubmit}>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  autoFocus
-                  className={`w-full px-4 py-3 bg-ink-deep border ${passwordError ? 'border-stone-slate' : 'border-stone-anthracite/50'} 
-                           font-mono text-sm text-engrave-fresco
-                           focus:border-engrave-line/30 focus:outline-none transition-colors mb-4`}
-                />
-                
-                <div className="flex gap-3">
+          {/* Search + Language - Right */}
+          <div className="flex items-center gap-3">
+            {/* Search */}
+            <div className="relative">
+              {searchOpen ? (
+                <form onSubmit={handleSearchSubmit} className="flex items-center">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t('header.searchPlaceholder')}
+                    autoFocus
+                    className="w-32 md:w-48 px-3 py-1.5 bg-ink-chrome border border-stone-anthracite/50 
+                             font-mono text-xs text-engrave-fresco placeholder-stone-anthracite
+                             focus:border-engrave-line/30 focus:outline-none"
+                  />
                   <button
                     type="button"
-                    onClick={() => setShowPasswordModal(false)}
-                    className="flex-1 py-3 border border-stone-anthracite/50 font-mono text-xs text-stone-slate
-                             hover:border-engrave-line/20 transition-colors"
+                    onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+                    className="p-1.5 text-stone-slate hover:text-engrave-line ml-1"
                   >
-                    {t('common.cancel')}
+                    <X size={14} />
                   </button>
-                  <button
-                    type="submit"
-                    className="flex-1 py-3 bg-engrave-fresco text-ink-deep font-mono text-xs tracking-widest"
+                </form>
+              ) : (
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  className="p-2 border border-stone-anthracite/30 text-stone-slate 
+                           hover:text-engrave-line hover:border-engrave-line/20 transition-colors"
+                >
+                  <Search size={14} />
+                </button>
+              )}
+            </div>
+
+            {/* Language Switcher */}
+            <div className="relative" ref={languageMenuRef}>
+              <button
+                onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
+                className="px-3 py-2 border border-stone-anthracite/30 text-stone-slate 
+                         hover:text-engrave-line hover:border-engrave-line/20 transition-colors
+                         flex items-center gap-1.5 font-mono text-xs"
+              >
+                <Globe size={14} />
+                <span>{languageNames[language]}</span>
+                <ChevronDown size={12} className={languageMenuOpen ? 'rotate-180' : ''} />
+              </button>
+
+              {/* Language Dropdown */}
+              <AnimatePresence>
+                {languageMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full right-0 mt-2 bg-ink-chrome border border-stone-anthracite/50 
+                             backdrop-blur-xl min-w-[120px] z-50"
                   >
-                    {t('common.login')}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+                    {languages.map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          setLanguageMenuOpen(false);
+                        }}
+                        className={`w-full px-4 py-2 text-left font-mono text-xs transition-colors
+                                 border-b border-stone-anthracite/20 last:border-b-0
+                                 ${language === lang 
+                                   ? 'bg-ink-deep text-engrave-line' 
+                                   : 'text-stone-slate hover:bg-ink-deep hover:text-engrave-line'
+                                 }`}
+                      >
+                        {languageNames[lang]}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }

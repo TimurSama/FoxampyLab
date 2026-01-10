@@ -11,10 +11,10 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
-import { useLocale } from '@/contexts/LocaleContext';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function ContactPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [formState, setFormState] = useState({
     name: '',
     email: '',

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { LocaleProvider } from '@/contexts/LocaleContext'
+import { I18nProvider } from '@/lib/i18n/context'
 
 export const metadata: Metadata = {
   title: 'FRACTALIX.LAB — Digital Laboratory',
@@ -24,14 +24,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <LocaleProvider>
+        <I18nProvider>
           {/* Atmospheric effects */}
           <div className="noise-overlay" />
           <div className="scanlines" />
           <div className="vignette" />
           
           {children}
-        </LocaleProvider>
+        </I18nProvider>
       </body>
     </html>
   )
