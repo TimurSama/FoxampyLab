@@ -14,13 +14,19 @@ const bootLines = [
 export default function BootSequence() {
   const [currentLine, setCurrentLine] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    if (currentLine >= bootLines.length) return;
+    if (currentLine >= bootLines.length) {
+      // Быстрое исчезновение после завершения
+      setTimeout(() => setIsVisible(false), 200);
+      return;
+    }
 
     const line = bootLines[currentLine];
     let charIndex = 0;
 
+    // Ускоренная печать - 15ms вместо 30ms
     const typeInterval = setInterval(() => {
       if (charIndex <= line.length) {
         setDisplayedText(line.slice(0, charIndex));
@@ -30,26 +36,29 @@ export default function BootSequence() {
         setTimeout(() => {
           setCurrentLine(prev => prev + 1);
           setDisplayedText('');
-        }, 200);
+        }, 100); // Уменьшено с 200ms до 100ms
       }
-    }, 30);
+    }, 15); // Ускорено с 30ms до 15ms
 
     return () => clearInterval(typeInterval);
   }, [currentLine]);
+
+  if (!isVisible) return null;
 
   return (
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-50 bg-ink-deep flex items-center justify-center"
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-[9999] bg-ink-deep flex items-center justify-center pointer-events-none"
+      style={{ backdropFilter: 'blur(0px)' }}
     >
       <div className="w-full max-w-md px-8">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
           className="text-center mb-12"
         >
           <div className="font-mono text-2xl md:text-3xl tracking-[0.4em] text-engrave-fresco">
@@ -88,7 +97,7 @@ export default function BootSequence() {
           <motion.div
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
-            transition={{ duration: 2.3, ease: 'linear' }}
+            transition={{ duration: 0.8, ease: 'linear' }} // Ускорено с 2.3s до 0.8s
             className="h-full bg-gradient-to-r from-stone-graphite via-engrave-line to-stone-graphite"
           />
         </div>
@@ -102,4 +111,3 @@ export default function BootSequence() {
     </motion.div>
   );
 }
-

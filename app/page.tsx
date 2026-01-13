@@ -40,7 +40,8 @@ function MainContent() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsBooting(false), 2500);
+    // Быстрая заставка - 0.8 секунды вместо 2.5
+    const timer = setTimeout(() => setIsBooting(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -125,19 +126,13 @@ function MainContent() {
       <div className="fixed inset-0 oil-shimmer opacity-30 pointer-events-none" />
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
       
-      {/* Boot sequence */}
-      <AnimatePresence>
-        {isBooting && <BootSequence />}
-      </AnimatePresence>
-
-      {/* Main content */}
-      <AnimatePresence>
-        {!isBooting && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
+      {/* Main content - всегда рендерится для SEO, видимый в HTML */}
+      <div className={isBooting ? 'opacity-0 pointer-events-none' : 'opacity-100 transition-opacity duration-300'}>
+        <motion.div
+          initial={false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
             {/* Header */}
             <Header />
 
@@ -673,7 +668,11 @@ function MainContent() {
             </footer>
 
           </motion.div>
-        )}
+        </div>
+
+      {/* Boot sequence overlay - поверх контента */}
+      <AnimatePresence>
+        {isBooting && <BootSequence />}
       </AnimatePresence>
 
       {/* Corner decorations */}
