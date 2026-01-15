@@ -126,8 +126,21 @@ function MainContent() {
       <div className="fixed inset-0 oil-shimmer opacity-30 pointer-events-none" />
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
       
-      {/* Main content - всегда рендерится для SEO, видимый в HTML */}
-      <div className={isBooting ? 'opacity-0 pointer-events-none' : 'opacity-100 transition-opacity duration-300'}>
+      {/* Noscript fallback для ИИ-краулеров - всегда видимый */}
+      <noscript>
+        <style>{`
+          .main-content-wrapper { display: block !important; visibility: visible !important; opacity: 1 !important; }
+          .boot-overlay { display: none !important; }
+        `}</style>
+      </noscript>
+      
+      {/* Main content - всегда видимый в HTML для ИИ-краулеров */}
+      {/* Контент всегда в DOM и доступен для краулеров, скрываем только визуально */}
+      <div className="main-content-wrapper" style={{ 
+        opacity: isBooting ? 0 : 1,
+        pointerEvents: isBooting ? 'none' : 'auto',
+        transition: 'opacity 0.3s ease-in-out'
+      }}>
         <motion.div
           initial={false}
           animate={{ opacity: 1 }}

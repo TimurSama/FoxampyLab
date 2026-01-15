@@ -1,6 +1,26 @@
 # robots.txt for FRACTALIX.LAB
 
+# Разрешаем всем краулерам, включая ИИ-краулеров
 User-agent: *
+Allow: /
+
+# Специально разрешаем ИИ-краулерам (Gemini, ChatGPT, Claude и др.)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
 Allow: /
 
 # Disallow admin and game pages from indexing
@@ -8,7 +28,10 @@ Disallow: /admin/
 Disallow: /game/
 
 # Sitemap
-Sitemap: https://yourusername.github.io/FoxampyLab/sitemap.xml
+Sitemap: https://timursama.github.io/FoxampyLab/sitemap.xml
+
+
+
 
 
 

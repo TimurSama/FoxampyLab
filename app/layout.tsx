@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
     googleBot: {
       index: true,
       follow: true,
@@ -21,6 +24,11 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  // Дополнительные мета-теги для ИИ-краулеров
+  other: {
+    'ai-crawler': 'allow',
+    'ai-index': 'yes',
   },
 }
 
@@ -37,9 +45,37 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Structured Data для лучшей индексации ИИ-краулерами
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "FRACTALIX.LAB",
+    "description": "Междисциплинарная лаборатория разработки цифровых продуктов. Экосистемы, веб-приложения, блокчейн, дизайн, маркетинг, AI, R&D.",
+    "url": "https://timursama.github.io/FoxampyLab/",
+    "logo": "https://timursama.github.io/FoxampyLab/logo.png",
+    "sameAs": [],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service"
+    },
+    "offers": {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "serviceType": "Digital Product Development",
+        "description": "Разработка экосистем, веб-приложений, блокчейн решений, дизайн, маркетинг"
+      }
+    }
+  };
+
   return (
     <html lang="en">
       <body className="antialiased">
+        {/* Structured Data для ИИ-краулеров - в начале body для лучшей доступности */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <I18nProvider>
           {/* Atmospheric effects */}
           <div className="noise-overlay" />
