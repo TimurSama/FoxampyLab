@@ -183,7 +183,18 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
 
         {/* CTA */}
-        <div className="pt-4 border-t border-stone-anthracite/20">
+        <div className="pt-4 border-t border-stone-anthracite/20 flex gap-3">
+          {project.id === 'civilization-protocol' ? (
+            <Link
+              href="/projects/civilization-protocol"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-stone-anthracite/30 bg-ink-deep/50
+                       hover:border-engrave-line/50 hover:bg-engrave-line/10 transition-all
+                       font-mono text-xs text-engrave-fresco tracking-wider group/link"
+            >
+              Архитектура платформы
+              <ExternalLink size={12} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+            </Link>
+          ) : null}
           <a
             href={project.url}
             target="_blank"
