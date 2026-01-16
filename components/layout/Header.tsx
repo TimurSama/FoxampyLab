@@ -17,6 +17,7 @@ const menuItemsConfig = [
   { path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
   { path: '/join', label: 'JOIN', labelEn: 'JOIN' },
   { path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
+  { path: '/legacy', label: 'LEGACY', labelEn: 'LEGACY' },
 ];
 
 export default function Header() {
