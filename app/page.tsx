@@ -7,6 +7,8 @@ import ZAxisController from '@/components/navigation/ZAxisController';
 import TheNexus from '@/components/scenes/TheNexus';
 import SynergeticSolutions from '@/components/scenes/SynergeticSolutions';
 import VentureTerminal from '@/components/scenes/VentureTerminal';
+import TheArtifacts from '@/components/scenes/TheArtifacts';
+import DistributedIntelligence from '@/components/scenes/DistributedIntelligence';
 import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
@@ -177,6 +179,20 @@ export default function Home() {
       component: <VentureTerminal />,
       cta: 'View Projects',
     },
+    {
+      id: 'artifacts',
+      title: 'THE ARTIFACTS',
+      subtitle: 'Виртуальная галерея',
+      description: 'Визуалы плавают в пространстве, при скролле меняют форму. IT-архитектура, цифровая мода, параметрический дизайн.',
+      component: <TheArtifacts />,
+    },
+    {
+      id: 'intelligence',
+      title: 'DISTRIBUTED INTELLIGENCE',
+      subtitle: 'Распределенный интеллект',
+      description: 'Мы не показываем лица — мы транслируем компетенции. Архитекторы мировых бюро, блокчейн-инженеры и креативные директора, объединенные в децентрализованную сеть исполнения.',
+      component: <DistributedIntelligence />,
+    },
   ];
 
   return (
@@ -218,6 +234,8 @@ export default function Home() {
             {currentSection === 0 && <TheNexus />}
             {currentSection === 1 && <SynergeticSolutions />}
             {currentSection === 2 && <VentureTerminal />}
+            {currentSection === 3 && <TheArtifacts />}
+            {currentSection === 4 && <DistributedIntelligence />}
           </Suspense>
 
           {/* Environment для отражений */}
@@ -243,11 +261,11 @@ export default function Home() {
               ─── {section.title} ───
             </div>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6">
               {section.subtitle}
             </h1>
             
-            <p className="font-mono text-base md:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed px-4">
               {section.description}
             </p>
 
