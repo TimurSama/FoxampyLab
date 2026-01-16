@@ -202,7 +202,7 @@ export default function ArchitectureVisualization({ type, color }: ArchitectureV
             />
           </Box>
           {Array.from({ length: 4 }).map((_, i) => {
-            const positions = [
+            const positions: [number, number, number][] = [
               [-0.8, 0.3, -0.8],
               [0.8, 0.3, -0.8],
               [-0.8, 0.3, 0.8],

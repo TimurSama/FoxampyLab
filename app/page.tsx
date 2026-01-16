@@ -126,7 +126,7 @@ export default function Home() {
   const [selectedService, setSelectedService] = useState<typeof servicesData[0] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const sectionsRef = useRef<HTMLDivElement[]>([]);
+  const sectionsRef = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsBooting(false), 800);
@@ -140,13 +140,15 @@ export default function Home() {
     const sections = sectionsRef.current;
     
     sections.forEach((section, index) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top center',
-        end: 'bottom center',
-        onEnter: () => setCurrentSection(index),
-        onEnterBack: () => setCurrentSection(index),
-      });
+      if (section) {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top center',
+          end: 'bottom center',
+          onEnter: () => setCurrentSection(index),
+          onEnterBack: () => setCurrentSection(index),
+        });
+      }
     });
 
     return () => {
