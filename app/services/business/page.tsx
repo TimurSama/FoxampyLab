@@ -4,38 +4,41 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Target, BarChart3, Lightbulb, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-
-const services = [
-  {
-    title: 'Разработка бизнес-концепций',
-    description: 'Создание комплексных бизнес-концепций на основе глубокого анализа рынка, конкурентной среды и пользовательских потребностей.',
-    features: ['Анализ рынка и конкурентов', 'Исследование пользователей', 'Разработка концепции', 'Валидация идеи']
-  },
-  {
-    title: 'Стратегическое планирование',
-    description: 'Построение долгосрочной стратегии развития бизнеса с учетом рыночных трендов, технологических возможностей и бизнес-целей.',
-    features: ['Стратегический анализ', 'Определение целей', 'Планирование этапов', 'Roadmap разработки']
-  },
-  {
-    title: 'Бизнес-моделирование',
-    description: 'Проектирование устойчивых бизнес-моделей с фокусом на масштабируемость, монетизацию и создание ценности.',
-    features: ['Модель монетизации', 'Unit-экономика', 'Сценарии роста', 'Финансовое планирование']
-  },
-  {
-    title: 'Анализ и исследования',
-    description: 'Комплексный анализ рынка, конкурентов, пользователей и технологических возможностей для принятия обоснованных решений.',
-    features: ['Рыночный анализ', 'Конкурентный анализ', 'Пользовательские исследования', 'Технологический аудит']
-  }
-];
-
-const process = [
-  { step: '01', title: 'Исследование', desc: 'Глубокий анализ рынка, конкурентов и пользователей' },
-  { step: '02', title: 'Концепция', desc: 'Разработка бизнес-концепции и модели' },
-  { step: '03', title: 'Стратегия', desc: 'Построение стратегии развития и плана действий' },
-  { step: '04', title: 'Реализация', desc: 'Поддержка на этапе реализации и масштабирования' }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function BusinessPage() {
+  const { t } = useI18n();
+
+  const services = [
+    {
+      title: t('businessPage.service1.title'),
+      description: t('businessPage.service1.description'),
+      features: t('businessPage.service1.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('businessPage.service2.title'),
+      description: t('businessPage.service2.description'),
+      features: (t('businessPage.service2.features', { returnObjects: true }) as unknown) as string[]
+    },
+    {
+      title: t('businessPage.service3.title'),
+      description: t('businessPage.service3.description'),
+      features: (t('businessPage.service3.features', { returnObjects: true }) as unknown) as string[]
+    },
+    {
+      title: t('businessPage.service4.title'),
+      description: t('businessPage.service4.description'),
+      features: (t('businessPage.service4.features', { returnObjects: true }) as unknown) as string[]
+    }
+  ];
+
+  const process = [
+    { step: t('businessPage.step1.step'), title: t('businessPage.step1.title'), desc: t('businessPage.step1.desc') },
+    { step: t('businessPage.step2.step'), title: t('businessPage.step2.title'), desc: t('businessPage.step2.desc') },
+    { step: t('businessPage.step3.step'), title: t('businessPage.step3.title'), desc: t('businessPage.step3.desc') },
+    { step: t('businessPage.step4.step'), title: t('businessPage.step4.title'), desc: t('businessPage.step4.desc') }
+  ];
+
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -52,18 +55,17 @@ export default function BusinessPage() {
               className="mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── BUSINESS & STRATEGY ───
+                ─── {t('businessPage.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                БИЗНЕС И
+                {t('businessPage.title')}
                 <br />
-                <span className="text-chrome">СТРАТЕГИРОВАНИЕ</span>
+                <span className="text-chrome">{t('businessPage.titleHighlight')}</span>
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
-                Разработка бизнес-концепций, стратегическое планирование, бизнес-моделирование. 
-                От исследования рынка и анализа конкурентов до построения стратегии развития и масштабирования.
+                {t('businessPage.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -74,7 +76,7 @@ export default function BusinessPage() {
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center gap-3 transition-all"
                   >
-                    ОБСУДИТЬ ПРОЕКТ
+                    {t('businessPage.ctaButton')}
                     <ArrowRight size={16} />
                   </motion.button>
                 </Link>
@@ -87,7 +89,7 @@ export default function BusinessPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── УСЛУГИ ───
+              ─── {t('businessPage.servicesTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -125,7 +127,7 @@ export default function BusinessPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ПРОЦЕСС РАБОТЫ ───
+              ─── {t('businessPage.processTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -163,10 +165,10 @@ export default function BusinessPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ НАЧАТЬ?
+                {t('businessPage.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и предложим оптимальное решение.
+                {t('businessPage.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -174,7 +176,7 @@ export default function BusinessPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('businessPage.ctaButton2')}
                 </motion.button>
               </Link>
             </motion.div>
@@ -185,9 +187,3 @@ export default function BusinessPage() {
     </div>
   );
 }
-
-
-
-
-
-

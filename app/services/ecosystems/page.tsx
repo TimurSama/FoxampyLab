@@ -4,38 +4,40 @@ import { motion } from 'framer-motion';
 import { Layers, Network, Rocket, Target, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-
-const services = [
-  {
-    title: 'Исследование и стратегия',
-    description: 'Комплексное исследование рынка, пользователей и технологических возможностей для построения стратегии развития экосистемы.',
-    features: ['Рыночное исследование', 'Анализ пользователей', 'Технологический аудит', 'Стратегическое планирование']
-  },
-  {
-    title: 'Архитектура решения',
-    description: 'Проектирование масштабируемой архитектуры экосистемы с учетом интеграций, безопасности и производительности.',
-    features: ['Системная архитектура', 'Микросервисы', 'API дизайн', 'Интеграции']
-  },
-  {
-    title: 'Разработка платформы',
-    description: 'Реализация комплексной платформы с множеством сервисов, модулей и интеграций.',
-    features: ['Разработка сервисов', 'Интеграции', 'Админ-панели', 'Аналитика']
-  },
-  {
-    title: 'Масштабирование',
-    description: 'Поддержка роста экосистемы: оптимизация производительности, добавление новых функций и сервисов.',
-    features: ['Оптимизация', 'Масштабирование', 'Новые функции', 'Поддержка']
-  }
-];
-
-const process = [
-  { step: '01', title: 'Исследование', desc: 'Глубокий анализ рынка и пользователей' },
-  { step: '02', title: 'Архитектура', desc: 'Проектирование системы и интеграций' },
-  { step: '03', title: 'Разработка', desc: 'Реализация платформы и сервисов' },
-  { step: '04', title: 'Запуск', desc: 'Деплой, масштабирование и поддержка' }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function EcosystemsPage() {
+  const { t } = useI18n();
+  
+  const services = [
+    {
+      title: t('ecosystemsPage.service1.title'),
+      description: t('ecosystemsPage.service1.description'),
+      features: t('ecosystemsPage.service1.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('ecosystemsPage.service2.title'),
+      description: t('ecosystemsPage.service2.description'),
+      features: t('ecosystemsPage.service2.features') as unknown as string[]
+    },
+    {
+      title: t('ecosystemsPage.service3.title'),
+      description: t('ecosystemsPage.service3.description'),
+      features: t('ecosystemsPage.service3.features') as unknown as string[]
+    },
+    {
+      title: t('ecosystemsPage.service4.title'),
+      description: t('ecosystemsPage.service4.description'),
+      features: t('ecosystemsPage.service4.features') as unknown as string[]
+    }
+  ];
+
+  const process = [
+    { step: t('ecosystemsPage.step1.step'), title: t('ecosystemsPage.step1.title'), desc: t('ecosystemsPage.step1.desc') },
+    { step: t('ecosystemsPage.step2.step'), title: t('ecosystemsPage.step2.title'), desc: t('ecosystemsPage.step2.desc') },
+    { step: t('ecosystemsPage.step3.step'), title: t('ecosystemsPage.step3.title'), desc: t('ecosystemsPage.step3.desc') },
+    { step: t('ecosystemsPage.step4.step'), title: t('ecosystemsPage.step4.title'), desc: t('ecosystemsPage.step4.desc') }
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -52,16 +54,15 @@ export default function EcosystemsPage() {
               className="mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── ECOSYSTEMS ───
+                ─── {t('ecosystemsPage.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                ЭКОСИСТЕМЫ
+                {t('ecosystemsPage.title')}
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
-                Создание комплексных экосистем и платформ: от стратегического планирования и исследования рынка 
-                до разработки архитектуры, реализации и масштабирования.
+                {t('ecosystemsPage.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -72,7 +73,7 @@ export default function EcosystemsPage() {
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center gap-3 transition-all"
                   >
-                    ОБСУДИТЬ ПРОЕКТ
+                    {t('ecosystemsPage.ctaButton')}
                     <ArrowRight size={16} />
                   </motion.button>
                 </Link>
@@ -85,7 +86,7 @@ export default function EcosystemsPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── УСЛУГИ ───
+              ─── {t('ecosystemsPage.servicesTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -106,7 +107,7 @@ export default function EcosystemsPage() {
                     {service.description}
                   </p>
                   <div className="space-y-2">
-                    {service.features.map((feature, j) => (
+                    {Array.isArray(service.features) && service.features.map((feature, j) => (
                       <div key={j} className="flex items-center gap-2 font-mono text-[10px] text-engrave-dim">
                         <CheckCircle size={10} />
                         {feature}
@@ -123,7 +124,7 @@ export default function EcosystemsPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ПРОЦЕСС РАБОТЫ ───
+              ─── {t('ecosystemsPage.processTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -161,10 +162,10 @@ export default function EcosystemsPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ НАЧАТЬ?
+                {t('ecosystemsPage.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и предложим оптимальное решение.
+                {t('ecosystemsPage.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -172,7 +173,7 @@ export default function EcosystemsPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('ecosystemsPage.ctaButton2')}
                 </motion.button>
               </Link>
             </motion.div>

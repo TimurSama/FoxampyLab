@@ -9,11 +9,16 @@ import { useI18n } from '@/lib/i18n/context';
 
 interface Case {
   id: string;
-  titleKey: string;
-  categoryKey: string;
-  descriptionKey: string;
+  titleKey?: string;
+  categoryKey?: string;
+  descriptionKey?: string;
+  title?: string;
+  category?: string;
+  description?: string;
   technologies: string[];
   icon: React.ReactNode;
+  solution: string;
+  visuals: string;
 }
 
 export default function CasesPage() {
@@ -27,6 +32,8 @@ export default function CasesPage() {
       descriptionKey: 'cases.web3Bank.description',
       technologies: ['Solidity', 'Web3.js', 'Everscale', 'Ethereum', 'Smart Contracts', 'Bridge Technology'],
       icon: <Layers size={24} />,
+      solution: 'Концепция Web3-банкинга без чисел: сценарии мультичейн-платежей, мосты и UX без перегрузки цифрами.',
+      visuals: 'Сеточные 3D-дашборды, прозрачные карты потоков транзакций, кинетические акценты при смене сети.',
     },
     {
       id: 'dao-ecology',
@@ -35,6 +42,8 @@ export default function CasesPage() {
       descriptionKey: 'cases.daoEcology.description',
       technologies: ['Blockchain', 'DeFi', 'AI/ML', 'Big Data', 'DAO Governance'],
       icon: <Network size={24} />,
+      solution: 'Экосистема для DAO-экологии: интерфейс управления потоками данных и решений без KPI-цифр.',
+      visuals: 'Органические диаграммы, мягкие цветовые градиенты для состояний DAO, микровзаимодействия голосований.',
     },
     {
       id: 'mail-services',
@@ -43,6 +52,28 @@ export default function CasesPage() {
       descriptionKey: 'cases.mailServices.description',
       technologies: ['React', 'Node.js', 'Mobile Development', 'API Integration', 'Service Management'],
       icon: <Code size={24} />,
+      solution: 'Сервисная шина почтовых сервисов: модульные интерфейсы, чистая интеграционная карта без метрик.',
+      visuals: 'Тонкие контуры, анимации линий API, монохромные акценты и плавные переходы состояний.',
+    },
+    {
+      id: 'parametric-fashion',
+      title: 'Параметрическая мода',
+      category: 'Fashion / Digital Textile',
+      description: 'Коллекция цифровой одежды с интерактивной примеркой.',
+      technologies: ['CLO3D', 'Houdini', 'Blender', 'Fabric Sim', 'Parametrics'],
+      icon: <Palette size={24} />,
+      solution: 'Линейка цифровой моды с параметрическими паттернами и интерактивной примеркой.',
+      visuals: 'Слоистые ткани, светящиеся швы, плавные деформации, ритм тканевых волн вместо чисел.',
+    },
+    {
+      id: 'parametric-architecture',
+      title: 'Параметрическая архитектура',
+      category: 'Architecture / Spatial Computing',
+      description: 'Павильон с интерактивной навигацией по слоям конструкций и сценариям света.',
+      technologies: ['Grasshopper', 'Rhino', 'Three.js', 'Unity', 'XR'],
+      icon: <TrendingUp size={24} />,
+      solution: 'Параметрический павильон с интерактивной навигацией по слоям конструкций.',
+      visuals: 'Нервюрные сетки, световые каналы, плавная морфология форм через WebGL.',
     },
   ];
   return (
@@ -96,19 +127,28 @@ export default function CasesPage() {
                         {caseItem.icon}
                       </div>
                       <span className="font-mono text-[9px] text-stone-slate tracking-widest">
-                        {t(caseItem.categoryKey)}
+                        {caseItem.categoryKey ? t(caseItem.categoryKey) : caseItem.category}
                       </span>
                     </div>
 
                     {/* Title */}
                     <h3 className="font-mono text-lg text-engrave-fresco mb-3">
-                      {t(caseItem.titleKey)}
+                      {caseItem.titleKey ? t(caseItem.titleKey) : caseItem.title}
                     </h3>
 
                     {/* Description */}
                     <p className="font-mono text-sm text-stone-slate leading-relaxed mb-4 flex-grow">
-                      {t(caseItem.descriptionKey)}
+                      {caseItem.descriptionKey ? t(caseItem.descriptionKey) : caseItem.description}
                     </p>
+
+                    <div className="space-y-3 mb-4">
+                      <p className="font-mono text-[12px] text-engrave-fresco/90 leading-relaxed">
+                        {caseItem.solution}
+                      </p>
+                      <p className="font-mono text-[12px] text-stone-slate leading-relaxed">
+                        {caseItem.visuals}
+                      </p>
+                    </div>
 
                     {/* Technologies */}
                     <div className="mb-4">
@@ -130,7 +170,6 @@ export default function CasesPage() {
                       </div>
                     </div>
 
-                    {/* Technologies Only - No Results */}
                     {/* Link */}
                     <div className="flex items-center gap-2 font-mono text-[10px] text-engrave-dim group-hover:text-engrave-line transition-colors mt-auto">
                       {t('cases.learnMore')} <ArrowRight size={10} />

@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const bootLines = [
-  'INITIALIZING FRACTALIX.LAB...',
-  'LOADING NEURAL INTERFACE...',
-  'CALIBRATING VISUAL SYSTEMS...',
-  'ESTABLISHING QUANTUM LINK...',
+  'FRACTALIZATION',
+  'OF MULTI-LABORATORY',
+  'SYSTEM INITIALIZING...',
+  'NEURAL INTERFACE LOADING...',
   'BOOT SEQUENCE COMPLETE',
 ];
 
@@ -62,10 +62,10 @@ export default function BootSequence() {
           className="text-center mb-12"
         >
           <div className="font-mono text-2xl md:text-3xl tracking-[0.4em] text-engrave-fresco">
-            FRACTALIX
+            FOXAMPY
           </div>
           <div className="font-mono text-xs tracking-[0.8em] text-stone-graphite mt-2">
-            .LAB
+            LAB
           </div>
         </motion.div>
 
@@ -104,7 +104,7 @@ export default function BootSequence() {
 
         {/* Version info */}
         <div className="mt-4 flex justify-between font-mono text-[9px] text-stone-graphite">
-          <span>BOOT v3.0.1</span>
+          <span className="tracking-wider">FRACTALIZATION</span>
           <span>SYS_READY</span>
         </div>
       </div>

@@ -1,201 +1,76 @@
 "use client";
 
-import { Suspense, useRef, useEffect, useState } from 'react';
+import { Suspense, useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera, Environment } from '@react-three/drei';
-import ZAxisController from '@/components/navigation/ZAxisController';
-import TheNexus from '@/components/scenes/TheNexus';
-import SynergeticSolutions from '@/components/scenes/SynergeticSolutions';
-import VentureTerminal from '@/components/scenes/VentureTerminal';
-import TheArtifacts from '@/components/scenes/TheArtifacts';
-import DistributedIntelligence from '@/components/scenes/DistributedIntelligence';
+import { PerspectiveCamera } from '@react-three/drei';
+import InkFluidBackground from '@/components/visuals/InkFluidBackground';
 import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, MessageSquare, X } from 'lucide-react';
+import CalendarPicker from '@/components/forms/CalendarPicker';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useI18n } from '@/lib/i18n/context';
 
 /**
  * Новая главная страница с 4D-навигацией
  * Z-axis камера управляется скроллом через GSAP ScrollTrigger
  */
-// Данные о 6 направлениях работы
-const servicesData = [
-  {
-    id: 'business',
-    title: 'STRATEGIC GENESIS & VENTURE LOGIC',
-    subtitle: 'Business Strategic Architecture',
-    description: 'Проектирование фундаментов бизнеса. Мы переводим хаос идей в строгую документарную форму: от создания Vision & Mission до детальных White Papers и инвестиционных меморандумов. Разработка токеномики и экономических моделей, устойчивых к рыночной энтропии.',
-    features: [
-      'Vision & Mission разработка',
-      'White Papers и Litepapers',
-      'Инвестиционные меморандумы',
-      'Токеномика и экономические модели',
-      'Бизнес-планирование',
-      'Стратегическое консультирование',
-    ],
-    color: '#00F0FF',
-  },
-  {
-    id: 'it',
-    title: 'DIGITAL CORE & ECOSYSTEM DEVELOPMENT',
-    subtitle: 'IT Ecosystem Engineering',
-    description: 'Создание технологического ДНК продукта. Разработка концепций и реализация сложных IT-экосистем: масштабируемые платформы, AI-интеграции и блокчейн-решения. Мы строим не просто код, а архитектуру, готовую к бесконечной трансформации.',
-    features: [
-      'Архитектура экосистем',
-      'Блокчейн разработка',
-      'AI/ML интеграции',
-      'Масштабируемые платформы',
-      'Микросервисная архитектура',
-      'API и интеграции',
-    ],
-    color: '#7000FF',
-  },
-  {
-    id: 'branding',
-    title: 'COGNITIVE BRANDING & VISUAL SYSTEMS',
-    subtitle: 'Identity & Sensory Branding',
-    description: 'Синтез восприятия и эстетики. Мы создаем бренды как живые организмы с уникальным кодом айдентики. Глубокий дизайн-анализ, разработка смысловых полей и маркетинговых стратегий, которые резонируют на уровне подсознания.',
-    features: [
-      'Бренд-стратегия',
-      'Визуальная идентичность',
-      'Дизайн-системы',
-      'Маркетинговые стратегии',
-      'Контент-стратегия',
-      'Digital маркетинг',
-    ],
-    color: '#00F0FF',
-  },
-  {
-    id: 'spatial',
-    title: 'PARAMETRIC FASHION & ARCHITECTURE',
-    subtitle: 'Spatial Form & Wearable Art',
-    description: 'Стирание границ между телом и пространством. Мы объединяем методы параметрического проектирования зданий с авангардным дизайном одежды. Создание цифровых двойников, 3D-прототипирование и концептуальные решения для физических миров.',
-    features: [
-      'Параметрический дизайн',
-      'Архитектурное проектирование',
-      'Fashion дизайн',
-      '3D прототипирование',
-      'Цифровые двойники',
-      'Концептуальные решения',
-    ],
-    color: '#7000FF',
-  },
-  {
-    id: 'cinema',
-    title: 'TEMPORAL NARRATIVE & VISUAL FX',
-    subtitle: 'Cinematic Synthesis & Motion',
-    description: 'Трансляция смыслов через визуальный опыт. Продакшн будущего: от концептуального сторителлинга до сложного CGI и видео-арта. Мы создаем визуальные миры, которые погружают зрителя в 4D-пространство и диктуют новые эстетические нормы.',
-    features: [
-      'Видео продакшн',
-      'CGI и визуальные эффекты',
-      'Motion design',
-      'Концептуальный сторителлинг',
-      '3D анимация',
-      'Постпродакшн',
-    ],
-    color: '#00F0FF',
-  },
-  {
-    id: 'rd',
-    title: 'APPLIED PHYSICS & ENGINEERING RESEARCH',
-    subtitle: 'Frontiers of R&D',
-    description: 'Лаборатория фундаментальных инноваций. Глубокие исследования на стыке инженерии и прикладной науки. Разработка патентоспособных технологий, прототипирование новых материалов и поиск нестандартных инженерных решений для глобальных вызовов.',
-    features: [
-      'Научные исследования',
-      'Инженерные разработки',
-      'Прототипирование',
-      'Патентование технологий',
-      'Прикладная физика',
-      'Материаловедение',
-    ],
-    color: '#7000FF',
-  },
-];
 
 export default function Home() {
+  const { t, language } = useI18n();
   const [isBooting, setIsBooting] = useState(true);
-  const [currentSection, setCurrentSection] = useState(0);
-  const [selectedService, setSelectedService] = useState<typeof servicesData[0] | null>(null);
+  const [selectedService, setSelectedService] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const sectionsRef = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsBooting(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
-  // Настройка ScrollTrigger для переключения секций
-  useEffect(() => {
-    if (!containerRef.current || isBooting) return;
+  // Получаем данные services из переводов
+  const servicesData = useMemo(() => {
+    return t('home.solutions.services', { returnObjects: true }) as any[];
+  }, [t, language]);
 
-    const sections = sectionsRef.current;
-    
-    sections.forEach((section, index) => {
-      if (section) {
-        ScrollTrigger.create({
-          trigger: section,
-          start: 'top center',
-          end: 'bottom center',
-          onEnter: () => setCurrentSection(index),
-          onEnterBack: () => setCurrentSection(index),
-        });
-      }
-    });
+  // Получаем данные projects из переводов
+  const projectsData = useMemo(() => {
+    return t('home.ventures.projects', { returnObjects: true }) as any[];
+  }, [t, language]);
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, [isBooting]);
-
-  const sections = [
-    {
-      id: 'nexus',
-      title: 'THE NEXUS',
-      subtitle: 'FOXAMPY LAB: MULTIDISCIPLINARY SYNTHESIS',
-      description: 'Проектируем будущее на стыке IT-архитектуры, физических пространств и цифровых активов.',
-      cta: 'Enter the Layer_01',
-      component: <TheNexus />,
-    },
+  const sections = useMemo(() => [
     {
       id: 'solutions',
-      title: 'SYNERGETIC SOLUTIONS',
-      subtitle: 'Мультидисциплинарный синтез',
-      description: 'Сплетение 4D-потоков. Сферы (IT, Architecture, Fashion) представлены как пересекающиеся энергетические слои.',
-      component: <SynergeticSolutions />,
+      title: t('home.solutions.title'),
+      subtitle: t('home.solutions.subtitle'),
+      description: t('home.solutions.description'),
       services: servicesData,
     },
     {
-      id: 'ventures',
-      title: 'VENTURE TERMINAL',
-      subtitle: 'Инвестиционные возможности',
-      description: 'Портфолио проектов и стартапов с высоким потенциалом роста. От блокчейн-решений до AI-платформ.',
-      component: <VentureTerminal />,
-      cta: 'View Projects',
+      id: 'gallery',
+      title: t('home.gallery.title'),
+      subtitle: t('home.gallery.subtitle'),
+      description: t('home.gallery.description'),
+      cta: t('home.gallery.cta'),
+      target: '/gallery',
     },
     {
-      id: 'artifacts',
-      title: 'THE ARTIFACTS',
-      subtitle: 'Виртуальная галерея',
-      description: 'Визуалы плавают в пространстве, при скролле меняют форму. IT-архитектура, цифровая мода, параметрический дизайн.',
-      component: <TheArtifacts />,
+      id: 'ventures',
+      title: t('home.ventures.title'),
+      subtitle: t('home.ventures.subtitle'),
+      description: t('home.ventures.description'),
+      cta: t('home.ventures.cta'),
+      target: '/hub',
     },
     {
       id: 'intelligence',
-      title: 'DISTRIBUTED INTELLIGENCE',
-      subtitle: 'Распределенный интеллект',
-      description: 'Мы не показываем лица — мы транслируем компетенции. Архитекторы мировых бюро, блокчейн-инженеры и креативные директора, объединенные в децентрализованную сеть исполнения.',
-      component: <DistributedIntelligence />,
+      title: t('home.intelligence.title'),
+      subtitle: t('home.intelligence.subtitle'),
+      description: t('home.intelligence.description'),
     },
-  ];
+  ], [t, language, servicesData]);
 
   return (
     <div 
@@ -210,7 +85,7 @@ export default function Home() {
       {/* Header */}
       <Header />
 
-      {/* Main 3D Canvas - фиксированный фон */}
+      {/* Main 3D Canvas - только чернильная жидкость на фон */}
       <div className="fixed inset-0 z-0">
         <Canvas
           camera={{ position: [0, 0, 10], fov: 50 }}
@@ -223,35 +98,77 @@ export default function Home() {
         >
           <PerspectiveCamera makeDefault position={[0, 0, 10]} />
           
-          {/* Lighting */}
-          <ambientLight intensity={0.3} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#00F0FF" />
-          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#7000FF" />
-          
-          {/* Z-axis controller для глубины */}
-          <ZAxisController sections={sections.length} depth={30} />
-          
-          {/* 3D Scenes - переключаются в зависимости от секции */}
+          {/* Только чернильная жидкость на весь фон */}
           <Suspense fallback={null}>
-            {currentSection === 0 && <TheNexus />}
-            {currentSection === 1 && <SynergeticSolutions />}
-            {currentSection === 2 && <VentureTerminal />}
-            {currentSection === 3 && <TheArtifacts />}
-            {currentSection === 4 && <DistributedIntelligence />}
+            <InkFluidBackground />
           </Suspense>
-
-          {/* Environment для отражений */}
-          <Environment preset="night" />
         </Canvas>
       </div>
+
+      {/* Hero */}
+      <section
+        className="relative z-10 min-h-screen flex items-center"
+        style={{ opacity: isBooting ? 0 : 1, transition: 'opacity 0.3s ease-in-out' }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-28 w-full">
+          <div className="flex flex-col gap-8">
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-4xl md:text-6xl lg:text-7xl font-mono text-[#E0E0E0] leading-tight"
+            >
+              {t('home.title')}
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-lg md:text-xl lg:text-2xl font-mono text-[#E0E0E0]/80 leading-relaxed max-w-3xl"
+            >
+              {t('home.subtitle')}
+            </motion.p>
+
+            <div className="flex flex-wrap gap-4">
+              <Link href="/services">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest flex items-center gap-3"
+                >
+                  {t('home.ctaButton1')}
+                  <ArrowRight size={16} />
+                </motion.button>
+              </Link>
+              <Link href="/hub">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-8 py-4 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm tracking-widest flex items-center gap-3"
+                >
+                  {t('home.ctaButton2')}
+                  <Sparkle size={16} />
+                </motion.button>
+              </Link>
+              <Link href="/gallery">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-8 py-4 border border-[#E0E0E0]/20 text-[#E0E0E0]/90 font-mono text-sm tracking-widest flex items-center gap-3"
+                >
+                  {t('home.ctaButton3')}
+                  <PlayCircle size={16} />
+                </motion.button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Content Sections */}
       {sections.map((section, index) => (
         <section
           key={section.id}
-          ref={(el) => {
-            if (el) sectionsRef.current[index] = el;
-          }}
           className="relative z-10 min-h-screen flex items-center justify-center"
           style={{ 
             opacity: isBooting ? 0 : 1,
@@ -259,7 +176,7 @@ export default function Home() {
           }}
         >
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <div className="font-mono text-[10px] text-[#00F0FF] tracking-[0.5em] mb-6">
+            <div className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6">
               ─── {section.title} ───
             </div>
             
@@ -272,9 +189,9 @@ export default function Home() {
             </p>
 
             {section.cta && (
-              <Link href={section.cta === 'Enter the Layer_01' ? '/services' : '/ventures'}>
-                <button className="px-8 py-4 bg-[#00F0FF] text-[#050505] font-mono text-sm tracking-widest
-                                 flex items-center gap-3 mx-auto transition-all hover:bg-[#00F0FF]/80">
+              <Link href={section.target ?? '/services'}>
+                <button className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest
+                                 flex items-center gap-3 mx-auto transition-all hover:bg-[#FFFFFF]">
                   {section.cta}
                   <ArrowRight size={16} />
                 </button>
@@ -294,22 +211,22 @@ export default function Home() {
                       setSelectedService(service);
                       setIsModalOpen(true);
                     }}
-                    className="border border-[#00F0FF]/20 bg-[#050505]/50 hover:border-[#00F0FF]/50 
-                             hover:bg-[#00F0FF]/5 transition-all cursor-pointer p-6 group"
+                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
+                             hover:bg-[#E0E0E0]/5 transition-all cursor-pointer p-6 group"
                   >
-                    <div style={{ color: service.color }} className="mb-4">
-                      <div className="w-10 h-10 border border-current flex items-center justify-center">
+                    <div className="mb-4 text-[#E0E0E0]">
+                      <div className="w-10 h-10 border border-[#E0E0E0] flex items-center justify-center">
                         <span className="font-mono text-xs">◈</span>
                       </div>
                     </div>
-                    <h3 className="font-mono text-lg text-[#E0E0E0] mb-2 group-hover:text-[#00F0FF] transition-colors">
+                    <h3 className="font-mono text-lg text-[#E0E0E0] mb-2 group-hover:text-[#FFFFFF] transition-colors">
                       {service.subtitle}
                     </h3>
                     <p className="font-mono text-xs text-[#E0E0E0]/60 mb-4 leading-relaxed">
                       {service.description.substring(0, 120)}...
                     </p>
-                    <div className="font-mono text-[10px] text-[#00F0FF] tracking-wider">
-                      CLICK FOR DETAILS →
+                    <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider">
+                      {t('home.ventures.clickForDetails')}
                     </div>
                   </motion.div>
                 ))}
@@ -319,48 +236,39 @@ export default function Home() {
             {/* Projects Grid для секции Ventures */}
             {section.id === 'ventures' && (
               <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                {[
-                  { name: 'Civilization Protocol', progress: 22, status: 'Active', color: '#00F0FF' },
-                  { name: 'TradePlus', progress: 25, status: 'Active', color: '#7000FF' },
-                  { name: 'Dogymorbios', progress: 13, status: 'Pilot', color: '#00F0FF' },
-                  { name: 'NexusVita', progress: 19, status: 'Active', color: '#7000FF' },
-                ].map((project, idx) => (
+                {projectsData.map((project, idx) => (
                   <motion.div
                     key={project.name}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="border border-[#00F0FF]/20 bg-[#050505]/50 hover:border-[#00F0FF]/50 
-                             hover:bg-[#00F0FF]/5 transition-all p-6 group backdrop-blur-sm"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${project.color}05 0%, transparent 100%)`,
-                    }}
+                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
+                             hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm"
                   >
                     <div className="flex items-start justify-between mb-4">
-                      <h3 className="font-mono text-xl text-[#E0E0E0] group-hover:text-[#00F0FF] transition-colors">
+                      <h3 className="font-mono text-xl text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors">
                         {project.name}
                       </h3>
-                      <span className="font-mono text-xs text-[#00F0FF] border border-[#00F0FF]/30 px-2 py-1">
-                        {project.status}
+                      <span className="font-mono text-xs text-[#E0E0E0] border border-[#E0E0E0]/30 px-2 py-1">
+                        {project.stage}
                       </span>
                     </div>
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs text-[#E0E0E0]/60">Progress</span>
-                        <span className="font-mono text-xs text-[#00F0FF]">{project.progress}%</span>
-                      </div>
-                      <div className="h-1 bg-[#00F0FF]/10 border border-[#00F0FF]/20 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${project.progress}%` }}
-                          transition={{ duration: 1, delay: idx * 0.1 + 0.3 }}
-                          className="h-full bg-gradient-to-r from-[#00F0FF] to-[#7000FF]"
-                        />
-                      </div>
+                    <p className="font-mono text-sm text-[#E0E0E0]/75 leading-relaxed mb-4">
+                      {project.status}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.stack.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="font-mono text-[10px] text-[#E0E0E0]/80 border border-[#E0E0E0]/30 px-2 py-1"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                     <Link href="/hub">
-                      <div className="font-mono text-[10px] text-[#00F0FF] tracking-wider mt-4 hover:underline">
-                        VIEW PROJECT →
+                      <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider mt-4 hover:underline">
+                        {t('home.ventures.viewInHub')}
                       </div>
                     </Link>
                   </motion.div>
@@ -372,17 +280,16 @@ export default function Home() {
       ))}
 
       {/* Scroll indicator */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-        <div className="font-mono text-[9px] text-[#00F0FF]/60 tracking-widest animate-pulse">
-          SCROLL TO EXPLORE
-        </div>
-      </div>
+      {/* (removed) Scroll indicator */}
 
       {/* Corner decorations */}
-      <div className="fixed top-4 left-4 w-8 h-8 border-t border-l border-[#00F0FF]/20 pointer-events-none z-20" />
-      <div className="fixed top-4 right-4 w-8 h-8 border-t border-r border-[#00F0FF]/20 pointer-events-none z-20" />
-      <div className="fixed bottom-4 left-4 w-8 h-8 border-b border-l border-[#00F0FF]/20 pointer-events-none z-20" />
-      <div className="fixed bottom-4 right-4 w-8 h-8 border-b border-r border-[#00F0FF]/20 pointer-events-none z-20" />
+      <div className="fixed top-4 left-4 w-8 h-8 border-t border-l border-[#E0E0E0]/20 pointer-events-none z-20" />
+      <div className="fixed top-4 right-4 w-8 h-8 border-t border-r border-[#E0E0E0]/20 pointer-events-none z-20" />
+      <div className="fixed bottom-4 left-4 w-8 h-8 border-b border-l border-[#E0E0E0]/20 pointer-events-none z-20" />
+      <div className="fixed bottom-4 right-4 w-8 h-8 border-b border-r border-[#E0E0E0]/20 pointer-events-none z-20" />
+
+      {/* Consultation Booking Form */}
+      <ConsultationForm />
 
       {/* Services Detail Modal */}
       <ServicesDetailModal
@@ -391,5 +298,332 @@ export default function Home() {
         onClose={() => setIsModalOpen(false)}
       />
     </div>
+  );
+}
+
+// Consultation Booking Form Component
+function ConsultationForm() {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('+');
+  const [message, setMessage] = useState('');
+
+  const timeSlots = [
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
+  ];
+
+  // Получаем доступные даты для недельного календаря
+  const getAvailableWeekDates = () => {
+    const dates: Date[] = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 60; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      if (date.getDay() !== 0 && date.getDay() !== 6) {
+        dates.push(date);
+      }
+    }
+    return dates;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Если пользователь удалил +, добавляем его обратно
+    if (!value.startsWith('+')) {
+      setPhone('+' + value.replace(/\+/g, ''));
+    } else {
+      setPhone(value);
+    }
+  };
+
+  const handleDateSelect = (date: Date | null) => {
+    setSelectedDate(date);
+    setShowCalendar(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedDate) return;
+    
+    // Формируем сообщение для Telegram бота
+    const telegramMessage = `Новая заявка на консультацию:\n\n` +
+      `Имя: ${name}\n` +
+      `Email: ${email}\n` +
+      `Телефон: ${phone}\n` +
+      `Дата: ${selectedDate.toLocaleDateString('ru-RU')}\n` +
+      `Время: ${selectedTime}\n` +
+      `Сообщение: ${message || 'Не указано'}`;
+    
+    // Открываем Telegram бота с предзаполненным сообщением
+    const telegramUrl = `https://t.me/FoxampyLab_contact_bot?start=${encodeURIComponent(telegramMessage)}`;
+    window.open(telegramUrl, '_blank');
+    
+    // Сброс формы
+    setIsExpanded(false);
+    setSelectedDate(null);
+    setSelectedTime('');
+    setName('');
+    setEmail('');
+    setPhone('+');
+    setMessage('');
+  };
+
+  const formatDateForDisplay = (date: Date | null): string => {
+    if (!date) return '';
+    return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+  };
+
+  const getWeekDays = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const weekStart = new Date(today);
+    const day = weekStart.getDay();
+    const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
+    weekStart.setDate(diff);
+    
+    const week: Date[] = [];
+    for (let i = 0; i < 7; i++) {
+      const weekDay = new Date(weekStart);
+      weekDay.setDate(weekStart.getDate() + i);
+      week.push(weekDay);
+    }
+    return week;
+  };
+
+  const weekDays = getWeekDays();
+  const availableDates = getAvailableWeekDates();
+  const isDateAvailable = (date: Date): boolean => {
+    const dateStr = date.toISOString().split('T')[0];
+    return availableDates.some(d => d.toISOString().split('T')[0] === dateStr);
+  };
+
+  return (
+    <>
+      {/* Floating Icon Button */}
+      <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsExpanded(true)}
+        className="fixed bottom-6 left-6 z-50 w-14 h-14 bg-[#E0E0E0] text-[#050505] rounded-full flex items-center justify-center shadow-lg hover:bg-[#FFFFFF] transition-colors"
+        aria-label="Записаться на консультацию"
+      >
+        <Calendar size={24} />
+      </motion.button>
+
+      {/* Expanded Form Modal */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#050505]/95 backdrop-blur-sm p-4"
+            onClick={() => setIsExpanded(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#050505] border border-[#E0E0E0]/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-[#E0E0E0]/10">
+                <h2 className="font-mono text-lg text-[#E0E0E0]">Записаться на консультацию</h2>
+                <button
+                  onClick={() => setIsExpanded(false)}
+                  className="p-2 hover:bg-[#E0E0E0]/10 transition-colors"
+                >
+                  <X size={20} className="text-[#E0E0E0]" />
+                </button>
+              </div>
+
+              {/* Form Content */}
+              <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                {/* Week Calendar Preview */}
+                <div>
+                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-3">
+                    <Calendar size={14} />
+                    Выберите дату
+                  </label>
+                  <div className="grid grid-cols-7 gap-1 mb-2">
+                    {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
+                      <div key={day} className="text-center font-mono text-[10px] text-[#E0E0E0]/60 py-1">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 mb-3">
+                    {weekDays.map((date, idx) => {
+                      const available = isDateAvailable(date);
+                      const selected = selectedDate && date.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0];
+                      const isToday = date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
+
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => available && setShowCalendar(true)}
+                          disabled={!available}
+                          className={`
+                            aspect-square flex items-center justify-center font-mono text-xs transition-all
+                            ${!available 
+                              ? 'text-[#E0E0E0]/20 cursor-not-allowed' 
+                              : selected
+                              ? 'bg-[#E0E0E0] text-[#050505] border border-[#E0E0E0]'
+                              : isToday
+                              ? 'border border-[#E0E0E0]/50 text-[#E0E0E0] hover:bg-[#E0E0E0]/10'
+                              : 'text-[#E0E0E0]/60 hover:bg-[#E0E0E0]/10 hover:text-[#E0E0E0] border border-transparent hover:border-[#E0E0E0]/20'
+                            }
+                          `}
+                        >
+                          {date.getDate()}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedDate && (
+                    <div className="font-mono text-xs text-[#E0E0E0]/60 mb-2">
+                      Выбрано: {selectedDate.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowCalendar(true)}
+                    className="font-mono text-xs text-[#E0E0E0]/80 hover:text-[#E0E0E0] underline"
+                  >
+                    Открыть полный календарь →
+                  </button>
+                </div>
+
+                {/* Time Selection */}
+                {selectedDate && (
+                  <div>
+                    <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
+                      <Clock size={14} />
+                      Время
+                    </label>
+                    <select
+                      value={selectedTime}
+                      onChange={(e) => setSelectedTime(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
+                    >
+                      <option value="">Выберите время</option>
+                      {timeSlots.map((time) => (
+                        <option key={time} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Name */}
+                <div>
+                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
+                    <User size={14} />
+                    Имя
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    placeholder="Ваше имя"
+                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
+                    <Mail size={14} />
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
+                    <Phone size={14} />
+                    Телефон
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    required
+                    placeholder="+"
+                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
+                    <MessageSquare size={14} />
+                    Сообщение (необязательно)
+                  </label>
+                  <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Расскажите о вашем проекте или вопросах..."
+                    rows={4}
+                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors resize-none"
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex items-center gap-4 pt-4">
+                  <button
+                    type="submit"
+                    disabled={!selectedDate || !selectedTime}
+                    className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest flex items-center gap-3 hover:bg-[#FFFFFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Отправить заявку
+                    <ArrowRight size={16} />
+                  </button>
+                  <a
+                    href="https://t.me/FoxampyLab_contact_bot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-4 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm tracking-widest flex items-center gap-3 hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all"
+                  >
+                    <MessageSquare size={16} />
+                    Telegram контакт
+                  </a>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Calendar Picker Modal */}
+      {showCalendar && (
+        <CalendarPicker
+          selectedDate={selectedDate}
+          onDateSelect={handleDateSelect}
+          availableDates={availableDates}
+          onClose={() => setShowCalendar(false)}
+        />
+      )}
+    </>
   );
 }

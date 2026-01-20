@@ -4,38 +4,41 @@ import { motion } from 'framer-motion';
 import { Film, Video, Sparkles, Camera, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-
-const services = [
-  {
-    title: 'Видеопродакшн',
-    description: 'Полный цикл создания видео: от концепции и сценария до съемки, монтажа и постпродакшна.',
-    features: ['Сценарий и концепция', 'Съемка', 'Монтаж', 'Цветокоррекция']
-  },
-  {
-    title: 'Кино',
-    description: 'Создание короткометражных и полнометражных фильмов, документальных проектов и видеоконтента.',
-    features: ['Короткометражные фильмы', 'Документалистика', 'Видеоарт', 'Экспериментальное кино']
-  },
-  {
-    title: 'Моушн-дизайн',
-    description: 'Создание анимированной графики, титров, инфографики и визуальных эффектов для видео.',
-    features: ['Анимация', 'Титры и графика', 'Инфографика', 'Визуальные эффекты']
-  },
-  {
-    title: 'Визуальные коммуникации',
-    description: 'Разработка визуальных решений для презентаций, лендингов, социальных сетей и рекламы.',
-    features: ['Презентации', 'Рекламные ролики', 'Эксплейнеры', 'Социальные сети']
-  }
-];
-
-const process = [
-  { step: '01', title: 'Концепция', desc: 'Разработка идеи и сценария' },
-  { step: '02', title: 'Продакшн', desc: 'Съемка и производство' },
-  { step: '03', title: 'Постпродакшн', desc: 'Монтаж, цветокоррекция, звук' },
-  { step: '04', title: 'Доставка', desc: 'Финальная версия и адаптация' }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function VideoPage() {
+  const { t } = useI18n();
+
+  const services = [
+    {
+      title: t('videoPage.service1.title'),
+      description: t('videoPage.service1.description'),
+      features: t('videoPage.service1.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('videoPage.service2.title'),
+      description: t('videoPage.service2.description'),
+      features: t('videoPage.service2.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('videoPage.service3.title'),
+      description: t('videoPage.service3.description'),
+      features: t('videoPage.service3.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('videoPage.service4.title'),
+      description: t('videoPage.service4.description'),
+      features: t('videoPage.service4.features', { returnObjects: true }) as string[]
+    }
+  ];
+
+  const process = [
+    { step: t('videoPage.step1.step'), title: t('videoPage.step1.title'), desc: t('videoPage.step1.desc') },
+    { step: t('videoPage.step2.step'), title: t('videoPage.step2.title'), desc: t('videoPage.step2.desc') },
+    { step: t('videoPage.step3.step'), title: t('videoPage.step3.title'), desc: t('videoPage.step3.desc') },
+    { step: t('videoPage.step4.step'), title: t('videoPage.step4.title'), desc: t('videoPage.step4.desc') }
+  ];
+
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -52,18 +55,17 @@ export default function VideoPage() {
               className="mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── VIDEO & FILM ───
+                ─── {t('videoPage.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                ВИДЕО И
+                {t('videoPage.title')}
                 <br />
-                <span className="text-chrome">КИНО</span>
+                <span className="text-chrome">{t('videoPage.titleHighlight')}</span>
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
-                Видеопродакшн, кино, моушн-дизайн, визуальные коммуникации. 
-                Промо-ролики, эксплейнеры, 3D визуализации. Для презентаций, лендингов и социальных сетей.
+                {t('videoPage.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -74,7 +76,7 @@ export default function VideoPage() {
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center gap-3 transition-all"
                   >
-                    ОБСУДИТЬ ПРОЕКТ
+                    {t('videoPage.ctaButton')}
                     <ArrowRight size={16} />
                   </motion.button>
                 </Link>
@@ -87,7 +89,7 @@ export default function VideoPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── УСЛУГИ ───
+              ─── {t('videoPage.servicesTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -125,7 +127,7 @@ export default function VideoPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ПРОЦЕСС РАБОТЫ ───
+              ─── {t('videoPage.processTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -163,10 +165,10 @@ export default function VideoPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ НАЧАТЬ?
+                {t('videoPage.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и предложим оптимальное решение.
+                {t('videoPage.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -174,7 +176,7 @@ export default function VideoPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('videoPage.ctaButton2')}
                 </motion.button>
               </Link>
             </motion.div>
@@ -185,9 +187,3 @@ export default function VideoPage() {
     </div>
   );
 }
-
-
-
-
-
-

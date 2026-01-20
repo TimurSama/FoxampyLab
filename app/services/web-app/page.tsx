@@ -4,45 +4,47 @@ import { motion } from 'framer-motion';
 import { Code, Smartphone, Globe, Zap, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-
-const services = [
-  {
-    title: 'Веб-сайты',
-    description: 'Разработка современных веб-сайтов с фокусом на производительность, SEO и пользовательский опыт.',
-    features: ['Корпоративные сайты', 'Лендинги', 'Портфолио', 'Блоги и CMS']
-  },
-  {
-    title: 'Веб-приложения',
-    description: 'Создание высоконагруженных веб-приложений с использованием современных технологий и лучших практик.',
-    features: ['SPA / SSR / SSG', 'PWA приложения', 'Дашборды', 'Админ-панели']
-  },
-  {
-    title: 'Мобильные приложения',
-    description: 'Разработка нативных и кроссплатформенных мобильных приложений для iOS и Android.',
-    features: ['iOS приложения', 'Android приложения', 'React Native', 'Flutter']
-  },
-  {
-    title: 'API и интеграции',
-    description: 'Разработка RESTful и GraphQL API, интеграция с внешними сервисами и системами.',
-    features: ['REST API', 'GraphQL', 'Микросервисы', 'Интеграции']
-  }
-];
-
-const tech = [
-  { name: 'React / Next.js', desc: 'Современный фронтенд' },
-  { name: 'Node.js', desc: 'Серверная разработка' },
-  { name: 'TypeScript', desc: 'Типобезопасность' },
-  { name: 'PostgreSQL / MongoDB', desc: 'Базы данных' }
-];
-
-const process = [
-  { step: '01', title: 'Планирование', desc: 'Анализ требований и проектирование архитектуры' },
-  { step: '02', title: 'Разработка', desc: 'Реализация функциональности и интерфейсов' },
-  { step: '03', title: 'Тестирование', desc: 'QA, оптимизация производительности' },
-  { step: '04', title: 'Запуск', desc: 'Деплой, мониторинг и поддержка' }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function WebAppPage() {
+  const { t } = useI18n();
+
+  const services = [
+    {
+      title: t('webAppPage.service1.title'),
+      description: t('webAppPage.service1.description'),
+      features: t('webAppPage.service1.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('webAppPage.service2.title'),
+      description: t('webAppPage.service2.description'),
+      features: t('webAppPage.service2.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('webAppPage.service3.title'),
+      description: t('webAppPage.service3.description'),
+      features: t('webAppPage.service3.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('webAppPage.service4.title'),
+      description: t('webAppPage.service4.description'),
+      features: t('webAppPage.service4.features', { returnObjects: true }) as string[]
+    }
+  ];
+
+  const tech = [
+    { name: t('webAppPage.tech1.name'), desc: t('webAppPage.tech1.desc') },
+    { name: t('webAppPage.tech2.name'), desc: t('webAppPage.tech2.desc') },
+    { name: t('webAppPage.tech3.name'), desc: t('webAppPage.tech3.desc') },
+    { name: t('webAppPage.tech4.name'), desc: t('webAppPage.tech4.desc') }
+  ];
+
+  const process = [
+    { step: t('webAppPage.step1.step'), title: t('webAppPage.step1.title'), desc: t('webAppPage.step1.desc') },
+    { step: t('webAppPage.step2.step'), title: t('webAppPage.step2.title'), desc: t('webAppPage.step2.desc') },
+    { step: t('webAppPage.step3.step'), title: t('webAppPage.step3.title'), desc: t('webAppPage.step3.desc') },
+    { step: t('webAppPage.step4.step'), title: t('webAppPage.step4.title'), desc: t('webAppPage.step4.desc') }
+  ];
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -59,18 +61,17 @@ export default function WebAppPage() {
               className="mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── WEB & APP DEVELOPMENT ───
+                ─── {t('webAppPage.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                САЙТЫ И
+                {t('webAppPage.title')}
                 <br />
-                <span className="text-chrome">ПРИЛОЖЕНИЯ</span>
+                <span className="text-chrome">{t('webAppPage.titleHighlight')}</span>
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
-                Разработка веб-сайтов, веб-приложений, мобильных приложений. 
-                Современный технологический стек: React, Next.js, React Native, Node.js.
+                {t('webAppPage.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -81,7 +82,7 @@ export default function WebAppPage() {
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center gap-3 transition-all"
                   >
-                    ОБСУДИТЬ ПРОЕКТ
+                    {t('webAppPage.ctaButton')}
                     <ArrowRight size={16} />
                   </motion.button>
                 </Link>
@@ -94,7 +95,7 @@ export default function WebAppPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── УСЛУГИ ───
+              ─── {t('webAppPage.servicesTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -132,7 +133,7 @@ export default function WebAppPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ТЕХНОЛОГИИ ───
+              ─── {t('webAppPage.techTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -161,7 +162,7 @@ export default function WebAppPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ПРОЦЕСС РАБОТЫ ───
+              ─── {t('webAppPage.processTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -199,10 +200,10 @@ export default function WebAppPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ НАЧАТЬ?
+                {t('webAppPage.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и предложим оптимальное решение.
+                {t('webAppPage.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -210,7 +211,7 @@ export default function WebAppPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('webAppPage.ctaButton2')}
                 </motion.button>
               </Link>
             </motion.div>

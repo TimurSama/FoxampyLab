@@ -4,38 +4,41 @@ import { motion } from 'framer-motion';
 import { Palette, Layers, Eye, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-
-const services = [
-  {
-    title: 'Архитектура решений',
-    description: 'Проектирование архитектуры цифровых решений с учетом масштабируемости, производительности и пользовательского опыта.',
-    features: ['Системная архитектура', 'UX архитектура', 'Информационная архитектура', 'Техническое проектирование']
-  },
-  {
-    title: 'Дизайн интерфейсов',
-    description: 'Создание интерфейсов, которые конвертируют и обеспечивают превосходный пользовательский опыт на всех устройствах.',
-    features: ['UX исследования', 'UI дизайн', 'Прототипирование', 'Дизайн-системы']
-  },
-  {
-    title: 'Визуальная идентичность',
-    description: 'Разработка визуальной идентичности и брендинга, которые отражают ценности компании и запоминаются аудиторией.',
-    features: ['Брендинг', 'Айдентика', 'Гайдлайны', 'Адаптация под носители']
-  },
-  {
-    title: 'Брендинг',
-    description: 'Создание комплексной системы бренда от стратегии до визуального воплощения и коммуникаций.',
-    features: ['Стратегия бренда', 'Позиционирование', 'Визуальный язык', 'Брендбук']
-  }
-];
-
-const process = [
-  { step: '01', title: 'Исследование', desc: 'Анализ аудитории, конкурентов и контекста' },
-  { step: '02', title: 'Концепция', desc: 'Разработка концепции и визуального направления' },
-  { step: '03', title: 'Дизайн', desc: 'Создание дизайн-системы и интерфейсов' },
-  { step: '04', title: 'Реализация', desc: 'Поддержка на этапе разработки и тестирования' }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function DesignPage() {
+  const { t } = useI18n();
+
+  const services = [
+    {
+      title: t('designPage.service1.title'),
+      description: t('designPage.service1.description'),
+      features: t('designPage.service1.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('designPage.service2.title'),
+      description: t('designPage.service2.description'),
+      features: t('designPage.service2.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('designPage.service3.title'),
+      description: t('designPage.service3.description'),
+      features: t('designPage.service3.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('designPage.service4.title'),
+      description: t('designPage.service4.description'),
+      features: t('designPage.service4.features', { returnObjects: true }) as string[]
+    }
+  ];
+
+  const process = [
+    { step: t('designPage.step1.step'), title: t('designPage.step1.title'), desc: t('designPage.step1.desc') },
+    { step: t('designPage.step2.step'), title: t('designPage.step2.title'), desc: t('designPage.step2.desc') },
+    { step: t('designPage.step3.step'), title: t('designPage.step3.title'), desc: t('designPage.step3.desc') },
+    { step: t('designPage.step4.step'), title: t('designPage.step4.title'), desc: t('designPage.step4.desc') }
+  ];
+
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -52,18 +55,17 @@ export default function DesignPage() {
               className="mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── DESIGN & ARCHITECTURE ───
+                ─── {t('designPage.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                ДИЗАЙН И
+                {t('designPage.title')}
                 <br />
-                <span className="text-chrome">АРХИТЕКТУРА</span>
+                <span className="text-chrome">{t('designPage.titleHighlight')}</span>
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
-                Архитектура решений, дизайн интерфейсов, визуальная идентичность, брендинг. 
-                От концепции до реализации визуального языка и дизайн-систем.
+                {t('designPage.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -74,7 +76,7 @@ export default function DesignPage() {
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center gap-3 transition-all"
                   >
-                    ОБСУДИТЬ ПРОЕКТ
+                    {t('designPage.ctaButton')}
                     <ArrowRight size={16} />
                   </motion.button>
                 </Link>
@@ -87,7 +89,7 @@ export default function DesignPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── УСЛУГИ ───
+              ─── {t('designPage.servicesTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -125,7 +127,7 @@ export default function DesignPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ПРОЦЕСС РАБОТЫ ───
+              ─── {t('designPage.processTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -163,10 +165,10 @@ export default function DesignPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ НАЧАТЬ?
+                {t('designPage.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и предложим оптимальное решение.
+                {t('designPage.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -174,7 +176,7 @@ export default function DesignPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('designPage.ctaButton2')}
                 </motion.button>
               </Link>
             </motion.div>
@@ -185,9 +187,3 @@ export default function DesignPage() {
     </div>
   );
 }
-
-
-
-
-
-

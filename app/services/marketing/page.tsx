@@ -4,38 +4,41 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Users, BarChart3, MessageSquare, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-
-const services = [
-  {
-    title: 'Контент-стратегия',
-    description: 'Разработка комплексной контент-стратегии для привлечения и удержания целевой аудитории.',
-    features: ['Стратегия контента', 'Контент-план', 'Копирайтинг', 'Редактура']
-  },
-  {
-    title: 'SMM и социальные сети',
-    description: 'Управление присутствием в социальных сетях, создание сообществ и взаимодействие с аудиторией.',
-    features: ['SMM стратегия', 'Контент для соцсетей', 'Community management', 'Инфлюенс-маркетинг']
-  },
-  {
-    title: 'Performance-маркетинг',
-    description: 'Data-driven подход к маркетингу с фокусом на измеримые результаты и оптимизацию конверсий.',
-    features: ['Реклама', 'Аналитика', 'A/B тестирование', 'Оптимизация конверсий']
-  },
-  {
-    title: 'Криптомаркетинг и Web3 PR',
-    description: 'Специализированный маркетинг для блокчейн-проектов, криптовалют и Web3 экосистем.',
-    features: ['Web3 PR', 'Криптомаркетинг', 'Community building', 'Token marketing']
-  }
-];
-
-const process = [
-  { step: '01', title: 'Анализ', desc: 'Исследование аудитории и конкурентов' },
-  { step: '02', title: 'Стратегия', desc: 'Разработка маркетинговой стратегии' },
-  { step: '03', title: 'Реализация', desc: 'Запуск кампаний и создание контента' },
-  { step: '04', title: 'Оптимизация', desc: 'Анализ результатов и улучшение' }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function MarketingPage() {
+  const { t } = useI18n();
+
+  const services = [
+    {
+      title: t('marketingPage.service1.title'),
+      description: t('marketingPage.service1.description'),
+      features: t('marketingPage.service1.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('marketingPage.service2.title'),
+      description: t('marketingPage.service2.description'),
+      features: t('marketingPage.service2.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('marketingPage.service3.title'),
+      description: t('marketingPage.service3.description'),
+      features: t('marketingPage.service3.features', { returnObjects: true }) as string[]
+    },
+    {
+      title: t('marketingPage.service4.title'),
+      description: t('marketingPage.service4.description'),
+      features: t('marketingPage.service4.features', { returnObjects: true }) as string[]
+    }
+  ];
+
+  const process = [
+    { step: t('marketingPage.step1.step'), title: t('marketingPage.step1.title'), desc: t('marketingPage.step1.desc') },
+    { step: t('marketingPage.step2.step'), title: t('marketingPage.step2.title'), desc: t('marketingPage.step2.desc') },
+    { step: t('marketingPage.step3.step'), title: t('marketingPage.step3.title'), desc: t('marketingPage.step3.desc') },
+    { step: t('marketingPage.step4.step'), title: t('marketingPage.step4.title'), desc: t('marketingPage.step4.desc') }
+  ];
+
   return (
     <div className="relative min-h-screen bg-ink-deep">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -52,18 +55,17 @@ export default function MarketingPage() {
               className="mb-16"
             >
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
-                ─── MARKETING & BRANDING ───
+                ─── {t('marketingPage.tagline')} ───
               </div>
               
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
-                МАРКЕТИНГ И
+                {t('marketingPage.title')}
                 <br />
-                <span className="text-chrome">БРЕНДИНГ</span>
+                <span className="text-chrome">{t('marketingPage.titleHighlight')}</span>
               </h1>
               
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
-                Маркетинг, продвижение, брендинг, построение сообществ. Data-driven подход, контент-стратегия, 
-                performance-маркетинг. Специализация в криптомаркетинге и Web3 PR.
+                {t('marketingPage.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -74,7 +76,7 @@ export default function MarketingPage() {
                     className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
                              flex items-center gap-3 transition-all"
                   >
-                    ОБСУДИТЬ ПРОЕКТ
+                    {t('marketingPage.ctaButton')}
                     <ArrowRight size={16} />
                   </motion.button>
                 </Link>
@@ -87,7 +89,7 @@ export default function MarketingPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── УСЛУГИ ───
+              ─── {t('marketingPage.servicesTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -125,7 +127,7 @@ export default function MarketingPage() {
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
-              ─── ПРОЦЕСС РАБОТЫ ───
+              ─── {t('marketingPage.processTitle')} ───
             </div>
             
             <div className="grid md:grid-cols-4 gap-4">
@@ -163,10 +165,10 @@ export default function MarketingPage() {
               className="p-8 border border-stone-anthracite/30"
             >
               <h2 className="font-mono text-2xl text-engrave-fresco mb-4">
-                ГОТОВЫ НАЧАТЬ?
+                {t('marketingPage.ctaTitle')}
               </h2>
               <p className="font-mono text-sm text-stone-slate mb-6">
-                Обсудим ваш проект и предложим оптимальное решение.
+                {t('marketingPage.ctaDescription')}
               </p>
               <Link href="/contact">
                 <motion.button
@@ -174,7 +176,7 @@ export default function MarketingPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
                 >
-                  СВЯЗАТЬСЯ
+                  {t('marketingPage.ctaButton2')}
                 </motion.button>
               </Link>
             </motion.div>
@@ -185,9 +187,3 @@ export default function MarketingPage() {
     </div>
   );
 }
-
-
-
-
-
-

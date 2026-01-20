@@ -3,13 +3,51 @@ import './globals.css'
 import { I18nProvider } from '@/lib/i18n/context'
 
 export const metadata: Metadata = {
-  title: 'FRACTALIX.LAB — Digital Laboratory | Разработка экосистем, приложений, блокчейн',
+  title: 'Foxampy LAB — Digital Laboratory | Разработка экосистем, приложений, блокчейн',
   description: 'Междисциплинарная лаборатория разработки цифровых продуктов. Экосистемы, веб-приложения, блокчейн, дизайн, маркетинг, AI, R&D. Инвестиционные возможности и научные исследования.',
-  keywords: ['разработка', 'дизайн', 'блокчейн', 'web3', 'маркетинг', 'стартап', 'инвестиции', 'экосистемы', 'веб-приложения', 'AI', 'R&D', 'лаборатория', 'инновации'],
+  keywords: ['разработка', 'дизайн', 'блокчейн', 'web3', 'маркетинг', 'стартап', 'инвестиции', 'экосистемы', 'веб-приложения', 'AI', 'R&D', 'лаборатория', 'инновации', 'цифровые продукты', 'технологии'],
+  authors: [{ name: 'Foxampy LAB' }],
+  creator: 'Foxampy LAB',
+  publisher: 'Foxampy LAB',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://timursama.github.io/FoxampyLab/'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'ru': '/',
+      'en': '/',
+      'ar': '/',
+      'es': '/',
+      'pl': '/',
+      'fr': '/',
+      'de': '/',
+    },
+  },
   openGraph: {
-    title: 'FRACTALIX.LAB — Digital Laboratory',
-    description: 'Междисциплинарная лаборатория разработки цифровых продуктов',
+    title: 'Foxampy LAB — Digital Laboratory',
+    description: 'Междисциплинарная лаборатория разработки цифровых продуктов. Экосистемы, веб-приложения, блокчейн, дизайн, маркетинг, AI, R&D.',
+    url: 'https://timursama.github.io/FoxampyLab/',
+    siteName: 'Foxampy LAB',
+    locale: 'ru_RU',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Foxampy LAB',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Foxampy LAB — Digital Laboratory',
+    description: 'Междисциплинарная лаборатория разработки цифровых продуктов',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -29,6 +67,7 @@ export const metadata: Metadata = {
   other: {
     'ai-crawler': 'allow',
     'ai-index': 'yes',
+    'google-site-verification': '',
   },
 }
 
@@ -49,7 +88,7 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "FRACTALIX.LAB",
+    "name": "Foxampy LAB",
     "description": "Междисциплинарная лаборатория разработки цифровых продуктов. Экосистемы, веб-приложения, блокчейн, дизайн, маркетинг, AI, R&D.",
     "url": "https://timursama.github.io/FoxampyLab/",
     "logo": "https://timursama.github.io/FoxampyLab/logo.png",
@@ -69,7 +108,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className="antialiased">
         {/* Structured Data для ИИ-краулеров - в начале body для лучшей доступности */}
         <script

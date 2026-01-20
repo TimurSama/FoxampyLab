@@ -3,17 +3,19 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/layout/Header';
-import { X, Network, Users, Box, Database, Shield, Zap, Globe, Code, Layers } from 'lucide-react';
+import { X, Network, Users, Box, Database, Shield, Zap, Globe, Code, Layers, FileText } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
 import ArchitectureVisualization from '@/components/visuals/ArchitectureVisualization';
+import Link from 'next/link';
+import { useI18n } from '@/lib/i18n/context';
 
-// Детальные данные для каждого блока
-const architectureBlocks = [
+// Функция для получения блоков архитектуры с переводами
+const getArchitectureBlocks = (t: (key: string) => string) => [
   {
     id: 'platform-architecture',
-    title: 'Архитектура платформы',
-    description: '12-уровневая кибер-физическая архитектура для управления водными ресурсами',
+    title: t('projects.civilizationProtocol.platformArchitecture.title'),
+    description: t('projects.civilizationProtocol.platformArchitecture.description'),
     detailedDescription: `**12-уровневая архитектура CivilizationProtocol**
 
 CivilizationProtocol представляет собой комплексную кибер-физическую систему для управления водными ресурсами через блокчейн. Архитектура спроектирована для обеспечения масштабируемости, безопасности и децентрализации.
@@ -104,8 +106,8 @@ CivilizationProtocol представляет собой комплексную 
   },
   {
     id: 'objects',
-    title: 'Объекты платформы',
-    description: 'Физические и цифровые объекты экосистемы',
+    title: t('projects.civilizationProtocol.objects.title'),
+    description: t('projects.civilizationProtocol.objects.description'),
     detailedDescription: `**Физические объекты:**
 - Водные ресурсы (реки, озера, подземные воды)
 - Инфраструктура (водопроводы, очистные сооружения)
@@ -122,8 +124,8 @@ CivilizationProtocol представляет собой комплексную 
   },
   {
     id: 'subjects',
-    title: 'Субъекты платформы',
-    description: 'Участники и роли в экосистеме',
+    title: t('projects.civilizationProtocol.subjects.title'),
+    description: t('projects.civilizationProtocol.subjects.description'),
     detailedDescription: `**Основные субъекты:**
 
 1. **Владельцы водных ресурсов**
@@ -155,8 +157,8 @@ CivilizationProtocol представляет собой комплексную 
   },
   {
     id: 'products',
-    title: 'Продукты экосистемы',
-    description: 'Основные продукты и сервисы платформы',
+    title: t('projects.civilizationProtocol.products.title'),
+    description: t('projects.civilizationProtocol.products.description'),
     detailedDescription: `**Основные продукты:**
 
 1. **VODeco Platform**
@@ -193,8 +195,8 @@ CivilizationProtocol представляет собой комплексную 
   },
   {
     id: 'projects',
-    title: 'Проекты экосистемы',
-    description: 'Активные и планируемые проекты',
+    title: t('projects.civilizationProtocol.projects.title'),
+    description: t('projects.civilizationProtocol.projects.description'),
     detailedDescription: `**Активные проекты:**
 
 1. **VODeco Water Management System**
@@ -230,8 +232,8 @@ CivilizationProtocol представляет собой комплексную 
   },
   {
     id: 'infrastructure',
-    title: 'Инфраструктура',
-    description: 'Техническая инфраструктура платформы',
+    title: t('projects.civilizationProtocol.infrastructure.title'),
+    description: t('projects.civilizationProtocol.infrastructure.description'),
     detailedDescription: `**Блокчейн инфраструктура:**
 - Ethereum Mainnet (основная сеть)
 - Polygon (масштабирование)
@@ -261,7 +263,7 @@ CivilizationProtocol представляет собой комплексную 
 ];
 
 // Компонент модального окна
-function DetailModal({ block, isOpen, onClose }: { block: typeof architectureBlocks[0] | null; isOpen: boolean; onClose: () => void }) {
+function DetailModal({ block, isOpen, onClose }: { block: ReturnType<typeof getArchitectureBlocks>[0] | null; isOpen: boolean; onClose: () => void }) {
   if (!block) return null;
 
   return (
@@ -368,6 +370,18 @@ function DetailModal({ block, isOpen, onClose }: { block: typeof architectureBlo
 
 // Компонент визуализации для блока
 function BlockVisualization({ type, color }: { type: string; color: string }) {
+  // Маппинг ID блоков на типы визуализации
+  const visualizationTypeMap: Record<string, 'platform' | 'objects' | 'subjects' | 'products' | 'projects' | 'infrastructure'> = {
+    'platform-architecture': 'platform',
+    'objects': 'objects',
+    'subjects': 'subjects',
+    'products': 'products',
+    'projects': 'projects',
+    'infrastructure': 'infrastructure',
+  };
+  
+  const visualizationType = visualizationTypeMap[type] || 'platform';
+  
   return (
     <div className="w-full h-full relative">
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
@@ -376,7 +390,7 @@ function BlockVisualization({ type, color }: { type: string; color: string }) {
           <pointLight position={[5, 5, 5]} intensity={1} color={color} />
           <pointLight position={[-5, -5, -5]} intensity={0.5} color={color} />
           <ArchitectureVisualization 
-            type={type as any} 
+            type={visualizationType} 
             color={color} 
           />
         </Suspense>
@@ -386,6 +400,8 @@ function BlockVisualization({ type, color }: { type: string; color: string }) {
 }
 
 export default function CivilizationProtocolPage() {
+  const { t } = useI18n();
+  const architectureBlocks = getArchitectureBlocks(t);
   const [selectedBlock, setSelectedBlock] = useState<typeof architectureBlocks[0] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -406,12 +422,19 @@ export default function CivilizationProtocolPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12 md:mb-16"
           >
-            <h1 className="text-3xl md:text-5xl lg:text-7xl font-mono font-light tracking-tight text-[#00F0FF] mb-4 md:mb-6">
-              CIVILIZATION PROTOCOL
+            <h1 className="text-3xl md:text-5xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6">
+              {t('projects.civilizationProtocol.heroTitle')}
             </h1>
-            <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-3xl mx-auto px-4">
-              Децентрализованная кибер-физическая платформа для управления водными ресурсами через блокчейн
+            <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-3xl mx-auto px-4 mb-6">
+              {t('projects.civilizationProtocol.heroDescription')}
             </p>
+            <Link
+              href="/projects/civilization-protocol/presentation"
+              className="inline-flex items-center gap-2 font-mono text-sm md:text-base px-6 py-3 border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all text-[#E0E0E0]"
+            >
+              <FileText className="w-4 h-4" />
+              {t('projects.civilizationProtocol.presentationLink')}
+            </Link>
           </motion.div>
 
           {/* Architecture Blocks Grid */}
@@ -423,8 +446,8 @@ export default function CivilizationProtocolPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleBlockClick(block)}
-                className="relative h-[300px] md:h-[400px] border border-[#00F0FF]/20 bg-[#050505]/50 
-                         hover:border-[#00F0FF]/50 hover:bg-[#00F0FF]/5 transition-all cursor-pointer
+                className="relative h-[300px] md:h-[400px] border border-[#E0E0E0]/20 bg-[#050505]/50 
+                         hover:border-[#E0E0E0]/50 hover:bg-[#E0E0E0]/5 transition-all cursor-pointer
                          group overflow-hidden"
               >
                 {/* Background Visualization */}
@@ -438,7 +461,7 @@ export default function CivilizationProtocolPage() {
                     {block.icon}
                   </div>
                   
-                  <h3 className="text-xl md:text-2xl font-mono text-[#E0E0E0] mb-2 md:mb-3 group-hover:text-[#00F0FF] transition-colors">
+                  <h3 className="text-xl md:text-2xl font-mono text-[#E0E0E0] mb-2 md:mb-3 group-hover:text-[#FFFFFF] transition-colors">
                     {block.title}
                   </h3>
                   
@@ -446,9 +469,9 @@ export default function CivilizationProtocolPage() {
                     {block.description}
                   </p>
 
-                  <div className="mt-auto pt-3 md:pt-4 border-t border-[#00F0FF]/20">
-                    <span className="font-mono text-[10px] md:text-xs text-[#00F0FF] tracking-wider">
-                      CLICK FOR DETAILS →
+                  <div className="mt-auto pt-3 md:pt-4 border-t border-[#E0E0E0]/20">
+                    <span className="font-mono text-[10px] md:text-xs text-[#E0E0E0] tracking-wider">
+                      {t('projects.civilizationProtocol.clickForDetails')}
                     </span>
                   </div>
                 </div>

@@ -10,6 +10,8 @@ import type { Language } from '@/lib/i18n/translations';
 
 const menuItemsConfig = [
   { path: '/hub', label: 'HUB', labelEn: 'HUB' },
+  { path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
+  { path: '/visual', label: 'ВИЗУАЛ', labelEn: 'VISUAL' },
   { path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
   { path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
   { path: '/cases', label: 'КЕЙСЫ', labelEn: 'CASES' },
@@ -17,6 +19,7 @@ const menuItemsConfig = [
   { path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
   { path: '/join', label: 'JOIN', labelEn: 'JOIN' },
   { path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
+  { path: '/background', label: 'ФОН', labelEn: 'BACKGROUND' },
   { path: '/legacy', label: 'LEGACY', labelEn: 'LEGACY' },
 ];
 
@@ -118,7 +121,7 @@ export default function Header() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </motion.div>
           </Link>
 

@@ -32,7 +32,7 @@ export default function VariantE() {
     const original = t('home.title');
     const interval = setInterval(() => {
       if (Math.random() > 0.7) {
-        const glitched = original.split('').map((char, i) => {
+        const glitched = original.split('').map((char: string, i: number) => {
           if (Math.random() > 0.8) {
             return glitchChars[Math.floor(Math.random() * glitchChars.length)];
           }
@@ -112,7 +112,7 @@ export default function VariantE() {
                 letterSpacing: '0.2em'
               }}
             >
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </motion.div>
           </Link>
           <Link href="/vote">
