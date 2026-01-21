@@ -51,6 +51,23 @@ export default function GalleryPage() {
       placeholders: ['Material Scan', 'Sensor Map', 'AI Study'],
     },
   ];
+
+  const videoShowcase = [
+    {
+      src: '/media/need-for-speed-underground-2-remaster-2022.mp4',
+      title: 'Need For Speed Underground 2 · Remaster 2022',
+      caption: 'Cinematic remaster — motion & CGI sequence',
+      tags: ['Motion', 'CGI', 'Remaster'],
+      meta: 'Motion · CGI',
+    },
+    {
+      src: '/media/ryabov.mp4',
+      title: 'rяbov — fashion motion',
+      caption: 'Art-fashion short with glitch aesthetic',
+      tags: ['Fashion', 'Art', 'Experimental'],
+      meta: 'Fashion film · Glitch art',
+    },
+  ];
   return (
     <div className="relative min-h-screen bg-[#050505]">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" aria-hidden="true" />
@@ -92,6 +109,76 @@ export default function GalleryPage() {
                 <Play size={14} />
               </motion.button>
             </Link>
+          </div>
+        </section>
+
+        {/* Video showcase */}
+        <section className="px-4 mb-16">
+          <div className="max-w-6xl mx-auto space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="text-[#E0E0E0]">
+                <Film size={18} />
+              </div>
+              <div className="font-mono text-xs text-[#E0E0E0]/60 tracking-[0.25em] uppercase">
+                {t('gallery.video.accent')}
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+              <div className="space-y-2">
+                <h2 className="font-mono text-2xl md:text-3xl text-[#E0E0E0]">{t('gallery.video.title')}</h2>
+                <p className="font-mono text-sm text-[#E0E0E0]/80 max-w-3xl">{t('gallery.video.description')}</p>
+              </div>
+              <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.3em] uppercase">
+                {t('gallery.tagline')}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {videoShowcase.map((item, idx) => (
+                <motion.div
+                  key={item.src}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="border border-[#E0E0E0]/20 bg-[#0A0A0A] overflow-hidden group"
+                >
+                  <div className="relative aspect-video bg-[#050505]">
+                    <video
+                      src={item.src}
+                      controls
+                      muted
+                      playsInline
+                      loop
+                      preload="metadata"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  </div>
+
+                  <div className="p-5 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-mono text-lg text-[#E0E0E0]">{item.title}</h3>
+                      <span className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.3em] uppercase">
+                        {item.meta}
+                      </span>
+                    </div>
+                    <p className="font-mono text-sm text-[#E0E0E0]/75 leading-relaxed">{item.caption}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 border border-[#E0E0E0]/20 text-[#E0E0E0]/80 font-mono text-[10px] tracking-[0.2em] uppercase"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
