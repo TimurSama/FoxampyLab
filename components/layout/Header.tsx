@@ -33,15 +33,10 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const languageMenuRef = useRef<HTMLDivElement>(null);
 
-  const languages: Language[] = ['en', 'ru', 'ar', 'es', 'pl', 'fr', 'de'];
+  const languages: Language[] = ['en', 'ru'];
   const languageNames: Record<Language, string> = {
     en: 'EN',
     ru: 'RU',
-    ar: 'AR',
-    es: 'ES',
-    pl: 'PL',
-    fr: 'FR',
-    de: 'DE',
   };
 
   // Close menus on outside click
@@ -193,10 +188,10 @@ export default function Header() {
                         }}
                         className={`w-full px-4 py-2 text-left font-mono text-xs transition-colors
                                  border-b border-stone-anthracite/20 last:border-b-0
-                                 ${language === lang 
-                                   ? 'bg-ink-deep text-engrave-line' 
-                                   : 'text-stone-slate hover:bg-ink-deep hover:text-engrave-line'
-                                 }`}
+                                 ${language === lang
+                            ? 'bg-ink-deep text-engrave-line'
+                            : 'text-stone-slate hover:bg-ink-deep hover:text-engrave-line'
+                          }`}
                       >
                         {languageNames[lang]}
                       </button>
