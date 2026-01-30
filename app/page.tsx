@@ -149,7 +149,7 @@ export default function Home() {
         className="relative z-10 min-h-screen grid md:grid-cols-2 items-center gap-8"
         style={{ opacity: isBooting ? 0 : 1, transition: 'opacity 0.3s ease-in-out' }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-28 w-full md:col-span-1">
+        <div className="max-w-6xl mx-auto px-6 pt-24 pb-8 md:py-28 w-full md:col-span-1">
           <div className="flex flex-col gap-8">
             <motion.h1
               initial={{ opacity: 0, y: 24 }}

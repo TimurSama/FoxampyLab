@@ -8,20 +8,15 @@ import { useRouter } from 'next/navigation';
 import { useI18n } from '@/lib/i18n/context';
 import type { Language } from '@/lib/i18n/translations';
 
-const menuItemsConfig = [
-  { path: '/hub', label: 'HUB', labelEn: 'HUB' },
-  { path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
-  { path: '/visual', label: 'ВИЗУАЛ', labelEn: 'VISUAL' },
-  { path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
-  { path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
-  { path: '/cases', label: 'КЕЙСЫ', labelEn: 'CASES' },
-  { path: '/research', label: 'R&D', labelEn: 'R&D' },
-  { path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
-  { path: '/join', label: 'JOIN', labelEn: 'JOIN' },
-  { path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
-  { path: '/background', label: 'ФОН', labelEn: 'BACKGROUND' },
-  { path: '/legacy', label: 'LEGACY', labelEn: 'LEGACY' },
-];
+{ path: '/hub', label: 'HUB', labelEn: 'HUB' },
+{ path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
+{ path: '/visual', label: 'ВИЗУАЛ', labelEn: 'VISUAL' },
+{ path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
+{ path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
+{ path: '/research', label: 'R&D', labelEn: 'R&D' },
+{ path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
+{ path: '/join', label: 'JOIN', labelEn: 'JOIN' },
+{ path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
 
 export default function Header() {
   const router = useRouter();
@@ -116,7 +111,8 @@ export default function Header() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              ◈ FOXAMPY LAB
+              <span className="md:hidden text-lg">◈</span>
+              <span className="hidden md:block">◈ FOXAMPY LAB</span>
             </motion.div>
           </Link>
 

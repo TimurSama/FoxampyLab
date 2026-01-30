@@ -35,7 +35,8 @@ export default function ServicesDetailModal({ service, isOpen, onClose }: Servic
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 xl:inset-32 bg-[#050505] border border-[#E0E0E0]/30 z-50 overflow-y-auto max-h-[90vh]"
+            className="fixed inset-4 md:inset-8 lg:inset-16 xl:inset-32 bg-[#050505] border border-[#E0E0E0]/30 z-50 overflow-y-auto max-h-[90vh] cursor-pointer"
+            onClick={onClose}
           >
             <div className="p-4 md:p-8 lg:p-12">
               <button
@@ -44,7 +45,7 @@ export default function ServicesDetailModal({ service, isOpen, onClose }: Servic
               >
                 <X size={24} />
               </button>
-              
+
               <div className="mb-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 border border-[#E0E0E0] text-[#E0E0E0] flex items-center justify-center">
