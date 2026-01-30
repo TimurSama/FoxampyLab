@@ -346,6 +346,26 @@ export interface Translations {
       solution: string;
       visuals: string;
     };
+    rd: {
+      iot: {
+        title: string;
+        category: string;
+        description: string;
+        tags: string[];
+      };
+      quantum: {
+        title: string;
+        category: string;
+        description: string;
+        tags: string[];
+      };
+      water: {
+        title: string;
+        category: string;
+        description: string;
+        tags: string[];
+      };
+    };
   };
   presentation: {
     back: string;
@@ -1226,35 +1246,55 @@ export const translations: Record<Language, Translations> = {
         category: 'Fintech / Blockchain',
         description: 'Is an automated cross-chain system for estimating the reputation of users on the blockchain. For reputation computation, system is analyzing the user’s transactions on the blockchain to assigning a score of credibility.\n\nThe initial strategy was the creation of Non-Fungible Tokens as SBTs for Everscale and Ethereum networks. However, Everscale’s Octus Bridge is lucking the ability for transferring Non- Fungible Tokens. Therefore, in order to mint SBTs from Ethereum network, we create a fungible token on Everscale and bridge it to. Ethereum where it transforms into a Non-Fungible. This way SBTs are created correctly',
         solution: 'Detailed multi-chain payment scenarios and reputation scoring logic.',
-        visuals: 'Grid 3D dashboards, transparent transaction flow maps, kinetic accents when switching networks.',
+        visuals: '',
       },
       daoEcology: {
         title: 'DAO Ecology',
         category: 'Envirotech / Governance',
         description: 'Decentralized platform for environmental monitoring and data management.',
         solution: 'Ecosystem for DAO ecology: interface for managing data flows and decisions without KPI numbers.',
-        visuals: 'Organic diagrams, soft color gradients for DAO states, micro-interactions for voting.',
+        visuals: '',
       },
       mailServices: {
         title: 'Mail System',
         category: 'Services / Logistics',
         description: 'Development of a user application for the postal group system and cleaning system, as well as the creation of special CRM and automated systems for exchange, storage, and use of data, as well as the development and connection of neural-agent AI tools for management and support',
         solution: 'Mail service bus: modular interfaces, clean integration map without metrics.',
-        visuals: 'Thin contours, API line animations, monochrome accents and smooth state transitions.',
+        visuals: '',
       },
       parametricFashion: {
         title: 'Parametric Fashion',
         category: 'Fashion / Digital Textile',
         description: 'Digital clothing collection with interactive fitting.',
         solution: 'Digital fashion line with parametric patterns and interactive fitting.',
-        visuals: 'Layered fabrics, glowing seams, smooth deformations, rhythm of fabric waves instead of numbers.',
+        visuals: '',
       },
       parametricArchitecture: {
         title: 'Parametric Architecture',
         category: 'Architecture / Spatial Computing',
-        description: 'Pavilion with interactive navigation through structure layers and lighting scenarios.',
-        solution: 'Parametric pavilion with interactive navigation through structure layers.',
-        visuals: 'Ribbed grids, light channels, smooth morphology of forms via WebGL.',
+        description: 'Pavilion with interactive navigation through structural layers and light scenarios.',
+        solution: 'Parametric pavilion with interactive navigation through structural layers.',
+        visuals: '',
+      },
+      rd: {
+        iot: {
+          title: 'IoT & Standardization',
+          category: 'Hardware / Blockchain',
+          description: 'Development, unification, and standardization of equipment systems. Specialized IoT sensors directly connected to the blockchain and hashing data to nodes.',
+          tags: ['IoT', 'Blockchain', 'Hardware']
+        },
+        quantum: {
+          title: 'Post-Quantum Blockchain',
+          category: 'Quantum Security / Blockchain',
+          description: 'Development of next-gen post-quantum blockchain. Enhanced security (quantum encryption), high throughput for data arrays, and cost minimization (reduced computational load and carbon footprint).',
+          tags: ['Quantum', 'Security', 'Green Tech']
+        },
+        water: {
+          title: 'Water Ecology',
+          category: 'Research / Ecology',
+          description: 'Educational and research program for ecological monitoring. Portable water analysis device with integrated learning and data collection modules.',
+          tags: ['Ecology', 'Education', 'Hardware']
+        }
       },
     },
     presentation: {
@@ -2342,35 +2382,55 @@ export const translations: Record<Language, Translations> = {
         category: 'Финансовые технологии / Блокчейн',
         description: 'Это автоматизированная кроссчейн-система для оценки репутации пользователей в блокчейне. Для вычисления репутации система анализирует транзакции пользователя в блокчейне для присвоения оценки доверия.\n\nПервоначальная стратегия заключалась в создании нефангибельных токенов (SBT) для сетей Everscale и Ethereum. Однако в мосту Octus Bridge от Everscale отсутствует возможность передачи нефангибельных токенов. Поэтому для создания SBT в сети Ethereum мы создаем фангибельный токен на Everscale и переводим его через мост в Ethereum, где он трансформируются в нефангибельный. Таким образом, SBT создаются корректно.',
         solution: 'Детальные сценарии мультичейн-платежей и логика оценки репутации.',
-        visuals: 'Сеточные 3D-дашборды, прозрачные карты потоков транзакций, кинетические акценты при смене сети.',
+        visuals: '',
       },
       daoEcology: {
         title: 'DAO Экология',
         category: 'Зеленые технологии / Управление',
         description: 'Децентрализованная платформа для экологического мониторинга и управления данными.',
         solution: 'Экосистема для DAO-экологии: интерфейс управления потоками данных и решений без KPI-цифр.',
-        visuals: 'Органические диаграммы, мягкие цветовые градиенты для состояний DAO, микровзаимодействия голосований.',
+        visuals: '',
       },
       mailServices: {
-        title: 'Почтовая система',
+        title: 'Экосистема сервисов',
         category: 'Сервисы / Логистика',
-        description: 'Разработка пользовательского приложения системы почтовой группы и клининг системы, а также создание специальных CRM и автоматизированных систем обмена хранения и использования данных а также разработка и подключение нейроагентных ИИ инструментов менеджмента и поддержки',
+        description: 'Экосистема сервисов и продуктов под управлением в систематизированном приложении с CRM и ИИ автоматизациями.',
         solution: 'Сервисная шина почтовых сервисов: модульные интерфейсы, чистая интеграционная карта без метрик.',
-        visuals: 'Тонкие контуры, анимации линий API, монохромные акценты и плавные переходы состояний.',
+        visuals: '',
       },
       parametricFashion: {
         title: 'Параметрическая мода',
         category: 'Мода / Диджитал текстиль',
         description: 'Коллекция цифровой одежды с интерактивной примеркой.',
         solution: 'Линейка цифровой моды с параметрическими паттернами и интерактивной примеркой.',
-        visuals: 'Слоистые ткани, светящиеся швы, плавные деформации, ритм тканевых волн вместо чисел.',
+        visuals: '',
       },
       parametricArchitecture: {
         title: 'Параметрическая архитектура',
         category: 'Архитектура / Пространственные вычисления',
         description: 'Павильон с интерактивной навигацией по слоям конструкций и сценариям света.',
         solution: 'Параметрический павильон с интерактивной навигацией по слоям конструкций.',
-        visuals: 'Нервюрные сетки, световые каналы, плавная морфология форм через WebGL.',
+        visuals: '',
+      },
+      rd: {
+        iot: {
+          title: 'IoT и Стандартизация',
+          category: 'Hardware / Blockchain',
+          description: 'Разработка, унификация и стандартизация систем оборудования. Специализированные IoT-датчики с прямым подключением к блокчейну и хешированием данных в ноды.',
+          tags: ['IoT', 'Blockchain', 'Hardware']
+        },
+        quantum: {
+          title: 'Постквантовый Блокчейн',
+          category: 'Quantum Security / Blockchain',
+          description: 'Разработка постквантового блокчейна нового поколения. Повышенная безопасность (квантовое шифрование), высокая пропускная способность и минимизация издержек (снижение вычислительных нагрузок и углеродного следа).',
+          tags: ['Quantum', 'Security', 'Green Tech']
+        },
+        water: {
+          title: 'Экология Воды',
+          category: 'Research / Ecology',
+          description: 'Образовательно-исследовательская программа экологического мониторинга. Портативное устройство анализа водных источников с модулями обучения и сбора данных.',
+          tags: ['Ecology', 'Education', 'Hardware']
+        }
       },
     },
     presentation: {
@@ -2652,12 +2712,12 @@ export const translations: Record<Language, Translations> = {
         description: 'UI/UX-кинематография: живые прототипы, сложные дашборды, 3D-интеракции.',
       },
       fashion: {
-        accent: 'Digital Collection',
+        accent: '',
         title: 'Мода',
         description: 'Дизайнерский модельный ряд Средяя Азия 2023',
       },
       architecture: {
-        accent: 'Параметрические пространства',
+        accent: '',
         title: 'Архитектура и среды',
         description: 'Работы Берлинской команды архитекторов-дизайнеров',
       },

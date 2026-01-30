@@ -11,11 +11,9 @@ import type { Language } from '@/lib/i18n/translations';
 const menuItemsConfig = [
   { path: '/hub', label: 'HUB', labelEn: 'HUB' },
   { path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
-  { path: '/visual', label: 'ВИЗУАЛ', labelEn: 'VISUAL' },
   { path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
   { path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
   { path: '/research', label: 'R&D', labelEn: 'R&D' },
-  { path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
   { path: '/join', label: 'JOIN', labelEn: 'JOIN' },
   { path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
 ];

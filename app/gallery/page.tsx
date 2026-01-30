@@ -190,13 +190,31 @@ export default function GalleryPage() {
       description: t('gallery.research.description'),
       projects: [
         {
-          id: 'dao-ecology',
-          title: t('cases.daoEcology.title'),
-          category: t('cases.daoEcology.category'),
-          description: t('cases.daoEcology.description'),
-          solution: t('cases.daoEcology.solution'),
-          visuals: t('cases.daoEcology.visuals'),
-          icon: <Zap size={20} />
+          id: 'rd-iot',
+          title: t('cases.rd.iot.title'),
+          category: t('cases.rd.iot.category'),
+          description: t('cases.rd.iot.description'),
+          solution: '', // No solution field needed for these if using standard card layout
+          visuals: '',
+          icon: <Monitor size={20} />
+        },
+        {
+          id: 'rd-quantum',
+          title: t('cases.rd.quantum.title'),
+          category: t('cases.rd.quantum.category'),
+          description: t('cases.rd.quantum.description'),
+          solution: '',
+          visuals: '',
+          icon: <Cpu size={20} />
+        },
+        {
+          id: 'rd-water',
+          title: t('cases.rd.water.title'),
+          category: t('cases.rd.water.category'),
+          description: t('cases.rd.water.description'),
+          solution: '',
+          visuals: '',
+          icon: <FlaskConical size={20} />
         }
       ]
     }
@@ -365,12 +383,14 @@ export default function GalleryPage() {
                                   </div>
                                 </div>
                                 <div className="space-y-6">
-                                  <div className="space-y-3">
-                                    <h4 className="font-mono text-[10px] text-[#E0E0E0]/40 uppercase tracking-widest">Visual Concept</h4>
-                                    <div className="p-6 border border-[#E0E0E0]/10 bg-[#050505] font-mono text-xs text-[#E0E0E0]/70 leading-relaxed">
-                                      {project.visuals}
+                                  {project.visuals && (
+                                    <div className="space-y-3">
+                                      <h4 className="font-mono text-[10px] text-[#E0E0E0]/40 uppercase tracking-widest">Visual Concept</h4>
+                                      <div className="p-6 border border-[#E0E0E0]/10 bg-[#050505] font-mono text-xs text-[#E0E0E0]/70 leading-relaxed">
+                                        {project.visuals}
+                                      </div>
                                     </div>
-                                  </div>
+                                  )}
                                   <Link href="/contact" className="block">
                                     <button className="w-full py-4 border border-[#E0E0E0]/20 hover:bg-[#E0E0E0] hover:text-[#050505] transition-all font-mono text-xs tracking-[0.2em] uppercase">
                                       Discuss similar project
