@@ -8,16 +8,17 @@ import { useRouter } from 'next/navigation';
 import { useI18n } from '@/lib/i18n/context';
 import type { Language } from '@/lib/i18n/translations';
 
-{ path: '/hub', label: 'HUB', labelEn: 'HUB' },
-{ path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
-{ path: '/visual', label: 'ВИЗУАЛ', labelEn: 'VISUAL' },
-{ path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
-{ path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
-{ path: '/research', label: 'R&D', labelEn: 'R&D' },
-{ path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
-{ path: '/join', label: 'JOIN', labelEn: 'JOIN' },
-{ path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
-
+const menuItemsConfig = [
+  { path: '/hub', label: 'HUB', labelEn: 'HUB' },
+  { path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
+  { path: '/visual', label: 'ВИЗУАЛ', labelEn: 'VISUAL' },
+  { path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
+  { path: '/services', label: 'УСЛУГИ', labelEn: 'SERVICES' },
+  { path: '/research', label: 'R&D', labelEn: 'R&D' },
+  { path: '/ventures', label: 'VENTURES', labelEn: 'VENTURES' },
+  { path: '/join', label: 'JOIN', labelEn: 'JOIN' },
+  { path: '/contact', label: 'КОНТАКТЫ', labelEn: 'CONTACT' },
+];
 export default function Header() {
   const router = useRouter();
   const { t, language, setLanguage } = useI18n();
