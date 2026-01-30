@@ -108,17 +108,16 @@ export default function Header() {
           {/* Logo - Center */}
           <Link href="/" className={`absolute left-1/2 -translate-x-1/2 transition-opacity duration-200 ${searchOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
             <motion.div
-              className="font-mono text-sm md:text-base tracking-[0.2em] text-engrave-fresco cursor-pointer"
+              className="font-mono text-sm md:text-base tracking-[0.2em] text-engrave-fresco cursor-pointer whitespace-nowrap"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span className="md:hidden text-lg">◈</span>
-              <span className="hidden md:block">◈ FOXAMPY LAB</span>
+              FOXAMPY LAB
             </motion.div>
           </Link>
 
           {/* Search + Language - Right */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end gap-1 md:flex-row md:items-center md:gap-3">
             {/* Search */}
             <div className="relative">
               {searchOpen ? (
