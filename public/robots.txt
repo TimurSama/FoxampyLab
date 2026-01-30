@@ -1,4 +1,4 @@
-# robots.txt for FRACTALIX.LAB
+# robots.txt for FOXAMPY LAB
 
 # Разрешаем всем краулерам, включая ИИ-краулеров
 User-agent: *

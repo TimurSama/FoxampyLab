@@ -110,7 +110,7 @@ export default function Header() {
           </div>
 
           {/* Logo - Center */}
-          <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+          <Link href="/" className={`absolute left-1/2 -translate-x-1/2 transition-opacity duration-200 ${searchOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
             <motion.div
               className="font-mono text-sm md:text-base tracking-[0.2em] text-engrave-fresco cursor-pointer"
               whileHover={{ scale: 1.02 }}

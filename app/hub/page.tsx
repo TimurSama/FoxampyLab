@@ -120,7 +120,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         {/* Stack */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-          <div className="space-y-2">
+        <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Target size={14} className="text-engrave-dim" />
               <span className="font-mono text-[10px] text-stone-slate uppercase tracking-wider">

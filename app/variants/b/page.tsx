@@ -72,7 +72,7 @@ export default function VariantB() {
               className="text-lg tracking-widest text-[#d4af37] cursor-pointer hover:text-[#f4cf57] transition-colors font-serif"
               style={{ letterSpacing: '0.3em' }}
             >
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </motion.div>
           </Link>
           <Link href="/vote">
@@ -202,7 +202,7 @@ export default function VariantB() {
       <footer className="py-12 px-4 border-t border-[#d4af37]/20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-sm text-[#d4af37]/60 font-serif">
-            © 2024 FRACTALIX.LAB — DIGITAL LABORATORY
+            © 2024 FOXAMPY LAB — DIGITAL LABORATORY
           </div>
           <Link href="/vote">
             <motion.button

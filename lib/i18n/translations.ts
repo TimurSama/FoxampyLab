@@ -2652,14 +2652,14 @@ export const translations: Record<Language, Translations> = {
         description: 'UI/UX-кинематография: живые прототипы, сложные дашборды, 3D-интеракции.',
       },
       fashion: {
-        accent: 'Мода',
+        accent: 'Digital Collection',
         title: 'Мода',
         description: 'Дизайнерский модельный ряд Средяя Азия 2023',
       },
       architecture: {
         accent: 'Параметрические пространства',
         title: 'Архитектура и среды',
-        description: 'Морфология фасадов, интерьеры-алгоритмы, световые сценарии.',
+        description: 'Работы Берлинской команды архитекторов-дизайнеров',
       },
       video: {
         accent: 'Видео',

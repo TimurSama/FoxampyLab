@@ -14,7 +14,7 @@ interface Node {
 
 const nodes: Node[] = [
   // Core - center
-  { id: 'core', label: 'FRACTALIX', x: 50, y: 50, category: 'tech', connections: ['web', 'blockchain', 'design', 'marketing', 'research', 'video'] },
+  { id: 'core', label: 'FOXAMPY', x: 50, y: 50, category: 'tech', connections: ['web', 'blockchain', 'design', 'marketing', 'research', 'video'] },
   
   // Tech cluster
   { id: 'web', label: 'WEB/APP', x: 25, y: 25, category: 'tech', connections: ['core', 'blockchain', 'design'] },

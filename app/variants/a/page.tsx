@@ -59,7 +59,7 @@ export default function VariantA() {
         <div className="px-4 md:px-8 py-4 flex items-center justify-between">
           <Link href="/">
             <motion.div className="text-sm tracking-widest text-[#00ff41] cursor-pointer hover:text-[#00ff88] transition-colors">
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </motion.div>
           </Link>
           <Link href="/vote">

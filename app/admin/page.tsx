@@ -48,12 +48,40 @@ export default function AdminPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'overview' | 'votes' | 'bookings' | 'content'>('overview');
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    // Check if accessed properly (in production would verify session)
-    // For now just show the admin panel
-    setIsAuthorized(true);
-  }, []);
+  const handlePasswordCheck = () => {
+    if (password === 'foxampy_admin_2024') {
+      setIsAuthorized(true);
+    } else {
+      alert('Неверный пароль доступа');
+    }
+  };
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+        <div className="bg-[#1a1a1a] p-8 rounded-lg border border-[#E0E0E0]/20 max-w-md w-full">
+          <h1 className="text-2xl font-mono text-[#E0E0E0] mb-4">Admin Panel</h1>
+          <p className="text-[#E0E0E0]/80 mb-6">Введите пароль для доступа к админ-панели</p>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Пароль"
+            className="w-full px-4 py-2 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] rounded mb-4"
+            onKeyPress={(e) => e.key === 'Enter' && handlePasswordCheck()}
+          />
+          <button
+            onClick={handlePasswordCheck}
+            className="w-full px-4 py-2 bg-[#E0E0E0] text-[#050505] rounded hover:bg-[#E0E0E0]/90 transition-colors"
+          >
+            Войти
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     router.push('/');
@@ -76,7 +104,7 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="font-mono text-sm text-engrave-fresco tracking-widest">
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </Link>
             <span className="font-mono text-[10px] text-stone-slate px-2 py-1 border border-stone-anthracite/30">
               ADMIN

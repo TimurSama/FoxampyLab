@@ -1,20 +1,11 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useRef, useMemo, useState, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useMemo, Suspense } from 'react';
 import * as THREE from 'three';
-import { Html } from '@react-three/drei';
 import { getOptimal3DQuality, isMobile } from '@/lib/device';
 import NeuralNodeCircle from './NeuralNodeCircle';
 
-const directions = [
-  'БИЗНЕС И СТРАТЕГИРОВАНИЕ',
-  'ДИЗАЙН И АРХИТЕКТУРА',
-  'САЙТЫ И ПРИЛОЖЕНИЯ',
-  'ЭКОСИСТЕМЫ',
-  'МАРКЕТИНГ И БРЕНДИНГ',
-  'ВИДЕО И КИНО',
-];
 
 const color = '#e8e8e8'; // engrave-line
 
@@ -209,88 +200,6 @@ function InnerGlow() {
   );
 }
 
-function FloatingLabel({ 
-  text, 
-  index, 
-  mousePos,
-  scrollDelta 
-}: { 
-  text: string; 
-  index: number;
-  mousePos: { x: number; y: number };
-  scrollDelta: { x: number; y: number };
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  const { camera } = useThree();
-  const [hovered, setHovered] = useState(false);
-  const accumulatedRotation = useRef({ x: 0, z: 0 });
-  
-  // Calculate position on sphere surface
-  const radius = useMemo(() => {
-    // Different orbits for each label
-    const baseRadius = 3.2;
-    const orbitOffset = (index % 3) * 0.3; // 3 different orbit levels
-    return baseRadius + orbitOffset;
-  }, [index]);
-  
-  const position = useMemo(() => {
-    const angle = (index / directions.length) * Math.PI * 2;
-    const verticalAngle = (index % 3) * (Math.PI / 6) - Math.PI / 6;
-    
-    const x = radius * Math.cos(angle) * Math.cos(verticalAngle);
-    const y = radius * Math.sin(verticalAngle);
-    const z = radius * Math.sin(angle) * Math.cos(verticalAngle);
-    
-    return [x, y, z] as [number, number, number];
-  }, [index, radius]);
-  
-  useFrame((state) => {
-    if (groupRef.current) {
-      // Накопление вращения от скролла
-      accumulatedRotation.current.x += scrollDelta.y * 0.1;
-      accumulatedRotation.current.z += scrollDelta.x * 0.1;
-      accumulatedRotation.current.x *= 0.96;
-      accumulatedRotation.current.z *= 0.96;
-      
-      // Rotate around sphere
-      const speed = 0.1 + (index % 3) * 0.05; // Different speeds
-      groupRef.current.rotation.y = state.clock.elapsedTime * speed;
-      
-      // Усиленное влияние мыши (в 2.5 раза)
-      groupRef.current.rotation.x = mousePos.y * 0.25 + accumulatedRotation.current.x;
-      groupRef.current.rotation.z = mousePos.x * 0.25 + accumulatedRotation.current.z;
-    }
-  });
-  
-  return (
-    <group ref={groupRef} position={position}>
-      <Html
-        center
-        distanceFactor={0.5}
-        style={{
-          pointerEvents: 'auto',
-          userSelect: 'none',
-        }}
-        transform
-        occlude
-      >
-        <div
-          onPointerEnter={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-          className="font-mono text-[9px] md:text-[10px] text-engrave-fresco tracking-wider
-                     bg-ink-chrome/95 backdrop-blur-xl border border-stone-anthracite/50
-                     px-3 py-2 whitespace-nowrap transition-all
-                     hover:border-engrave-line/50 hover:text-engrave-line"
-          style={{
-            transform: hovered ? 'scale(1.1)' : 'scale(1)',
-          }}
-        >
-          {text}
-        </div>
-      </Html>
-    </group>
-  );
-}
 
 function SphereScene({ 
   mousePos, 
@@ -306,17 +215,6 @@ function SphereScene({
       <ParticleCloud mousePos={mousePos} scrollDelta={scrollDelta} />
       <IcosahedronWireframe mousePos={mousePos} scrollDelta={scrollDelta} />
       <OuterPolyhedron mousePos={mousePos} scrollDelta={scrollDelta} />
-      
-      {/* Floating labels */}
-      {directions.map((direction, index) => (
-        <FloatingLabel 
-          key={index}
-          text={direction}
-          index={index}
-          mousePos={mousePos}
-          scrollDelta={scrollDelta}
-        />
-      ))}
     </group>
   );
 }

@@ -164,8 +164,8 @@ export default function GalleryPage() {
     },
     {
       id: 'architecture',
-      title: language === 'ru' ? 'Архитектура' : 'Architecture',
-      accent: language === 'ru' ? 'работы Берлинской команды' : 'Berlin team works',
+      title: t('gallery.architecture.title'),
+      accent: t('gallery.architecture.accent'),
       icon: <Compass size={18} />,
       description: t('gallery.architecture.description'),
       isCarousel: true,

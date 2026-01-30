@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import '../styles/temp-animations.css'
 import { I18nProvider } from '@/lib/i18n/context'
 
 export const metadata: Metadata = {
@@ -20,11 +21,6 @@ export const metadata: Metadata = {
     languages: {
       'ru': '/',
       'en': '/',
-      'ar': '/',
-      'es': '/',
-      'pl': '/',
-      'fr': '/',
-      'de': '/',
     },
   },
   openGraph: {
@@ -120,7 +116,7 @@ export default function RootLayout({
           <div className="noise-overlay" />
           <div className="scanlines" />
           <div className="vignette" />
-          
+
           {children}
         </I18nProvider>
       </body>

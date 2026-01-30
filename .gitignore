@@ -57,8 +57,11 @@ Fractalix.lab.2/
 Fractalix.lab.3/
 
 # Референс изображения
-*.jpg
-*.jpeg
-*.png
-*.gif
+# *.jpg
+# *.jpeg
+# *.png
+# *.gif
+
+# Внутренние инструменты (не коммитим)
+BOTPARS/
 

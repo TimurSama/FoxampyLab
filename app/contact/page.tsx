@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { useI18n } from '@/lib/i18n/context';
+import { TelegramService } from '@/lib/telegram';
 
 export default function ContactPage() {
   const { t } = useI18n();
@@ -22,12 +23,46 @@ export default function ContactPage() {
     budget: '',
     message: ''
   });
-  const [submitted, setSubmitted] = useState(false);
+const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here would be form submission logic
-    setSubmitted(true);
+    setIsLoading(true);
+    
+    try {
+      const contactData = {
+        name: formState.name,
+        email: formState.email,
+        subject: formState.project,
+        message: formState.message
+      };
+
+      if (TelegramService.isConfigured()) {
+        await TelegramService.sendMessage(
+          TelegramService.formatContactMessage(contactData)
+        );
+        setSubmitted(true);
+        setFormState({
+          name: '',
+          email: '',
+          project: '',
+          budget: '',
+          message: ''
+        });
+      } else {
+        // Fallback - открываем Telegram бота
+        const telegramMessage = TelegramService.formatContactMessage(contactData);
+        const telegramUrl = `${TelegramService.getBotUrl()}?start=${encodeURIComponent(telegramMessage)}`;
+        window.open(telegramUrl, '_blank');
+        setSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      alert('❌ Произошла ошибка. Пожалуйста, попробуйте еще раз.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

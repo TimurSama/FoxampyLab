@@ -26,7 +26,7 @@ const commands: Record<string, (args: string[]) => string[]> = {
     '',
     'Available commands:',
     '  help      - Show this help message',
-    '  about     - About Fractalix.lab',
+    '  about     - About Foxampy Lab',
     '  services  - List our services',
     '  projects  - View projects',
     '  contact   - Contact information',
@@ -39,7 +39,7 @@ const commands: Record<string, (args: string[]) => string[]> = {
   ],
   about: () => [
     '',
-    '◈ FRACTALIX.LAB',
+    '◈ FOXAMPY LAB',
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     '',
     'We are a digital laboratory specializing in:',

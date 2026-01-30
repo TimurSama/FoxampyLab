@@ -70,3 +70,6 @@ export default function BarChart({ data, maxValue, height = 200, showValues = tr
 
 
 
+
+
+

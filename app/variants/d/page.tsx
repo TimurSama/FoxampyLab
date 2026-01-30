@@ -78,7 +78,7 @@ export default function VariantD() {
                 letterSpacing: '0.2em'
               }}
             >
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </motion.div>
           </Link>
           <Link href="/vote">

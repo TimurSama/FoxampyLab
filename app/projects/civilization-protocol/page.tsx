@@ -428,13 +428,22 @@ export default function CivilizationProtocolPage() {
             <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-3xl mx-auto px-4 mb-6">
               {t('projects.civilizationProtocol.heroDescription')}
             </p>
-            <Link
-              href="/projects/civilization-protocol/presentation"
-              className="inline-flex items-center gap-2 font-mono text-sm md:text-base px-6 py-3 border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all text-[#E0E0E0]"
-            >
-              <FileText className="w-4 h-4" />
-              {t('projects.civilizationProtocol.presentationLink')}
-            </Link>
+            <div className="flex justify-center gap-3 flex-wrap">
+              <Link
+                href="/projects/civilization-protocol/presentation"
+                className="inline-flex items-center gap-2 font-mono text-sm md:text-base px-6 py-3 border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all text-[#E0E0E0]"
+              >
+                <FileText className="w-4 h-4" />
+                {t('projects.civilizationProtocol.presentationLink')}
+              </Link>
+              <Link
+                href="/projects/civilization-protocol/presentation-2"
+                className="inline-flex items-center gap-2 font-mono text-sm md:text-base px-6 py-3 border border-[#00F0FF]/30 bg-[#050505]/60 hover:border-[#00F0FF]/70 hover:bg-[#00F0FF]/10 transition-all text-[#E0E0E0]"
+              >
+                <FileText className="w-4 h-4" />
+                Презентация 2
+              </Link>
+            </div>
           </motion.div>
 
           {/* Architecture Blocks Grid */}

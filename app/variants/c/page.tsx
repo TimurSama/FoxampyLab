@@ -73,7 +73,7 @@ export default function VariantC() {
               className="text-base tracking-tight text-[#8b0000] cursor-pointer hover:text-[#cc0000] transition-colors font-bold"
               style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}
             >
-              ◈ FRACTALIX.LAB
+              ◈ FOXAMPY LAB
             </motion.div>
           </Link>
           <Link href="/vote">

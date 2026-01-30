@@ -22,7 +22,7 @@ export default function NexusVitaPresentation() {
   
   const roadmapItems = [
     { 
-      period: 'Q1 2025',
+      period: 'Q1 2025', 
       title: language === 'ru' ? 'MVP Launch' : 'MVP Launch', 
       description: language === 'ru' 
         ? 'Профили, базовая карта здоровья, маркетплейс'
