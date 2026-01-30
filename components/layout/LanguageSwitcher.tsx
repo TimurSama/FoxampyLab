@@ -3,22 +3,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { Globe, ChevronDown } from 'lucide-react';
-import { useLocale } from '@/contexts/LocaleContext';
-import { Locale } from '@/i18n';
+import { useI18n } from '@/lib/i18n/context';
+import { Language } from '@/lib/i18n/translations';
 
-const languageNames: Record<Locale, string> = {
+const languageNames: Record<Language, string> = {
   en: 'EN',
   ru: 'RU',
-  pl: 'PL',
-  es: 'ES',
-  fr: 'FR',
-  de: 'DE',
-  ar: 'AR',
-  be: 'BE',
 };
 
 export default function LanguageSwitcher() {
-  const { locale, setLocale } = useLocale();
+  const { language, setLanguage } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +32,8 @@ export default function LanguageSwitcher() {
     };
   }, [isOpen]);
 
-  const handleLanguageChange = (newLocale: Locale) => {
-    setLocale(newLocale);
+  const handleLanguageChange = (newLanguage: Language) => {
+    setLanguage(newLanguage);
     setIsOpen(false);
   };
 
@@ -54,10 +48,10 @@ export default function LanguageSwitcher() {
       >
         <Globe size={12} className="text-engrave-dim" />
         <span className="font-mono text-[8px] md:text-[9px] text-stone-slate tracking-widest">
-          {languageNames[locale]}
+          {languageNames[language]}
         </span>
-        <ChevronDown 
-          size={10} 
+        <ChevronDown
+          size={10}
           className={`text-stone-slate transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </motion.button>
@@ -80,13 +74,13 @@ export default function LanguageSwitcher() {
               className="absolute top-full right-0 mt-2 bg-ink-chrome border border-stone-anthracite/50 
                        backdrop-blur-xl z-50 min-w-[120px]"
             >
-              {Object.entries(languageNames).map(([langCode, langName]) => (
+              {(Object.entries(languageNames) as [Language, string][]).map(([langCode, langName]) => (
                 <button
                   key={langCode}
-                  onClick={() => handleLanguageChange(langCode as Locale)}
+                  onClick={() => handleLanguageChange(langCode)}
                   className={`w-full px-4 py-2 text-left font-mono text-[9px] tracking-widest transition-colors
-                    ${locale === langCode 
-                      ? 'bg-engrave-fresco/20 text-engrave-fresco' 
+                    ${language === langCode
+                      ? 'bg-engrave-fresco/20 text-engrave-fresco'
                       : 'text-stone-slate hover:bg-ink-deep hover:text-engrave-line'
                     }`}
                 >

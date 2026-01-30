@@ -1,9 +1,24 @@
 "use client";
 
 import { Suspense, useRef, useEffect, useState, useMemo } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera } from '@react-three/drei';
-import InkFluidBackground from '@/components/visuals/InkFluidBackground';
+import dynamic from 'next/dynamic';
+import { isMobile } from '@/lib/device';
+import InteractiveSphere from '@/components/visuals/InteractiveSphere';
+import TerrainGrid from '@/components/visuals/TerrainGrid';
+
+// Временно отключаем 3D фон до исправления ошибки
+const InkFluidBackground = () => (
+  <div className="w-full h-full bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#030303]">
+    {/* Анимированный эффект как замена 3D */}
+    <div className="absolute inset-0 opacity-20">
+      <div className="w-full h-full" style={{
+        backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                         radial-gradient(circle at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 40%)`,
+        animation: 'float 20s ease-in-out infinite'
+      }} />
+    </div>
+  </div>
+);
 import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
@@ -12,6 +27,7 @@ import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, Me
 import CalendarPicker from '@/components/forms/CalendarPicker';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
 import { useI18n } from '@/lib/i18n/context';
+import { TelegramService } from '@/lib/telegram';
 
 /**
  * Новая главная страница с 4D-навигацией
@@ -23,11 +39,27 @@ export default function Home() {
   const [isBooting, setIsBooting] = useState(true);
   const [selectedService, setSelectedService] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsBooting(false), 800);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setMousePos({
+          x: (e.clientX - rect.left) / rect.width - 0.5,
+          y: (e.clientY - rect.top) / rect.height - 0.5,
+        });
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Получаем данные services из переводов
@@ -40,6 +72,27 @@ export default function Home() {
     return t('home.ventures.projects', { returnObjects: true }) as any[];
   }, [t, language]);
 
+  const cases = useMemo(() => [
+    {
+      id: 'web3-bank',
+      title: t('cases.web3Bank.title'),
+      category: t('cases.web3Bank.category'),
+      description: t('cases.web3Bank.description'),
+      technologies: ['Solidity', 'Web3.js', 'Everscale', 'Ethereum', 'Smart Contracts', 'Bridge Technology'],
+      solution: t('cases.web3Bank.solution'),
+      visuals: t('cases.web3Bank.visuals')
+    },
+    {
+      id: 'mail-services',
+      title: t('cases.mailServices.title'),
+      category: t('cases.mailServices.category'),
+      description: t('cases.mailServices.description'),
+      technologies: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'REST API'],
+      solution: t('cases.mailServices.solution'),
+      visuals: t('cases.mailServices.visuals')
+    }
+  ], [t]);
+
   const sections = useMemo(() => [
     {
       id: 'solutions',
@@ -49,19 +102,20 @@ export default function Home() {
       services: servicesData,
     },
     {
-      id: 'gallery',
+      id: 'cases',
       title: t('home.gallery.title'),
       subtitle: t('home.gallery.subtitle'),
       description: t('home.gallery.description'),
+      cases: cases,
       cta: t('home.gallery.cta'),
-      target: '/gallery',
+      target: '/gallery'
     },
     {
-      id: 'ventures',
-      title: t('home.ventures.title'),
-      subtitle: t('home.ventures.subtitle'),
-      description: t('home.ventures.description'),
-      cta: t('home.ventures.cta'),
+      id: 'hub',
+      title: t('home.nexus.title'),
+      subtitle: t('home.nexus.subtitle'),
+      description: t('home.nexus.description'),
+      cta: t('home.nexus.cta'),
       target: '/hub',
     },
     {
@@ -70,10 +124,10 @@ export default function Home() {
       subtitle: t('home.intelligence.subtitle'),
       description: t('home.intelligence.description'),
     },
-  ], [t, language, servicesData]);
+  ], [t, language, servicesData, cases]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="relative w-full bg-[#050505] overflow-x-hidden"
     >
@@ -85,32 +139,17 @@ export default function Home() {
       {/* Header */}
       <Header />
 
-      {/* Main 3D Canvas - только чернильная жидкость на фон */}
-      <div className="fixed inset-0 z-0">
-        <Canvas
-          camera={{ position: [0, 0, 10], fov: 50 }}
-          gl={{
-            antialias: true,
-            alpha: false,
-            powerPreference: 'high-performance',
-          }}
-          dpr={[1, 2]}
-        >
-          <PerspectiveCamera makeDefault position={[0, 0, 10]} />
-          
-          {/* Только чернильная жидкость на весь фон */}
-          <Suspense fallback={null}>
-            <InkFluidBackground />
-          </Suspense>
-        </Canvas>
+      {/* CSS Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <InkFluidBackground />
       </div>
 
       {/* Hero */}
       <section
-        className="relative z-10 min-h-screen flex items-center"
+        className="relative z-10 min-h-screen grid md:grid-cols-2 items-center gap-8"
         style={{ opacity: isBooting ? 0 : 1, transition: 'opacity 0.3s ease-in-out' }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-28 w-full">
+        <div className="max-w-6xl mx-auto px-6 py-28 w-full md:col-span-1">
           <div className="flex flex-col gap-8">
             <motion.h1
               initial={{ opacity: 0, y: 24 }}
@@ -129,40 +168,57 @@ export default function Home() {
               {t('home.subtitle')}
             </motion.p>
 
-            <div className="flex flex-wrap gap-4">
-              <Link href="/services">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest flex items-center gap-3"
-                >
-                  {t('home.ctaButton1')}
-                  <ArrowRight size={16} />
-                </motion.button>
-              </Link>
-              <Link href="/hub">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm tracking-widest flex items-center gap-3"
-                >
-                  {t('home.ctaButton2')}
-                  <Sparkle size={16} />
-                </motion.button>
-              </Link>
-              <Link href="/gallery">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 border border-[#E0E0E0]/20 text-[#E0E0E0]/90 font-mono text-sm tracking-widest flex items-center gap-3"
-                >
-                  {t('home.ctaButton3')}
-                  <PlayCircle size={16} />
-                </motion.button>
-              </Link>
+            <div className="flex flex-col gap-4">
+              {/* Row 1: Order Project */}
+              <div className="flex">
+                <Link href="/services">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest flex items-center gap-3 w-full md:w-auto"
+                  >
+                    {t('home.ctaButton1')}
+                    <ArrowRight size={16} />
+                  </motion.button>
+                </Link>
+              </div>
+
+              {/* Row 2: Gallery & Hub */}
+              <div className="flex flex-wrap gap-4">
+                <Link href="/gallery" className="flex-1 md:flex-initial">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 border border-[#E0E0E0]/20 text-[#E0E0E0]/90 font-mono text-sm tracking-widest flex items-center gap-3 w-full"
+                  >
+                    {t('home.ctaButton3')}
+                    <PlayCircle size={16} />
+                  </motion.button>
+                </Link>
+                <Link href="/hub" className="flex-1 md:flex-initial">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm tracking-widest flex items-center gap-3 w-full"
+                  >
+                    {t('home.ctaButton2')}
+                    <Sparkle size={16} />
+                  </motion.button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Interactive Sphere */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="relative h-[400px] md:h-[600px] pointer-events-auto cursor-pointer md:col-span-1"
+        >
+          <InteractiveSphere mousePos={mousePos} />
+        </motion.div>
       </section>
 
       {/* Content Sections */}
@@ -170,20 +226,29 @@ export default function Home() {
         <section
           key={section.id}
           className="relative z-10 min-h-screen flex items-center justify-center"
-          style={{ 
+          style={{
             opacity: isBooting ? 0 : 1,
             transition: 'opacity 0.3s ease-in-out'
           }}
         >
+          {/* TerrainGrid background for intelligence section */}
+          {section.id === 'intelligence' && (
+            <div className="absolute inset-0 z-0 opacity-40 overflow-hidden w-screen">
+              <TerrainGrid
+                mousePos={mousePos}
+                className="w-full h-full scale-110 md:scale-125"
+              />
+            </div>
+          )}
           <div className="max-w-4xl mx-auto px-4 text-center">
             <div className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6">
               ─── {section.title} ───
             </div>
-            
+
             <h1 className="text-3xl md:text-5xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6">
               {section.subtitle}
             </h1>
-            
+
             <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed px-4">
               {section.description}
             </p>
@@ -227,6 +292,50 @@ export default function Home() {
                     </p>
                     <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider">
                       {t('home.ventures.clickForDetails')}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Cases Grid для секции Cases */}
+            {section.id === 'cases' && section.cases && (
+              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                {section.cases.map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
+                             hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm"
+                  >
+                    <h3 className="font-mono text-xl text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="font-mono text-xs text-[#E0E0E0]/60 mb-4">
+                      {item.category}
+                    </p>
+                    <p className="font-mono text-sm text-[#E0E0E0]/75 leading-relaxed mb-4">
+                      {item.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {item.technologies.slice(0, 3).map((tech, i) => (
+                        <span
+                          key={i}
+                          className="font-mono text-[10px] text-[#E0E0E0]/80 border border-[#E0E0E0]/30 px-2 py-1"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {item.technologies.length > 3 && (
+                        <span className="font-mono text-[10px] text-[#E0E0E0]/50">
+                          +{item.technologies.length - 3}
+                        </span>
+                      )}
+                    </div>
+                    <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider mt-2">
+                      Нажмите для деталей
                     </div>
                   </motion.div>
                 ))}
@@ -346,31 +455,65 @@ function ConsultationForm() {
     setShowCalendar(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDate) return;
-    
-    // Формируем сообщение для Telegram бота
-    const telegramMessage = `Новая заявка на консультацию:\n\n` +
-      `Имя: ${name}\n` +
-      `Email: ${email}\n` +
-      `Телефон: ${phone}\n` +
-      `Дата: ${selectedDate.toLocaleDateString('ru-RU')}\n` +
-      `Время: ${selectedTime}\n` +
-      `Сообщение: ${message || 'Не указано'}`;
-    
-    // Открываем Telegram бота с предзаполненным сообщением
-    const telegramUrl = `https://t.me/FoxampyLab_contact_bot?start=${encodeURIComponent(telegramMessage)}`;
-    window.open(telegramUrl, '_blank');
-    
-    // Сброс формы
-    setIsExpanded(false);
-    setSelectedDate(null);
-    setSelectedTime('');
-    setName('');
-    setEmail('');
-    setPhone('+');
-    setMessage('');
+
+    try {
+      // Показываем loading состояние
+      const submitButton = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Отправка...';
+      }
+
+      // Формируем данные для отправки
+      const consultationData = {
+        name,
+        email,
+        phone,
+        date: selectedDate.toLocaleDateString('ru-RU'),
+        time: selectedTime,
+        message: message || 'Не указано'
+      };
+
+      // Отправляем через Telegram API
+      if (TelegramService.isConfigured()) {
+        await TelegramService.sendMessage(
+          TelegramService.formatConsultationMessage(consultationData)
+        );
+
+        // Показываем успешное сообщение
+        alert('✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
+      } else {
+        // Fallback - открываем Telegram бота напрямую
+        const telegramMessage = TelegramService.formatConsultationMessage(consultationData);
+        const telegramUrl = `${TelegramService.getBotUrl()}?start=${encodeURIComponent(telegramMessage)}`;
+        window.open(telegramUrl, '_blank');
+
+        alert('📱 Перенаправляем в Telegram для завершения заявки...');
+      }
+
+      // Сброс формы
+      setIsExpanded(false);
+      setSelectedDate(null);
+      setSelectedTime('');
+      setName('');
+      setEmail('');
+      setPhone('+');
+      setMessage('');
+
+    } catch (error) {
+      console.error('Failed to submit form:', error);
+      alert('❌ Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
+
+      // Восстанавливаем кнопку
+      const submitButton = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Отправить заявку';
+      }
+    }
   };
 
   const formatDateForDisplay = (date: Date | null): string => {
@@ -385,7 +528,7 @@ function ConsultationForm() {
     const day = weekStart.getDay();
     const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
     weekStart.setDate(diff);
-    
+
     const week: Date[] = [];
     for (let i = 0; i < 7; i++) {
       const weekDay = new Date(weekStart);
@@ -474,13 +617,13 @@ function ConsultationForm() {
                           disabled={!available}
                           className={`
                             aspect-square flex items-center justify-center font-mono text-xs transition-all
-                            ${!available 
-                              ? 'text-[#E0E0E0]/20 cursor-not-allowed' 
+                            ${!available
+                              ? 'text-[#E0E0E0]/20 cursor-not-allowed'
                               : selected
-                              ? 'bg-[#E0E0E0] text-[#050505] border border-[#E0E0E0]'
-                              : isToday
-                              ? 'border border-[#E0E0E0]/50 text-[#E0E0E0] hover:bg-[#E0E0E0]/10'
-                              : 'text-[#E0E0E0]/60 hover:bg-[#E0E0E0]/10 hover:text-[#E0E0E0] border border-transparent hover:border-[#E0E0E0]/20'
+                                ? 'bg-[#E0E0E0] text-[#050505] border border-[#E0E0E0]'
+                                : isToday
+                                  ? 'border border-[#E0E0E0]/50 text-[#E0E0E0] hover:bg-[#E0E0E0]/10'
+                                  : 'text-[#E0E0E0]/60 hover:bg-[#E0E0E0]/10 hover:text-[#E0E0E0] border border-transparent hover:border-[#E0E0E0]/20'
                             }
                           `}
                         >

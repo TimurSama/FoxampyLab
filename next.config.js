@@ -5,9 +5,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Для GitHub Pages - имя репозитория
-  basePath: process.env.NODE_ENV === 'production' ? '/FoxampyLab' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/FoxampyLab/' : '',
+  // Для GitHub Pages - имя репозитория. При локальной сборке оставляем пустым, чтобы избежать 404.
+  basePath: process.env.GITHUB_ACTIONS === 'true' ? '/FoxampyLab' : '',
+  assetPrefix: process.env.GITHUB_ACTIONS === 'true' ? '/FoxampyLab/' : '',
   // Оптимизация bundle
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -16,7 +16,7 @@ const nextConfig = {
         ...config.resolve.alias,
         'three': require.resolve('three'),
       };
-      
+
       // Оптимизация для production
       if (process.env.NODE_ENV === 'production') {
         config.optimization = {

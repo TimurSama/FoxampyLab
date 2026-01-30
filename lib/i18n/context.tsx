@@ -29,22 +29,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('language', lang);
-    // Устанавливаем dir для арабского языка
-    if (lang === 'ar') {
-      document.documentElement.dir = 'rtl';
-    } else {
-      document.documentElement.dir = 'ltr';
-    }
+    document.documentElement.dir = 'ltr';
   };
 
   const translationsObj = translations[language];
-  
+
   // Функция-обертка для доступа к переводам через строковые пути (как в старом useLocale)
   const t = (key: string, options?: { returnObjects?: boolean }): string | any => {
     try {
       const keys = key.split('.');
       let value: any = translationsObj;
-      
+
       // Проходим по пути в текущем языке
       for (const k of keys) {
         if (value === null || value === undefined) {
@@ -53,7 +48,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         }
         value = value[k];
       }
-      
+
       // Если значение не найдено в текущем языке, используем английский как fallback
       if (value === undefined || value === null) {
         value = translations.en;
@@ -65,17 +60,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
           value = value[k];
         }
       }
-      
+
       // Если все еще не найдено, возвращаем ключ
       if (value === undefined || value === null) {
         return key;
       }
-      
+
       // Если запрошен объект, возвращаем его как есть
       if (options?.returnObjects) {
         return value;
       }
-      
+
       // Возвращаем строку или преобразуем в строку
       return typeof value === 'string' ? value : (typeof value === 'object' ? key : String(value));
     } catch (error) {
@@ -119,7 +114,7 @@ export function useI18n() {
     };
     return {
       language: 'ru' as Language,
-      setLanguage: () => {},
+      setLanguage: () => { },
       t: defaultT,
     };
   }
