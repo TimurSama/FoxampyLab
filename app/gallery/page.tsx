@@ -20,6 +20,11 @@ import Header from '@/components/layout/Header';
 import { useI18n } from '@/lib/i18n/context';
 import { useState, useEffect } from 'react';
 
+const getAssetPath = (path: string) => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  return `${basePath}${path}`;
+};
+
 const fashionImages = [
   '/gallery/photo_2026-01-30_12-26-56.jpg',
   '/gallery/photo_2026-01-30_12-27-09.jpg',
@@ -36,7 +41,7 @@ const fashionImages = [
   '/gallery/photo_2026-01-30_12-28-02.jpg',
   '/gallery/photo_2026-01-30_12-28-05.jpg',
   '/gallery/photo_2026-01-30_12-28-08.jpg',
-];
+].map(getAssetPath);
 
 const architectureImages = [
   '/architecture/image_2024-08-21_21-32-32.png',
@@ -44,7 +49,7 @@ const architectureImages = [
   '/architecture/image_2024-08-21_21-32-44.png',
   '/architecture/image_2024-08-21_21-32-49.png',
   '/architecture/image_2024-08-21_21-32-54.png',
-];
+].map(getAssetPath);
 
 function ImageCarousel({ images }: { images: string[] }) {
   const [index, setIndex] = useState(0);
@@ -58,16 +63,16 @@ function ImageCarousel({ images }: { images: string[] }) {
   }, [images.length]);
 
   return (
-    <div className="relative w-full aspect-[4/5] md:aspect-[16/9] overflow-hidden border border-[#E0E0E0]/10 bg-[#0A0A0A]">
+    <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-[50vh] overflow-hidden border border-[#E0E0E0]/10 bg-[#0A0A0A]">
       <AnimatePresence mode="wait">
         <motion.img
           key={index}
           src={images[index]}
-          initial={{ opacity: 0, scale: 1.1 }}
+          initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
       </AnimatePresence>
 
@@ -106,14 +111,14 @@ export default function GalleryPage() {
 
   const videoShowcase = [
     {
-      src: "/media/need-for-speed-underground-2-remaster-2022.mp4",
-      title: "Atmospheric Pulse",
+      src: getAssetPath("/media/need-for-speed-underground-2-remaster-2022.mp4"),
+      title: language === 'ru' ? "CGI 3D кино" : "CGI 3D Cinema",
       meta: "CGI / 01",
       tags: ["DYNAMICS", "VELOCITY", "CORE"]
     },
     {
-      src: "/media/ryabov.mp4",
-      title: "Fluid Motion",
+      src: getAssetPath("/media/ryabov.mp4"),
+      title: language === 'ru' ? "Рекламный шоурилс" : "Advertising Showreel",
       meta: "R&D / 02",
       tags: ["BIOMORPHIC", "SYNTHESIS", "FLOW"]
     }
@@ -257,7 +262,7 @@ export default function GalleryPage() {
                       playsInline
                       loop
                       preload="metadata"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                   <div className="p-4 flex items-center justify-between border-t border-[#E0E0E0]/10">

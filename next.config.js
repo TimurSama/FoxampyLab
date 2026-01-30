@@ -8,6 +8,9 @@ const nextConfig = {
   // Для GitHub Pages - имя репозитория. При локальной сборке оставляем пустым, чтобы избежать 404.
   basePath: process.env.GITHUB_ACTIONS === 'true' ? '/FoxampyLab' : '',
   assetPrefix: process.env.GITHUB_ACTIONS === 'true' ? '/FoxampyLab/' : '',
+  env: {
+    NEXT_PUBLIC_BASE_PATH: process.env.GITHUB_ACTIONS === 'true' ? '/FoxampyLab' : '',
+  },
   // Оптимизация bundle
   webpack: (config, { isServer }) => {
     if (!isServer) {
