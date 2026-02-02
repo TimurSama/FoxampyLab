@@ -207,12 +207,111 @@ export default function Home() {
           }}
         >
           {section.id === 'intelligence' && (
-            <div className="absolute inset-0 z-0 opacity-40 overflow-hidden w-screen">
-              <TerrainGrid
-                mousePos={mousePos}
-                className="w-full h-full scale-110 md:scale-125"
-              />
-            </div>
+            <>
+              <div className="absolute inset-0 z-0 opacity-40 overflow-hidden w-screen">
+                <TerrainGrid
+                  mousePos={mousePos}
+                  className="w-full h-full scale-110 md:scale-125"
+                />
+              </div>
+              
+              {/* Мультидисциплинарный синтез - карточки услуг */}
+              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {[
+                  {
+                    id: 'ecosystems',
+                    title: 'Создаем продукты и проекты',
+                    description: 'Разработка комплексных продуктов и проектов с полной поддержкой от идеи до реализации',
+                    features: ['Разработка продуктов под ключ', 'Интеграция сервисов', 'API архитектура', 'Управление данными', 'Масштабируемость']
+                  },
+                  {
+                    id: 'web-mobile',
+                    title: 'Веб и мобильная разработка',
+                    description: 'Создание современных веб-приложений и нативных мобильных решений',
+                    features: ['React/Next.js', 'iOS/Android', 'PWA', 'Backend', 'База данных', 'Оптимизация']
+                  },
+                  {
+                    id: 'blockchain',
+                    title: 'Блокчейн и Web3 решения',
+                    description: 'Разработка децентрализованных приложений и интеграция с блокчейн технологиями',
+                    features: ['Smart-контракты', 'DeFi приложения', 'NFT платформы', 'DAO системы', 'Токеномика']
+                  },
+                  {
+                    id: 'design-branding',
+                    title: 'Дизайн и брендинг',
+                    description: 'Создание визуальных концепций и комплексных брендинговых стратегий',
+                    features: ['UI/UX дизайн', 'Брендинг и айдентика', 'Дизайн-система', 'Прототипирование', '3D визуализация']
+                  },
+                  {
+                    id: 'marketing',
+                    title: 'Digital маркетинг',
+                    description: 'Комплексное продвижение цифровых продуктов и брендов',
+                    features: ['Маркетинговая стратегия', 'SMM и контент', 'SEO оптимизация', 'Таргетированная реклама', 'Привлечение трафика', 'Настройка воронок', 'Автоматизация', 'CRM системы']
+                  },
+                  {
+                    id: 'fashion-architecture',
+                    title: 'Фэшн и архитектура',
+                    description: 'Создание цифровых моделей одежды и архитектурных визуализаций',
+                    features: ['3D моделирование', 'Digital Fashion', 'Архитектурная визуализация', 'Виртуальные примерочные', 'Fashion Tech', 'AR/VR решения']
+                  },
+                  {
+                    id: 'video-animation',
+                    title: 'Видео и анимация',
+                    description: 'Создание промо-контента, анимаций и визуальных материалов',
+                    features: ['Промо-видео', 'Explainer видео', 'Моушн-дизайн', '3D анимация', 'Видео для соцсетей', 'Монтаж и постпродакшн']
+                  },
+                  {
+                    id: 'gamedev-gamification',
+                    title: 'Геймдев и геймификация',
+                    description: 'Разработка игр и игровых механик для вовлечения пользователей',
+                    features: ['Разработка игр', 'Геймификация процессов', 'Обучающие симуляторы', 'VR/AR игры', 'Игровые механики', 'Gamification стратегия']
+                  }
+                ].map((service, idx) => (
+                  <motion.div
+                    key={service.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
+                             hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm"
+                  >
+                    <div className="mb-4">
+                      <div className="w-10 h-10 border border-[#E0E0E0]/40 flex items-center justify-center mb-3">
+                        <div className="font-mono text-xs text-[#E0E0E0]/80">◈</div>
+                      </div>
+                    </div>
+                    
+                    <h3 className="font-mono text-lg text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors mb-3">
+                      {service.title}
+                    </h3>
+                    
+                    <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-4">
+                      {service.description}
+                    </p>
+                    
+                    <div className="space-y-1">
+                      {service.features.slice(0, 3).map((feature, i) => (
+                        <div key={i} className="font-mono text-[10px] text-[#E0E0E0]/60 flex items-center">
+                          <span className="w-1 h-1 bg-[#E0E0E0]/40 rounded-full mr-2 flex-shrink-0"></span>
+                          {feature}
+                        </div>
+                      ))}
+                      {service.features.length > 3 && (
+                        <div className="font-mono text-[10px] text-[#E0E0E0]/50">
+                          +{service.features.length - 3} еще
+                        </div>
+                      )}
+                    </div>
+                    
+                    <Link href="/services">
+                      <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider mt-4 hover:text-[#FFFFFF] transition-colors">
+                        Подробнее в услугах →
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </>
           )}
           <div className="max-w-4xl mx-auto px-4 text-center">
             <div className={`inline-block p-4 md:p-6 bg-glass-matte border border-white/10 rounded-sm ${section.id === 'cases' ? 'mb-12' : ''}`}>
