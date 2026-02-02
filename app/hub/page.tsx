@@ -98,13 +98,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      className="border border-stone-anthracite/30 bg-ink-chrome/30 hover:bg-ink-chrome/50 transition-all group"
+      className="border border-white/5 bg-glass-matte hover:bg-black/03 transition-all group rounded-sm"
     >
       <div className="p-6 md:p-8 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <div className="inline-block px-3 py-1 mb-3 border border-stone-anthracite/30 bg-ink-deep/50">
+            <div className="inline-block px-3 py-1 mb-3 border border-stone-anthracite/30 bg-ink-deep/03">
               <span className="font-mono text-[10px] text-stone-slate tracking-wider">
                 {language !== 'en' ? project.category : project.categoryEn}
               </span>
@@ -120,16 +120,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         {/* Stack */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-        <div className="space-y-2">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Target size={14} className="text-engrave-dim" />
               <span className="font-mono text-[10px] text-stone-slate uppercase tracking-wider">
                 {t('hub.status')}
               </span>
             </div>
-            <span className={`inline-block px-2 py-1 border font-mono text-[10px] tracking-wider ${
-              statusColors[project.status]
-            } text-engrave-fresco`}>
+            <span className={`inline-block px-2 py-1 border font-mono text-[10px] tracking-wider ${statusColors[project.status]
+              } text-engrave-fresco`}>
               {statusLabels[project.status]} · {project.stageLabel}
             </span>
           </div>
@@ -211,7 +210,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 border border-stone-anthracite/30 bg-ink-deep/50
+            className="inline-flex items-center gap-2 px-4 py-2 border border-stone-anthracite/30 bg-ink-deep/03
                      hover:border-engrave-line/50 hover:bg-engrave-line/10 transition-all
                      font-mono text-xs text-engrave-fresco tracking-wider group/link"
           >
@@ -228,11 +227,11 @@ export default function HubPage() {
   const { t } = useI18n();
 
   return (
-    <div className="relative min-h-screen bg-ink-deep">
+    <div className="relative min-h-screen bg-transparent">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" aria-hidden="true" />
-      
+
       <Header />
-      
+
       <main id="main-content" className="relative z-10">
         {/* Hero Section */}
         <section className="px-4 pt-32 pb-16 md:pb-24">
@@ -248,11 +247,11 @@ export default function HubPage() {
                   {t('hub.openForInvestment')}
                 </span>
               </div>
-              
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-mono text-engrave-fresco tracking-tight leading-tight">
                 {t('hub.title')}
               </h1>
-              
+
               <p className="font-mono text-sm md:text-base text-stone-slate leading-relaxed max-w-2xl mx-auto">
                 {t('hub.subtitle')}
               </p>

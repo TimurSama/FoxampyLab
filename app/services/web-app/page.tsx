@@ -46,11 +46,11 @@ export default function WebAppPage() {
     { step: t('webAppPage.step4.step'), title: t('webAppPage.step4.title'), desc: t('webAppPage.step4.desc') }
   ];
   return (
-    <div className="relative min-h-screen bg-ink-deep">
+    <div className="relative min-h-screen bg-transparent">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
-      
+
       <Header />
-      
+
       <main className="relative z-10 pt-32 pb-24">
         {/* Hero */}
         <section className="px-4 mb-24">
@@ -63,13 +63,13 @@ export default function WebAppPage() {
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
                 ─── {t('webAppPage.tagline')} ───
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
                 {t('webAppPage.title')}
                 <br />
                 <span className="text-chrome">{t('webAppPage.titleHighlight')}</span>
               </h1>
-              
+
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
                 {t('webAppPage.description')}
               </p>
@@ -97,7 +97,7 @@ export default function WebAppPage() {
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── {t('webAppPage.servicesTitle')} ───
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               {services.map((service, i) => (
                 <motion.div
@@ -106,7 +106,7 @@ export default function WebAppPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 border border-stone-anthracite/30 bg-ink-chrome/20 
+                  className="p-4 md:p-5 border border-stone-anthracite/30 bg-ink-chrome/03 
                            hover:border-engrave-line/20 transition-all"
                 >
                   <h3 className="font-mono text-lg text-engrave-fresco mb-3">
@@ -135,7 +135,7 @@ export default function WebAppPage() {
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── {t('webAppPage.techTitle')} ───
             </div>
-            
+
             <div className="grid md:grid-cols-4 gap-4">
               {tech.map((item, i) => (
                 <motion.div
@@ -144,7 +144,7 @@ export default function WebAppPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 border border-stone-anthracite/30 bg-ink-chrome/20 text-center"
+                  className="p-4 md:p-5 border border-stone-anthracite/30 bg-ink-chrome/03 text-center"
                 >
                   <h4 className="font-mono text-base text-engrave-fresco mb-2">
                     {item.name}
@@ -164,7 +164,7 @@ export default function WebAppPage() {
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── {t('webAppPage.processTitle')} ───
             </div>
-            
+
             <div className="grid md:grid-cols-4 gap-4">
               {process.map((item, i) => (
                 <motion.div
@@ -173,7 +173,7 @@ export default function WebAppPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 border border-stone-anthracite/30 bg-ink-chrome/20"
+                  className="p-4 md:p-5 border border-stone-anthracite/30 bg-ink-chrome/03"
                 >
                   <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
                     {item.step}

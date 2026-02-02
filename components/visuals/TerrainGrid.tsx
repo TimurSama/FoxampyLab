@@ -12,31 +12,31 @@ interface TerrainMeshProps {
 function TerrainMesh({ mousePos, time }: TerrainMeshProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const geometryRef = useRef<THREE.PlaneGeometry>(null);
-  
+
   const segments = 50;
-  
+
   useFrame((state) => {
     if (meshRef.current && geometryRef.current) {
       const positions = geometryRef.current.attributes.position;
       const time = state.clock.elapsedTime;
-      
+
       for (let i = 0; i < positions.count; i++) {
         const x = positions.getX(i);
         const y = positions.getY(i);
-        
+
         // Base wave
         let z = Math.sin(x * 0.5 + time * 0.5) * 0.3;
         z += Math.cos(y * 0.5 + time * 0.3) * 0.3;
-        
+
         // Mouse ripple
         const dx = x - mousePos.x * 5;
         const dy = y - mousePos.y * 5;
         const dist = Math.sqrt(dx * dx + dy * dy);
         z += Math.sin(dist - time * 2) * Math.exp(-dist * 0.2) * 0.5;
-        
+
         positions.setZ(i, z);
       }
-      
+
       positions.needsUpdate = true;
       geometryRef.current.computeVertexNormals();
     }
@@ -45,7 +45,7 @@ function TerrainMesh({ mousePos, time }: TerrainMeshProps) {
   return (
     <mesh ref={meshRef} rotation={[-Math.PI / 3, 0, Math.PI / 8]} position={[0, -0.5, 0]}>
       <planeGeometry ref={geometryRef} args={[10, 10, segments, segments]} />
-      <meshBasicMaterial 
+      <meshBasicMaterial
         color="#e8e8e8"
         wireframe
         transparent
@@ -57,13 +57,13 @@ function TerrainMesh({ mousePos, time }: TerrainMeshProps) {
 
 function GridLines() {
   const linesRef = useRef<THREE.Group>(null);
-  
+
   const lines = useMemo(() => {
     const result = [];
     const count = 20;
     const size = 10;
     const step = size / count;
-    
+
     // Horizontal lines
     for (let i = 0; i <= count; i++) {
       const y = -size / 2 + i * step;
@@ -81,7 +81,7 @@ function GridLines() {
         </line>
       );
     }
-    
+
     // Vertical lines
     for (let i = 0; i <= count; i++) {
       const x = -size / 2 + i * step;
@@ -99,7 +99,7 @@ function GridLines() {
         </line>
       );
     }
-    
+
     return result;
   }, []);
 
@@ -112,17 +112,17 @@ function GridLines() {
 
 function DataPoints({ mousePos }: { mousePos: { x: number; y: number } }) {
   const pointsRef = useRef<THREE.Points>(null);
-  
+
   const positions = useMemo(() => {
     const count = 100;
     const positions = new Float32Array(count * 3);
-    
+
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 8;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
       positions[i * 3 + 2] = Math.random() * 2;
     }
-    
+
     return positions;
   }, []);
 
@@ -142,7 +142,7 @@ function DataPoints({ mousePos }: { mousePos: { x: number; y: number } }) {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial 
+      <pointsMaterial
         color="#f0f0f5"
         size={0.05}
         transparent
@@ -163,10 +163,10 @@ export default function TerrainGrid({ className = '', mousePos = { x: 0, y: 0 } 
     <div className={`relative ${className}`}>
       <Canvas
         camera={{ position: [0, 3, 6], fov: 50 }}
-        gl={{ 
-          antialias: true, 
+        gl={{
+          antialias: true,
           alpha: true,
-          powerPreference: 'high-performance'
+          powerPreference: 'low-power'
         }}
         style={{ background: 'transparent' }}
       >
@@ -182,7 +182,7 @@ export default function TerrainGrid({ className = '', mousePos = { x: 0, y: 0 } 
           <span>TERRAIN_MAP</span>
         </div>
       </div>
-      
+
       <div className="absolute top-4 right-4 font-mono text-[9px] text-stone-graphite text-right">
         <div>RES: 50x50</div>
         <div>SCALE: 1:1000</div>

@@ -5,20 +5,9 @@ import dynamic from 'next/dynamic';
 import { isMobile } from '@/lib/device';
 import InteractiveSphere from '@/components/visuals/InteractiveSphere';
 import TerrainGrid from '@/components/visuals/TerrainGrid';
+import GalleryCarousel from '@/components/sections/GalleryCarousel';
+import FAQSection from '@/components/sections/FAQSection';
 
-// Временно отключаем 3D фон до исправления ошибки
-const InkFluidBackground = () => (
-  <div className="w-full h-full bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#030303]">
-    {/* Анимированный эффект как замена 3D */}
-    <div className="absolute inset-0 opacity-20">
-      <div className="w-full h-full" style={{
-        backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 50%),
-                         radial-gradient(circle at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 40%)`,
-        animation: 'float 20s ease-in-out infinite'
-      }} />
-    </div>
-  </div>
-);
 import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
@@ -26,13 +15,11 @@ import Link from 'next/link';
 import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, MessageSquare, X } from 'lucide-react';
 import CalendarPicker from '@/components/forms/CalendarPicker';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
+import FlippableServiceCard from '@/components/sections/FlippableServiceCard';
 import { useI18n } from '@/lib/i18n/context';
 import { TelegramService } from '@/lib/telegram';
-
-/**
- * Новая главная страница с 4D-навигацией
- * Z-axis камера управляется скроллом через GSAP ScrollTrigger
- */
+import { homeFAQ } from '@/lib/seo/faq-data';
+import { getFAQSchema } from '@/lib/seo/structured-data';
 
 export default function Home() {
   const { t, language } = useI18n();
@@ -62,12 +49,10 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Получаем данные services из переводов
   const servicesData = useMemo(() => {
     return t('home.solutions.services', { returnObjects: true }) as any[];
   }, [t, language]);
 
-  // Получаем данные projects из переводов
   const projectsData = useMemo(() => {
     return t('home.ventures.projects', { returnObjects: true }) as any[];
   }, [t, language]);
@@ -129,20 +114,13 @@ export default function Home() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-[#050505] overflow-x-hidden"
+      className="relative w-full bg-transparent overflow-x-hidden"
     >
-      {/* Boot sequence overlay */}
       <AnimatePresence>
         {isBooting && <BootSequence />}
       </AnimatePresence>
 
-      {/* Header */}
       <Header />
-
-      {/* CSS Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <InkFluidBackground />
-      </div>
 
       {/* Hero */}
       <section
@@ -150,12 +128,12 @@ export default function Home() {
         style={{ opacity: isBooting ? 0 : 1, transition: 'opacity 0.3s ease-in-out' }}
       >
         <div className="max-w-6xl mx-auto px-6 pt-24 pb-8 md:py-28 w-full md:col-span-1">
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-6 bg-glass-matte rounded-sm">
             <motion.h1
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-mono text-[#E0E0E0] leading-tight"
+              className="text-3xl md:text-5xl lg:text-6xl font-mono text-[#E0E0E0] leading-tight"
             >
               {t('home.title')}
             </motion.h1>
@@ -163,13 +141,12 @@ export default function Home() {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-lg md:text-xl lg:text-2xl font-mono text-[#E0E0E0]/80 leading-relaxed max-w-3xl"
+              className="text-base md:text-lg lg:text-xl font-mono text-[#E0E0E0]/80 leading-relaxed max-w-3xl"
             >
               {t('home.subtitle')}
             </motion.p>
 
             <div className="flex flex-col gap-4">
-              {/* Row 1: Order Project */}
               <div className="flex">
                 <Link href="/services">
                   <motion.button
@@ -183,7 +160,6 @@ export default function Home() {
                 </Link>
               </div>
 
-              {/* Row 2: Gallery & Hub */}
               <div className="flex flex-wrap gap-4">
                 <Link href="/gallery" className="flex-1 md:flex-initial">
                   <motion.button
@@ -210,7 +186,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Interactive Sphere */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -225,13 +200,12 @@ export default function Home() {
       {sections.map((section, index) => (
         <section
           key={section.id}
-          className="relative z-10 min-h-screen flex items-center justify-center"
+          className={`relative z-10 min-h-screen flex items-center justify-center ${section.id === 'cases' ? 'pt-32' : ''}`}
           style={{
             opacity: isBooting ? 0 : 1,
             transition: 'opacity 0.3s ease-in-out'
           }}
         >
-          {/* TerrainGrid background for intelligence section */}
           {section.id === 'intelligence' && (
             <div className="absolute inset-0 z-0 opacity-40 overflow-hidden w-screen">
               <TerrainGrid
@@ -241,29 +215,32 @@ export default function Home() {
             </div>
           )}
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <div className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6">
-              ─── {section.title} ───
+            <div className={`inline-block p-4 md:p-6 bg-glass-matte border border-white/10 rounded-sm ${section.id === 'cases' ? 'mb-12' : ''}`}>
+              <div className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6">
+                ─── {section.title} ───
+              </div>
+
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6">
+                {section.subtitle}
+              </h1>
+
+              {section.description && (
+                <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed px-4">
+                  {section.description}
+                </p>
+              )}
+
+              {section.cta && section.id !== 'cases' && (
+                <Link href={section.target ?? '/services'}>
+                  <button className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest
+                                   flex items-center gap-3 mx-auto transition-all hover:bg-[#FFFFFF]">
+                    {section.cta}
+                    <ArrowRight size={16} />
+                  </button>
+                </Link>
+              )}
             </div>
 
-            <h1 className="text-3xl md:text-5xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6">
-              {section.subtitle}
-            </h1>
-
-            <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed px-4">
-              {section.description}
-            </p>
-
-            {section.cta && (
-              <Link href={section.target ?? '/services'}>
-                <button className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest
-                                 flex items-center gap-3 mx-auto transition-all hover:bg-[#FFFFFF]">
-                  {section.cta}
-                  <ArrowRight size={16} />
-                </button>
-              </Link>
-            )}
-
-            {/* Services Grid для секции Solutions */}
             {section.id === 'solutions' && section.services && (
               <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
                 {section.services.map((service, idx) => (
@@ -272,135 +249,39 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    onClick={() => {
-                      setSelectedService(service);
-                      setIsModalOpen(true);
-                    }}
-                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
-                             hover:bg-[#E0E0E0]/5 transition-all cursor-pointer p-6 group"
                   >
-                    <div className="mb-4 text-[#E0E0E0]">
-                      <div className="w-10 h-10 border border-[#E0E0E0] flex items-center justify-center">
-                        <span className="font-mono text-xs">◈</span>
-                      </div>
-                    </div>
-                    <h3 className="font-mono text-lg text-[#E0E0E0] mb-2 group-hover:text-[#FFFFFF] transition-colors">
-                      {service.subtitle}
-                    </h3>
-                    <p className="font-mono text-xs text-[#E0E0E0]/60 mb-4 leading-relaxed">
-                      {service.description.substring(0, 120)}...
-                    </p>
-                    <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider">
-                      {t('home.ventures.clickForDetails')}
-                    </div>
+                    <FlippableServiceCard service={service} t={t} />
                   </motion.div>
                 ))}
               </div>
             )}
 
-            {/* Cases Grid для секции Cases */}
-            {section.id === 'cases' && section.cases && (
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                {section.cases.map((item, idx) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
-                             hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm"
-                  >
-                    <h3 className="font-mono text-xl text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="font-mono text-xs text-[#E0E0E0]/60 mb-4">
-                      {item.category}
-                    </p>
-                    <p className="font-mono text-sm text-[#E0E0E0]/75 leading-relaxed mb-4">
-                      {item.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {item.technologies.slice(0, 3).map((tech, i) => (
-                        <span
-                          key={i}
-                          className="font-mono text-[10px] text-[#E0E0E0]/80 border border-[#E0E0E0]/30 px-2 py-1"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {item.technologies.length > 3 && (
-                        <span className="font-mono text-[10px] text-[#E0E0E0]/50">
-                          +{item.technologies.length - 3}
-                        </span>
-                      )}
-                    </div>
-                    <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider mt-2">
-                      Нажмите для деталей
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            {/* Projects Grid для секции Ventures */}
-            {section.id === 'ventures' && (
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                {projectsData.map((project, idx) => (
-                  <motion.div
-                    key={project.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
-                             hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="font-mono text-xl text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors">
-                        {project.name}
-                      </h3>
-                      <span className="font-mono text-xs text-[#E0E0E0] border border-[#E0E0E0]/30 px-2 py-1">
-                        {project.stage}
-                      </span>
-                    </div>
-                    <p className="font-mono text-sm text-[#E0E0E0]/75 leading-relaxed mb-4">
-                      {project.status}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.stack.map((tag: string) => (
-                        <span
-                          key={tag}
-                          className="font-mono text-[10px] text-[#E0E0E0]/80 border border-[#E0E0E0]/30 px-2 py-1"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <Link href="/hub">
-                      <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider mt-4 hover:underline">
-                        {t('home.ventures.viewInHub')}
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
+            {section.id === 'cases' && (
+              <div className="mt-16">
+                <GalleryCarousel />
               </div>
             )}
           </div>
         </section>
       ))}
 
-      {/* Scroll indicator */}
-      {/* (removed) Scroll indicator */}
-
-      {/* Corner decorations */}
+      {/* Decorations */}
       <div className="fixed top-4 left-4 w-8 h-8 border-t border-l border-[#E0E0E0]/20 pointer-events-none z-20" />
       <div className="fixed top-4 right-4 w-8 h-8 border-t border-r border-[#E0E0E0]/20 pointer-events-none z-20" />
       <div className="fixed bottom-4 left-4 w-8 h-8 border-b border-l border-[#E0E0E0]/20 pointer-events-none z-20" />
       <div className="fixed bottom-4 right-4 w-8 h-8 border-b border-r border-[#E0E0E0]/20 pointer-events-none z-20" />
 
-      {/* Consultation Booking Form */}
+      {/* FAQ Section for SEO and LLM */}
+      <section className="relative z-10 py-16">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(getFAQSchema(homeFAQ)) }}
+        />
+        <FAQSection items={homeFAQ} />
+      </section>
+
       <ConsultationForm />
 
-      {/* Services Detail Modal */}
       <ServicesDetailModal
         service={selectedService}
         isOpen={isModalOpen}
@@ -410,7 +291,6 @@ export default function Home() {
   );
 }
 
-// Consultation Booking Form Component
 function ConsultationForm() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -425,7 +305,6 @@ function ConsultationForm() {
     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
   ];
 
-  // Получаем доступные даты для недельного календаря
   const getAvailableWeekDates = () => {
     const dates: Date[] = [];
     const today = new Date();
@@ -442,7 +321,6 @@ function ConsultationForm() {
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Если пользователь удалил +, добавляем его обратно
     if (!value.startsWith('+')) {
       setPhone('+' + value.replace(/\+/g, ''));
     } else {
@@ -460,14 +338,12 @@ function ConsultationForm() {
     if (!selectedDate) return;
 
     try {
-      // Показываем loading состояние
       const submitButton = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
       if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = 'Отправка...';
       }
 
-      // Формируем данные для отправки
       const consultationData = {
         name,
         email,
@@ -477,24 +353,18 @@ function ConsultationForm() {
         message: message || 'Не указано'
       };
 
-      // Отправляем через Telegram API
       if (TelegramService.isConfigured()) {
         await TelegramService.sendMessage(
           TelegramService.formatConsultationMessage(consultationData)
         );
-
-        // Показываем успешное сообщение
         alert('✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
       } else {
-        // Fallback - открываем Telegram бота напрямую
         const telegramMessage = TelegramService.formatConsultationMessage(consultationData);
         const telegramUrl = `${TelegramService.getBotUrl()}?start=${encodeURIComponent(telegramMessage)}`;
         window.open(telegramUrl, '_blank');
-
         alert('📱 Перенаправляем в Telegram для завершения заявки...');
       }
 
-      // Сброс формы
       setIsExpanded(false);
       setSelectedDate(null);
       setSelectedTime('');
@@ -502,12 +372,9 @@ function ConsultationForm() {
       setEmail('');
       setPhone('+');
       setMessage('');
-
     } catch (error) {
       console.error('Failed to submit form:', error);
-      alert('❌ Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
-
-      // Восстанавливаем кнопку
+      alert('❌ Произошла ошибка при отправке.');
       const submitButton = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
       if (submitButton) {
         submitButton.disabled = false;
@@ -521,33 +388,10 @@ function ConsultationForm() {
     return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
   };
 
-  const getWeekDays = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const weekStart = new Date(today);
-    const day = weekStart.getDay();
-    const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
-    weekStart.setDate(diff);
-
-    const week: Date[] = [];
-    for (let i = 0; i < 7; i++) {
-      const weekDay = new Date(weekStart);
-      weekDay.setDate(weekStart.getDate() + i);
-      week.push(weekDay);
-    }
-    return week;
-  };
-
-  const weekDays = getWeekDays();
   const availableDates = getAvailableWeekDates();
-  const isDateAvailable = (date: Date): boolean => {
-    const dateStr = date.toISOString().split('T')[0];
-    return availableDates.some(d => d.toISOString().split('T')[0] === dateStr);
-  };
 
   return (
     <>
-      {/* Floating Icon Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -555,210 +399,125 @@ function ConsultationForm() {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsExpanded(true)}
         className="fixed bottom-6 left-6 z-50 w-14 h-14 bg-[#E0E0E0] text-[#050505] rounded-full flex items-center justify-center shadow-lg hover:bg-[#FFFFFF] transition-colors"
-        aria-label="Записаться на консультацию"
       >
         <Calendar size={24} />
       </motion.button>
 
-      {/* Expanded Form Modal */}
       <AnimatePresence>
         {isExpanded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#050505]/95 backdrop-blur-sm p-4"
-            onClick={() => setIsExpanded(false)}
-          >
+          <div className="fixed inset-0 z-[60] pointer-events-none overflow-hidden">
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-[#050505] border border-[#E0E0E0]/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ opacity: 0, y: 100, x: -100, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 100, x: -100, scale: 0.8 }}
+              className="absolute bottom-24 left-6 z-[60] w-[calc(100vw-3rem)] md:w-[450px] pointer-events-auto"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-[#E0E0E0]/10">
-                <h2 className="font-mono text-lg text-[#E0E0E0]">Записаться на консультацию</h2>
-                <button
-                  onClick={() => setIsExpanded(false)}
-                  className="p-2 hover:bg-[#E0E0E0]/10 transition-colors"
-                >
-                  <X size={20} className="text-[#E0E0E0]" />
-                </button>
-              </div>
+              <div className="bg-glass-matte border border-white/10 overflow-hidden rounded-sm">
+                <div className="flex items-center justify-between p-4 border-b border-white/5">
+                  <h2 className="font-mono text-sm uppercase tracking-widest text-[#E0E0E0]">Заявка на консультацию</h2>
+                  <button onClick={() => setIsExpanded(false)} className="p-2 hover:bg-white/5 transition-colors rounded-full">
+                    <X size={18} className="text-[#E0E0E0]/60" />
+                  </button>
+                </div>
 
-              {/* Form Content */}
-              <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                {/* Week Calendar Preview */}
-                <div>
-                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-3">
-                    <Calendar size={14} />
-                    Выберите дату
-                  </label>
-                  <div className="grid grid-cols-7 gap-1 mb-2">
-                    {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
-                      <div key={day} className="text-center font-mono text-[10px] text-[#E0E0E0]/60 py-1">
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-7 gap-1 mb-3">
-                    {weekDays.map((date, idx) => {
-                      const available = isDateAvailable(date);
-                      const selected = selectedDate && date.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0];
-                      const isToday = date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
-
-                      return (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => available && setShowCalendar(true)}
-                          disabled={!available}
-                          className={`
-                            aspect-square flex items-center justify-center font-mono text-xs transition-all
-                            ${!available
-                              ? 'text-[#E0E0E0]/20 cursor-not-allowed'
-                              : selected
-                                ? 'bg-[#E0E0E0] text-[#050505] border border-[#E0E0E0]'
-                                : isToday
-                                  ? 'border border-[#E0E0E0]/50 text-[#E0E0E0] hover:bg-[#E0E0E0]/10'
-                                  : 'text-[#E0E0E0]/60 hover:bg-[#E0E0E0]/10 hover:text-[#E0E0E0] border border-transparent hover:border-[#E0E0E0]/20'
-                            }
-                          `}
-                        >
-                          {date.getDate()}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {selectedDate && (
-                    <div className="font-mono text-xs text-[#E0E0E0]/60 mb-2">
-                      Выбрано: {selectedDate.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' })}
+                <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/40 mb-2">
+                        <User size={12} /> Имя
+                      </label>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        placeholder="Ваше имя"
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white font-mono text-xs focus:border-white/30 focus:outline-none transition-colors placeholder:text-white/10"
+                      />
                     </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setShowCalendar(true)}
-                    className="font-mono text-xs text-[#E0E0E0]/80 hover:text-[#E0E0E0] underline"
-                  >
-                    Открыть полный календарь →
-                  </button>
-                </div>
-
-                {/* Time Selection */}
-                {selectedDate && (
-                  <div>
-                    <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
-                      <Clock size={14} />
-                      Время
-                    </label>
-                    <select
-                      value={selectedTime}
-                      onChange={(e) => setSelectedTime(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
-                    >
-                      <option value="">Выберите время</option>
-                      {timeSlots.map((time) => (
-                        <option key={time} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/40 mb-2">
+                        <Mail size={12} /> Email
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="mail@example.com"
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white font-mono text-xs focus:border-white/30 focus:outline-none transition-colors placeholder:text-white/10"
+                      />
+                    </div>
                   </div>
-                )}
 
-                {/* Name */}
-                <div>
-                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
-                    <User size={14} />
-                    Имя
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    placeholder="Ваше имя"
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
-                  />
-                </div>
+                  <div>
+                    <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/40 mb-2">
+                      <Phone size={12} /> Телефон
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={handlePhoneChange}
+                      required
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white font-mono text-xs focus:border-white/30 focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                {/* Email */}
-                <div>
-                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
-                    <Mail size={14} />
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/40 mb-2">
+                        <Calendar size={12} /> Дата
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowCalendar(true)}
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white font-mono text-xs text-left flex justify-between items-center hover:bg-white/10 transition-all"
+                      >
+                        {selectedDate ? formatDateForDisplay(selectedDate) : 'Выбрать...'}
+                        <ArrowRight size={10} className="opacity-40" />
+                      </button>
+                    </div>
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/40 mb-2">
+                        <Clock size={12} /> Время
+                      </label>
+                      <select
+                        value={selectedTime}
+                        onChange={(e) => setSelectedTime(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white font-mono text-xs focus:border-white/30 focus:outline-none transition-colors appearance-none cursor-pointer"
+                      >
+                        <option value="" className="bg-black">Выбрать...</option>
+                        {timeSlots.map((time) => (
+                          <option key={time} value={time} className="bg-black">{time}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
 
-                {/* Phone */}
-                <div>
-                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
-                    <Phone size={14} />
-                    Телефон
-                  </label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    required
-                    placeholder="+"
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors"
-                  />
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/80 mb-2">
-                    <MessageSquare size={14} />
-                    Сообщение (необязательно)
-                  </label>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Расскажите о вашем проекте или вопросах..."
-                    rows={4}
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#E0E0E0]/20 text-[#E0E0E0] font-mono text-sm placeholder:text-[#E0E0E0]/40 focus:border-[#E0E0E0]/50 focus:outline-none transition-colors resize-none"
-                  />
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex items-center gap-4 pt-4">
-                  <button
-                    type="submit"
-                    disabled={!selectedDate || !selectedTime}
-                    className="px-8 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest flex items-center gap-3 hover:bg-[#FFFFFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Отправить заявку
-                    <ArrowRight size={16} />
-                  </button>
-                  <a
-                    href="https://t.me/FoxampyLab_contact_bot"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-4 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm tracking-widest flex items-center gap-3 hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all"
-                  >
-                    <MessageSquare size={16} />
-                    Telegram контакт
-                  </a>
-                </div>
-              </form>
+                  <div>
+                    <button
+                      type="submit"
+                      disabled={!selectedDate || !selectedTime}
+                      className="w-full py-3 bg-[#E0E0E0] text-[#050505] font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3 hover:bg-[#FFFFFF] transition-colors disabled:opacity-30"
+                    >
+                      Отправить заявку
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowCalendar(true)}
+                      className="w-full mt-3 text-center font-mono text-[9px] uppercase tracking-wider text-[#E0E0E0]/30 hover:text-[#E0E0E0]/60 transition-colors"
+                    >
+                      ─── Открыть полный календарь ───
+                    </button>
+                  </div>
+                </form>
+              </div>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
-      {/* Calendar Picker Modal */}
       {showCalendar && (
         <CalendarPicker
           selectedDate={selectedDate}

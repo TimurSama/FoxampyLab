@@ -12,21 +12,21 @@ export default function NexusVitaPresentation() {
   const { t, language } = useI18n();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showIntroduction, setShowIntroduction] = useState(true);
-  
+
   // Финансовые данные проекта
   const totalBudget = 287000; // $287K
   const totalInvested = 55000; // $55K
-  
+
   const introductionSlides = getIntroductionSlides(language);
   const whitepaperSections = getWhitepaperSections(language);
-  
+
   const roadmapItems = [
-    { 
-      period: 'Q1 2025', 
-      title: language === 'ru' ? 'MVP Launch' : 'MVP Launch', 
-      description: language === 'ru' 
+    {
+      period: 'Q1 2025',
+      title: language === 'ru' ? 'MVP Launch' : 'MVP Launch',
+      description: language === 'ru'
         ? 'Профили, базовая карта здоровья, маркетплейс'
-        : 'Profiles, basic health map, marketplace', 
+        : 'Profiles, basic health map, marketplace',
       status: 'current' as const,
       budget: {
         allocated: 115000,
@@ -38,12 +38,12 @@ export default function NexusVitaPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q2 2025', 
-      title: language === 'ru' ? 'AI и Социальная сеть' : 'AI and Social Network', 
+    {
+      period: 'Q2 2025',
+      title: language === 'ru' ? 'AI и Социальная сеть' : 'AI and Social Network',
       description: language === 'ru'
         ? 'AI-анализ, социальная сеть здоровья, система челленджей'
-        : 'AI analysis, health social network, challenge system', 
+        : 'AI analysis, health social network, challenge system',
       status: 'upcoming' as const,
       budget: {
         allocated: 80000,
@@ -55,12 +55,12 @@ export default function NexusVitaPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q3 2025', 
-      title: language === 'ru' ? 'DAO и Токеномика' : 'DAO and Tokenomics', 
+    {
+      period: 'Q3 2025',
+      title: language === 'ru' ? 'DAO и Токеномика' : 'DAO and Tokenomics',
       description: language === 'ru'
         ? 'DAO запуск, токеномика и стейкинг, расширенные программы'
-        : 'DAO launch, tokenomics and staking, extended programs', 
+        : 'DAO launch, tokenomics and staking, extended programs',
       status: 'upcoming' as const,
       budget: {
         allocated: 60000,
@@ -72,12 +72,12 @@ export default function NexusVitaPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q4 2025', 
-      title: language === 'ru' ? 'Корпоративные и Городские программы' : 'Corporate and City Programs', 
+    {
+      period: 'Q4 2025',
+      title: language === 'ru' ? 'Корпоративные и Городские программы' : 'Corporate and City Programs',
       description: language === 'ru'
         ? 'Корпоративные программы wellbeing, городские программы, мобильные приложения'
-        : 'Corporate wellbeing programs, city programs, mobile apps', 
+        : 'Corporate wellbeing programs, city programs, mobile apps',
       status: 'upcoming' as const,
       budget: {
         allocated: 32000,
@@ -114,38 +114,36 @@ export default function NexusVitaPresentation() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0]">
+    <div className="relative min-h-screen bg-transparent text-[#E0E0E0]">
       <Header />
-      
+
       <main className="relative z-10 pt-20 md:pt-24 pb-12 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-between">
-            <Link 
+            <Link
               href="/hub"
               className="font-mono text-sm text-[#E0E0E0]/60 hover:text-[#E0E0E0] transition-colors flex items-center gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
               {t('presentation.back')} {language === 'ru' ? 'к HUB' : 'to HUB'}
             </Link>
-            
+
             <div className="flex gap-4">
               <button
                 onClick={goToIntroduction}
-                className={`font-mono text-sm px-4 py-2 border transition-all ${
-                  showIntroduction
-                    ? 'border-[#E0E0E0] bg-[#E0E0E0]/10 text-[#E0E0E0]'
-                    : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
-                }`}
+                className={`font-mono text-sm px-4 py-2 border transition-all ${showIntroduction
+                  ? 'border-[#E0E0E0] bg-[#E0E0E0]/15 text-[#E0E0E0]'
+                  : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
+                  }`}
               >
                 {t('presentation.introduction')}
               </button>
               <button
                 onClick={goToWhitepaper}
-                className={`font-mono text-sm px-4 py-2 border transition-all ${
-                  !showIntroduction
-                    ? 'border-[#E0E0E0] bg-[#E0E0E0]/10 text-[#E0E0E0]'
-                    : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
-                }`}
+                className={`font-mono text-sm px-4 py-2 border transition-all ${!showIntroduction
+                  ? 'border-[#E0E0E0] bg-[#E0E0E0]/15 text-[#E0E0E0]'
+                  : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
+                  }`}
               >
                 {t('presentation.whitepaper')}
               </button>
@@ -154,7 +152,7 @@ export default function NexusVitaPresentation() {
 
           {showIntroduction && (
             <div className="relative">
-              <div className="border border-[#E0E0E0]/20 bg-[#050505]/50 backdrop-blur-sm p-8 md:p-12 min-h-[600px] flex flex-col">
+              <div className="bg-glass-matte p-6 md:p-10 min-h-[600px] flex flex-col rounded-sm">
                 <div className="flex-1">
                   <div className="mb-8">
                     <h1 className="text-4xl md:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4">
@@ -180,12 +178,12 @@ export default function NexusVitaPresentation() {
                     ) : (
                       <p className="text-lg leading-relaxed">{introductionSlides[currentSlide].content}</p>
                     )}
-                    
+
                     {/* Визуализация дорожной карты для слайда 8 */}
                     {currentSlide === 7 && (
                       <div className="mt-8">
-                        <Timeline 
-                          items={roadmapItems} 
+                        <Timeline
+                          items={roadmapItems}
                           totalBudget={totalBudget}
                           totalInvested={totalInvested}
                           showBudget={true}
@@ -209,9 +207,8 @@ export default function NexusVitaPresentation() {
                     {introductionSlides.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          idx === currentSlide ? 'bg-[#E0E0E0]' : 'bg-[#E0E0E0]/20'
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-[#E0E0E0]' : 'bg-[#E0E0E0]/20'
+                          }`}
                       />
                     ))}
                   </div>
@@ -220,7 +217,7 @@ export default function NexusVitaPresentation() {
                     {currentSlide === introductionSlides.length - 1 ? (
                       <button
                         onClick={goToWhitepaper}
-                        className="font-mono text-sm px-6 py-3 border border-[#E0E0E0] bg-[#E0E0E0]/10 hover:bg-[#E0E0E0]/20 transition-all flex items-center gap-2"
+                        className="font-mono text-sm px-6 py-3 border border-[#E0E0E0] bg-[#E0E0E0]/03 hover:bg-[#E0E0E0]/20 transition-all flex items-center gap-2"
                       >
                         {t('presentation.whitepaper')}
                         <ChevronRight className="w-4 h-4" />
@@ -245,7 +242,7 @@ export default function NexusVitaPresentation() {
               {whitepaperSections.map((section) => (
                 <div
                   key={section.id}
-                  className="border border-[#E0E0E0]/20 bg-[#050505]/50 backdrop-blur-sm p-8 md:p-12"
+                  className="bg-glass-matte p-6 md:p-10 rounded-sm"
                 >
                   <h2 className="text-3xl md:text-4xl font-mono font-light tracking-tight text-[#E0E0E0] mb-6">
                     {section.title}

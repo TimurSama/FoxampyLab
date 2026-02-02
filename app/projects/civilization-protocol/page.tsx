@@ -281,7 +281,7 @@ function DetailModal({ block, isOpen, onClose }: { block: ReturnType<typeof getA
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 xl:inset-32 bg-[#050505] border border-[#00F0FF]/30 z-50 overflow-y-auto max-h-[90vh]"
+            className="fixed inset-4 md:inset-8 lg:inset-16 xl:inset-32 bg-glass-matte z-50 overflow-y-auto max-h-[90vh] rounded-sm shadow-2xl"
           >
             <div className="p-4 md:p-8 lg:p-12">
               <button
@@ -290,7 +290,7 @@ function DetailModal({ block, isOpen, onClose }: { block: ReturnType<typeof getA
               >
                 <X size={24} />
               </button>
-              
+
               <div className="mb-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div style={{ color: block.color }}>
@@ -316,7 +316,7 @@ function DetailModal({ block, isOpen, onClose }: { block: ReturnType<typeof getA
                         </h3>
                       );
                     }
-                    
+
                     // Обычный параграф
                     return (
                       <div key={i} className="mb-4">
@@ -379,9 +379,9 @@ function BlockVisualization({ type, color }: { type: string; color: string }) {
     'projects': 'projects',
     'infrastructure': 'infrastructure',
   };
-  
+
   const visualizationType = visualizationTypeMap[type] || 'platform';
-  
+
   return (
     <div className="w-full h-full relative">
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
@@ -389,9 +389,9 @@ function BlockVisualization({ type, color }: { type: string; color: string }) {
           <ambientLight intensity={0.4} />
           <pointLight position={[5, 5, 5]} intensity={1} color={color} />
           <pointLight position={[-5, -5, -5]} intensity={0.5} color={color} />
-          <ArchitectureVisualization 
-            type={visualizationType} 
-            color={color} 
+          <ArchitectureVisualization
+            type={visualizationType}
+            color={color}
           />
         </Suspense>
       </Canvas>
@@ -411,9 +411,9 @@ export default function CivilizationProtocolPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0] overflow-x-hidden">
+    <div className="relative min-h-screen bg-transparent text-[#E0E0E0] overflow-x-hidden">
       <Header />
-      
+
       <main className="relative z-10 pt-20 md:pt-24 pb-12 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Hero Section */}
@@ -455,8 +455,8 @@ export default function CivilizationProtocolPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleBlockClick(block)}
-                className="relative h-[300px] md:h-[400px] border border-[#E0E0E0]/20 bg-[#050505]/50 
-                         hover:border-[#E0E0E0]/50 hover:bg-[#E0E0E0]/5 transition-all cursor-pointer
+                className="relative h-[300px] md:h-[400px] bg-glass-matte rounded-sm
+                         hover:border-white/20 hover:bg-black/40 transition-all cursor-pointer
                          group overflow-hidden"
               >
                 {/* Background Visualization */}
@@ -469,11 +469,11 @@ export default function CivilizationProtocolPage() {
                   <div style={{ color: block.color }} className="mb-3 md:mb-4">
                     {block.icon}
                   </div>
-                  
+
                   <h3 className="text-xl md:text-2xl font-mono text-[#E0E0E0] mb-2 md:mb-3 group-hover:text-[#FFFFFF] transition-colors">
                     {block.title}
                   </h3>
-                  
+
                   <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/60 flex-1 leading-relaxed">
                     {block.description}
                   </p>
@@ -491,10 +491,10 @@ export default function CivilizationProtocolPage() {
       </main>
 
       {/* Detail Modal */}
-      <DetailModal 
-        block={selectedBlock} 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <DetailModal
+        block={selectedBlock}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </div>
   );

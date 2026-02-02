@@ -17,7 +17,7 @@ export default function StatCard({ icon: Icon, value, label, color = '#E0E0E0', 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="border border-[#E0E0E0]/20 bg-[#050505]/50 p-6 hover:border-[#E0E0E0]/40 transition-all"
+      className="border border-[#E0E0E0]/20 bg-[#050505]/15 p-6 hover:border-[#E0E0E0]/40 transition-all"
     >
       <div className="flex items-start gap-4">
         <div className="p-3 border border-[#E0E0E0]/20" style={{ color }}>

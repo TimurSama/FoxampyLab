@@ -221,7 +221,7 @@ export default function GalleryPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#050505]">
+    <div className="relative min-h-screen bg-transparent">
       {/* Background elements */}
       <div className="fixed inset-0 oil-shimmer opacity-[0.03] pointer-events-none" />
       <div className="fixed inset-0 bg-gradient-to-b from-transparent via-[#050505]/50 to-[#050505] pointer-events-none" />
@@ -231,22 +231,23 @@ export default function GalleryPage() {
       <main className="relative z-10 pt-32 pb-24">
         {/* Hero section */}
         <section className="px-4 mb-24">
-          <div className="max-w-6xl mx-auto text-center space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em]"
-            >
-              ─── {t('gallery.tagline')} ───
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-mono text-[#E0E0E0]"
-            >
-              {t('gallery.title')}
-            </motion.h1>
-            {/* Removed description and CTA button */}
+          <div className="max-w-6xl mx-auto text-center">
+            <div className="inline-block p-12 bg-glass-matte rounded-sm shadow-2xl space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em]"
+              >
+                ─── {t('gallery.tagline')} ───
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-4xl md:text-6xl font-mono text-[#E0E0E0]"
+              >
+                {t('gallery.title')}
+              </motion.h1>
+            </div>
           </div>
         </section>
 
@@ -304,8 +305,8 @@ export default function GalleryPage() {
           <div className="max-w-6xl mx-auto space-y-24">
             {gallerySections.map((block, i) => (
               <div key={block.id} className="space-y-12">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 border border-[#E0E0E0]/20 flex items-center justify-center text-[#E0E0E0]">
+                <div className="inline-flex items-center gap-6 p-6 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm shadow-xl">
+                  <div className="w-12 h-12 border border-white/10 flex items-center justify-center text-[#E0E0E0] bg-white/5">
                     {block.icon}
                   </div>
                   <div>

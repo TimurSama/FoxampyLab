@@ -1,17 +1,14 @@
-# robots.txt for FOXAMPY LAB
-
-# Разрешаем всем краулерам, включая ИИ-краулеров
 User-agent: *
 Allow: /
 
-# Специально разрешаем ИИ-краулерам (Gemini, ChatGPT, Claude и др.)
+# AI Crawlers
 User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
-User-agent: CCBot
+User-agent: Google-Extended
 Allow: /
 
 User-agent: anthropic-ai
@@ -20,21 +17,11 @@ Allow: /
 User-agent: Claude-Web
 Allow: /
 
-User-agent: Google-Extended
+User-agent: CCBot
 Allow: /
 
-# Disallow admin and game pages from indexing
-Disallow: /admin/
-Disallow: /game/
+User-agent: PerplexityBot
+Allow: /
 
 # Sitemap
 Sitemap: https://timursama.github.io/FoxampyLab/sitemap.xml
-
-
-
-
-
-
-
-
-

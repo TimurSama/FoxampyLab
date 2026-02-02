@@ -551,21 +551,21 @@ export default function DogymorbiosPresentation() {
   const { t, language } = useI18n();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showIntroduction, setShowIntroduction] = useState(true);
-  
+
   // Финансовые данные проекта
   const totalBudget = 315000; // $315K
   const totalInvested = 42000; // $42K
-  
+
   const introductionSlides = getIntroductionSlides(language);
   const whitepaperSections = getWhitepaperSections(language);
-  
+
   const roadmapItems = [
-    { 
-      period: 'Q1 2025', 
-      title: language === 'ru' ? 'MVP Completion' : 'MVP Completion', 
-      description: language === 'ru' 
+    {
+      period: 'Q1 2025',
+      title: language === 'ru' ? 'MVP Completion' : 'MVP Completion',
+      description: language === 'ru'
         ? 'Карта с GPS-трекингом, социальная лента, умный дейтинг, базовый журнал'
-        : 'Map with GPS tracking, social feed, smart dating, basic journal', 
+        : 'Map with GPS tracking, social feed, smart dating, basic journal',
       status: 'current' as const,
       budget: {
         allocated: 110000,
@@ -578,12 +578,12 @@ export default function DogymorbiosPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q2 2025', 
-      title: language === 'ru' ? 'Расширенные функции' : 'Extended Features', 
+    {
+      period: 'Q2 2025',
+      title: language === 'ru' ? 'Расширенные функции' : 'Extended Features',
       description: language === 'ru'
         ? 'AI-анализ, система тренировок, расширенная геймификация, маркетплейс (бета)'
-        : 'AI analysis, training system, extended gamification, marketplace (beta)', 
+        : 'AI analysis, training system, extended gamification, marketplace (beta)',
       status: 'upcoming' as const,
       budget: {
         allocated: 80000,
@@ -596,12 +596,12 @@ export default function DogymorbiosPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q3 2025', 
-      title: language === 'ru' ? 'Монетизация и партнеры' : 'Monetization and Partners', 
+    {
+      period: 'Q3 2025',
+      title: language === 'ru' ? 'Монетизация и партнеры' : 'Monetization and Partners',
       description: language === 'ru'
         ? 'Полноценный маркетплейс, партнерская программа, мобильные приложения, DAO запуск'
-        : 'Full marketplace, partner program, mobile apps, DAO launch', 
+        : 'Full marketplace, partner program, mobile apps, DAO launch',
       status: 'upcoming' as const,
       budget: {
         allocated: 70000,
@@ -614,12 +614,12 @@ export default function DogymorbiosPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q4 2025', 
-      title: language === 'ru' ? 'Масштабирование' : 'Scaling', 
+    {
+      period: 'Q4 2025',
+      title: language === 'ru' ? 'Масштабирование' : 'Scaling',
       description: language === 'ru'
         ? 'Интеграции с ветеринарными клиниками, расширение на новые города, международное расширение'
-        : 'Veterinary clinic integrations, expansion to new cities, international expansion', 
+        : 'Veterinary clinic integrations, expansion to new cities, international expansion',
       status: 'upcoming' as const,
       budget: {
         allocated: 55000,
@@ -656,38 +656,36 @@ export default function DogymorbiosPresentation() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0]">
+    <div className="relative min-h-screen bg-transparent text-[#E0E0E0]">
       <Header />
-      
+
       <main className="relative z-10 pt-20 md:pt-24 pb-12 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-between">
-            <Link 
+            <Link
               href="/hub"
               className="font-mono text-sm text-[#E0E0E0]/60 hover:text-[#E0E0E0] transition-colors flex items-center gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
               {t('presentation.back')} {language === 'ru' ? 'к HUB' : 'to HUB'}
             </Link>
-            
+
             <div className="flex gap-4">
               <button
                 onClick={goToIntroduction}
-                className={`font-mono text-sm px-4 py-2 border transition-all ${
-                  showIntroduction
+                className={`font-mono text-sm px-4 py-2 border transition-all ${showIntroduction
                     ? 'border-[#E0E0E0] bg-[#E0E0E0]/10 text-[#E0E0E0]'
                     : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
-                }`}
+                  }`}
               >
                 {t('presentation.introduction')}
               </button>
               <button
                 onClick={goToWhitepaper}
-                className={`font-mono text-sm px-4 py-2 border transition-all ${
-                  !showIntroduction
+                className={`font-mono text-sm px-4 py-2 border transition-all ${!showIntroduction
                     ? 'border-[#E0E0E0] bg-[#E0E0E0]/10 text-[#E0E0E0]'
                     : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
-                }`}
+                  }`}
               >
                 {t('presentation.whitepaper')}
               </button>
@@ -696,7 +694,7 @@ export default function DogymorbiosPresentation() {
 
           {showIntroduction && (
             <div className="relative">
-              <div className="border border-[#E0E0E0]/20 bg-[#050505]/50 backdrop-blur-sm p-8 md:p-12 min-h-[600px] flex flex-col">
+              <div className="bg-glass-matte p-8 md:p-12 min-h-[600px] flex flex-col rounded-sm">
                 <div className="flex-1">
                   <div className="mb-8">
                     <h1 className="text-4xl md:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4">
@@ -722,12 +720,12 @@ export default function DogymorbiosPresentation() {
                     ) : (
                       <p className="text-lg leading-relaxed">{introductionSlides[currentSlide].content}</p>
                     )}
-                    
+
                     {/* Визуализация дорожной карты для слайда 8 */}
                     {currentSlide === 7 && (
                       <div className="mt-8">
-                        <Timeline 
-                          items={roadmapItems} 
+                        <Timeline
+                          items={roadmapItems}
                           totalBudget={totalBudget}
                           totalInvested={totalInvested}
                           showBudget={true}
@@ -751,9 +749,8 @@ export default function DogymorbiosPresentation() {
                     {introductionSlides.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          idx === currentSlide ? 'bg-[#E0E0E0]' : 'bg-[#E0E0E0]/20'
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-[#E0E0E0]' : 'bg-[#E0E0E0]/20'
+                          }`}
                       />
                     ))}
                   </div>
@@ -787,7 +784,7 @@ export default function DogymorbiosPresentation() {
               {whitepaperSections.map((section) => (
                 <div
                   key={section.id}
-                  className="border border-[#E0E0E0]/20 bg-[#050505]/50 backdrop-blur-sm p-8 md:p-12"
+                  className="bg-glass-matte p-8 md:p-12 rounded-sm"
                 >
                   <h2 className="text-3xl md:text-4xl font-mono font-light tracking-tight text-[#E0E0E0] mb-6">
                     {section.title}

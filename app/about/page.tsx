@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { 
-  FlaskConical, 
-  Rocket, 
-  Users, 
-  Target, 
-  Lightbulb, 
+import {
+  FlaskConical,
+  Rocket,
+  Users,
+  Target,
+  Lightbulb,
   Code,
   Palette,
   TrendingUp,
@@ -22,7 +22,7 @@ import { useI18n } from '@/lib/i18n/context';
 
 export default function AboutPage() {
   const { t } = useI18n();
-  
+
   const values = [
     {
       icon: <Lightbulb size={24} />,
@@ -115,11 +115,11 @@ export default function AboutPage() {
     },
   ];
   return (
-    <div className="relative min-h-screen bg-ink-deep">
+    <div className="relative min-h-screen bg-transparent">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" aria-hidden="true" />
-      
+
       <Header />
-      
+
       <main id="main-content" className="relative z-10 pt-32 pb-24" role="main">
         {/* Hero */}
         <section className="px-4 mb-24">
@@ -132,11 +132,11 @@ export default function AboutPage() {
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
                 ─── {t('about.tagline')} ───
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
                 {t('about.title')}
               </h1>
-              
+
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl mx-auto leading-relaxed">
                 {t('about.description')}
               </p>
@@ -151,7 +151,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="p-8 border border-stone-anthracite/30 bg-ink-chrome/10"
+              className="p-8 bg-glass-matte"
             >
               <div className="flex items-start gap-4 mb-6">
                 <FlaskConical className="w-8 h-8 text-engrave-line flex-shrink-0 mt-1" />
@@ -181,7 +181,7 @@ export default function AboutPage() {
                 {t('about.values.title')}
               </h2>
             </motion.div>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               {values.map((value, i) => (
                 <motion.div
@@ -190,8 +190,7 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 border border-stone-anthracite/30 bg-ink-chrome/10 
-                           hover:border-engrave-line/20 transition-all"
+                  className="p-6 bg-glass-matte hover:border-white/20 transition-all rounded-sm"
                 >
                   <div className="flex items-start gap-4">
                     <div className="text-engrave-line flex-shrink-0">
@@ -228,7 +227,7 @@ export default function AboutPage() {
                 {t('about.expertise.subtitle')}
               </p>
             </motion.div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {expertise.map((area, i) => (
                 <motion.div
@@ -237,7 +236,7 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 border border-stone-anthracite/30 bg-ink-chrome/10"
+                  className="p-6 bg-glass-matte rounded-sm"
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <div className="text-engrave-line">
@@ -247,7 +246,7 @@ export default function AboutPage() {
                       {t(area.categoryKey)}
                     </h3>
                   </div>
-                  
+
                   <ul className="space-y-2">
                     {area.items.map((itemKey, j) => (
                       <li

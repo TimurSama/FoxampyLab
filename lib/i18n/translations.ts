@@ -829,10 +829,10 @@ const enHomeTranslations = {
     ],
   },
   gallery: {
-    title: 'LIVING GALLERY',
-    subtitle: 'Artifacts and Prototypes',
-    description: 'Gallery of visual solutions: applications, digital fashion, architectural forms, video art, R&D prototypes. Each work is a portal to a future environment.',
-    cta: 'View Gallery',
+    title: 'Галерея',
+    subtitle: 'Витрина кейсов и работ',
+    description: '',
+    cta: 'Открыть галерею',
   },
   ventures: {
     title: 'VENTURE TERMINAL',
@@ -1920,8 +1920,8 @@ export const translations: Record<Language, Translations> = {
         services: [
           {
             id: 'business',
-            title: 'STRATEGIC GENESIS & VENTURE LOGIC',
-            subtitle: 'Business Strategic Architecture',
+            title: 'БИЗНЕС СТРАТЕГИРОВАНИЕ',
+            subtitle: 'Бизнес-Стратегическая Архитектура',
             description: 'Проектирование фундаментов бизнеса. Мы переводим хаос идей в строгую документарную форму: от создания Vision & Mission до детальных White Papers и инвестиционных меморандумов. Разработка токеномики и экономических моделей, устойчивых к рыночной энтропии.',
             features: [
               'Vision & Mission разработка',
@@ -1934,8 +1934,8 @@ export const translations: Record<Language, Translations> = {
           },
           {
             id: 'it',
-            title: 'DIGITAL CORE & ECOSYSTEM DEVELOPMENT',
-            subtitle: 'IT Ecosystem Engineering',
+            title: 'РАЗРАБОТКА ЭКОСИСТЕМ',
+            subtitle: 'ИТ-Экосистемная Инженерия',
             description: 'Создание технологического ДНК продукта. Разработка концепций и реализация сложных IT-экосистем: масштабируемые платформы, AI-интеграции и блокчейн-решения. Мы строим не просто код, а архитектуру, готовую к бесконечной трансформации.',
             features: [
               'Архитектура экосистем',
@@ -1948,8 +1948,8 @@ export const translations: Record<Language, Translations> = {
           },
           {
             id: 'branding',
-            title: 'COGNITIVE BRANDING & VISUAL SYSTEMS',
-            subtitle: 'Identity & Sensory Branding',
+            title: 'БРЕНДИНГ И АЙДЕНТИКА',
+            subtitle: 'Айдентика и Сенсорный Брендинг',
             description: 'Синтез восприятия и эстетики. Мы создаем бренды как живые организмы с уникальным кодом айдентики. Глубокий дизайн-анализ, разработка смысловых полей и маркетинговых стратегий, которые резонируют на уровне подсознания.',
             features: [
               'Бренд-стратегия',
@@ -1962,8 +1962,8 @@ export const translations: Record<Language, Translations> = {
           },
           {
             id: 'spatial',
-            title: 'PARAMETRIC FASHION & ARCHITECTURE',
-            subtitle: 'Spatial Form & Wearable Art',
+            title: 'ЦИФРОВОЙ ДИЗАЙН И ФЭШН',
+            subtitle: 'Пространственная Форма и Носимое Искусство',
             description: 'Стирание границ между телом и пространством. Мы объединяем методы параметрического проектирования зданий с авангардным дизайном одежды. Создание цифровых двойников, 3D-прототипирование и концептуальные решения для физических миров.',
             features: [
               'Параметрический дизайн',
@@ -1976,8 +1976,8 @@ export const translations: Record<Language, Translations> = {
           },
           {
             id: 'cinema',
-            title: 'TEMPORAL NARRATIVE & VISUAL FX',
-            subtitle: 'Cinematic Synthesis & Motion',
+            title: 'ВИДЕОПРОДАКШН И CGI',
+            subtitle: 'Кинематографический Синтез и Движение',
             description: 'Трансляция смыслов через визуальный опыт. Продакшн будущего: от концептуального сторителлинга до сложного CGI и видео-арта. Мы создаем визуальные миры, которые погружают зрителя в 4D-пространство и диктуют новые эстетические нормы.',
             features: [
               'Видео продакшн',
@@ -1990,8 +1990,8 @@ export const translations: Record<Language, Translations> = {
           },
           {
             id: 'rd',
-            title: 'APPLIED PHYSICS & ENGINEERING RESEARCH',
-            subtitle: 'Frontiers of R&D',
+            title: 'ИССЛЕДОВАНИЯ И R&D',
+            subtitle: 'Фронтиры R&D',
             description: 'Лаборатория фундаментальных инноваций. Глубокие исследования на стыке инженерии и прикладной науки. Разработка патентоспособных технологий, прототипирование новых материалов и поиск нестандартных инженерных решений для глобальных вызовов.',
             features: [
               'Научные исследования',
@@ -2005,10 +2005,10 @@ export const translations: Record<Language, Translations> = {
         ],
       },
       gallery: {
-        title: 'LIVING GALLERY',
-        subtitle: 'Артефакты и прототипы',
-        description: 'Галерея визуальных решений: приложения, цифровая мода, архитектурные формы, видео-арт, R&D прототипы. Каждая работа — портал в будущую среду.',
-        cta: 'Смотреть галерею',
+        title: 'Галерея',
+        subtitle: 'Витрина кейсов и работ',
+        description: '',
+        cta: 'Открыть галерею',
       },
       ventures: {
         title: 'VENTURE TERMINAL',

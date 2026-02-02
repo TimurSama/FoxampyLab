@@ -17,21 +17,21 @@ export default function TradePlusPresentation() {
   const { t, language } = useI18n();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showIntroduction, setShowIntroduction] = useState(true);
-  
+
   // Финансовые данные проекта
   const totalBudget = 140000; // $140K
   const totalInvested = 35000; // $35K
-  
+
   const introductionSlides = getIntroductionSlides(language);
   const whitepaperSections = getWhitepaperSections(language);
-  
+
   const roadmapItems = [
-    { 
-      period: 'Q1 2024', 
-      title: language === 'ru' ? 'MVP Development' : 'MVP Development', 
-      description: language === 'ru' 
+    {
+      period: 'Q1 2024',
+      title: language === 'ru' ? 'MVP Development' : 'MVP Development',
+      description: language === 'ru'
         ? 'Базовая торговая платформа, интеграция бирж'
-        : 'Basic trading platform, exchange integration', 
+        : 'Basic trading platform, exchange integration',
       status: 'completed' as const,
       budget: {
         allocated: 40000,
@@ -43,12 +43,12 @@ export default function TradePlusPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q2-Q3 2024', 
-      title: language === 'ru' ? 'Beta Launch' : 'Beta Launch', 
+    {
+      period: 'Q2-Q3 2024',
+      title: language === 'ru' ? 'Beta Launch' : 'Beta Launch',
       description: language === 'ru'
         ? 'Алгоритмический трейдинг, социальный трейдинг'
-        : 'Algorithmic trading, social trading', 
+        : 'Algorithmic trading, social trading',
       status: 'completed' as const,
       budget: {
         allocated: 50000,
@@ -60,12 +60,12 @@ export default function TradePlusPresentation() {
         ]
       }
     },
-    { 
-      period: 'Q4 2024', 
-      title: language === 'ru' ? 'Public Launch' : 'Public Launch', 
+    {
+      period: 'Q4 2024',
+      title: language === 'ru' ? 'Public Launch' : 'Public Launch',
       description: language === 'ru'
         ? 'Маркетплейс, DAO запуск, мобильные приложения'
-        : 'Marketplace, DAO launch, mobile apps', 
+        : 'Marketplace, DAO launch, mobile apps',
       status: 'current' as const,
       budget: {
         allocated: 30000,
@@ -77,12 +77,12 @@ export default function TradePlusPresentation() {
         ]
       }
     },
-    { 
-      period: '2025', 
-      title: language === 'ru' ? 'Expansion' : 'Expansion', 
+    {
+      period: '2025',
+      title: language === 'ru' ? 'Expansion' : 'Expansion',
       description: language === 'ru'
         ? 'Институциональные функции, расширение на новые рынки'
-        : 'Institutional features, expansion to new markets', 
+        : 'Institutional features, expansion to new markets',
       status: 'upcoming' as const,
       budget: {
         allocated: 20000,
@@ -119,38 +119,36 @@ export default function TradePlusPresentation() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0]">
+    <div className="relative min-h-screen bg-transparent text-[#E0E0E0]">
       <Header />
-      
+
       <main className="relative z-10 pt-20 md:pt-24 pb-12 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-between">
-            <Link 
+            <Link
               href="/hub"
               className="font-mono text-sm text-[#E0E0E0]/60 hover:text-[#E0E0E0] transition-colors flex items-center gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
               {t('presentation.back')} {language === 'ru' ? 'к HUB' : 'to HUB'}
             </Link>
-            
+
             <div className="flex gap-4">
               <button
                 onClick={goToIntroduction}
-                className={`font-mono text-sm px-4 py-2 border transition-all ${
-                  showIntroduction
+                className={`font-mono text-sm px-4 py-2 border transition-all ${showIntroduction
                     ? 'border-[#E0E0E0] bg-[#E0E0E0]/10 text-[#E0E0E0]'
                     : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
-                }`}
+                  }`}
               >
                 {t('presentation.introduction')}
               </button>
               <button
                 onClick={goToWhitepaper}
-                className={`font-mono text-sm px-4 py-2 border transition-all ${
-                  !showIntroduction
+                className={`font-mono text-sm px-4 py-2 border transition-all ${!showIntroduction
                     ? 'border-[#E0E0E0] bg-[#E0E0E0]/10 text-[#E0E0E0]'
                     : 'border-[#E0E0E0]/20 text-[#E0E0E0]/60 hover:border-[#E0E0E0]/40'
-                }`}
+                  }`}
               >
                 {t('presentation.whitepaper')}
               </button>
@@ -159,7 +157,7 @@ export default function TradePlusPresentation() {
 
           {showIntroduction && (
             <div className="relative">
-              <div className="border border-[#E0E0E0]/20 bg-[#050505]/50 backdrop-blur-sm p-8 md:p-12 min-h-[600px] flex flex-col">
+              <div className="bg-glass-matte p-8 md:p-12 min-h-[600px] flex flex-col rounded-sm">
                 <div className="flex-1">
                   <div className="mb-8">
                     <h1 className="text-4xl md:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4">
@@ -185,12 +183,12 @@ export default function TradePlusPresentation() {
                     ) : (
                       <p className="text-lg leading-relaxed">{introductionSlides[currentSlide].content}</p>
                     )}
-                    
+
                     {/* Визуализация дорожной карты для слайда 8 */}
                     {currentSlide === 7 && (
                       <div className="mt-8">
-                        <Timeline 
-                          items={roadmapItems} 
+                        <Timeline
+                          items={roadmapItems}
                           totalBudget={totalBudget}
                           totalInvested={totalInvested}
                           showBudget={true}
@@ -214,9 +212,8 @@ export default function TradePlusPresentation() {
                     {introductionSlides.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          idx === currentSlide ? 'bg-[#E0E0E0]' : 'bg-[#E0E0E0]/20'
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-[#E0E0E0]' : 'bg-[#E0E0E0]/20'
+                          }`}
                       />
                     ))}
                   </div>
@@ -250,7 +247,7 @@ export default function TradePlusPresentation() {
               {whitepaperSections.map((section) => (
                 <div
                   key={section.id}
-                  className="border border-[#E0E0E0]/20 bg-[#050505]/50 backdrop-blur-sm p-8 md:p-12"
+                  className="bg-glass-matte p-8 md:p-12 rounded-sm"
                 >
                   <h2 className="text-3xl md:text-4xl font-mono font-light tracking-tight text-[#E0E0E0] mb-6">
                     {section.title}

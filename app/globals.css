@@ -9,16 +9,16 @@
   --ink-deep: #030303;
   --ink-oil: #0a0a0a;
   --ink-chrome: #121215;
-  
+
   /* Stone spectrum - grays */
   --stone-matte: #1a1a1c;
   --stone-anthracite: #2a2a2e;
   --stone-graphite: #3a3a40;
-  
+
   /* Engrave spectrum - whites */
   --engrave-line: #e8e8e8;
   --engrave-fresco: #f5f5f5;
-  
+
   /* Dimensions */
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
@@ -38,7 +38,7 @@ html {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--ink-deep);
+  background: transparent;
   color: var(--engrave-fresco);
   min-height: 100vh;
   min-height: 100dvh;
@@ -118,13 +118,11 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px);
 }
 
 /* Vignette */
@@ -133,44 +131,48 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 9997;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 0%,
-    transparent 50%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
+  background: radial-gradient(ellipse at center,
+      transparent 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.4) 100%);
 }
 
 /* Oil/Chrome shimmer effect */
 .oil-shimmer {
-  background: linear-gradient(
-    135deg,
-    var(--ink-deep) 0%,
-    var(--ink-oil) 25%,
-    var(--ink-chrome) 50%,
-    var(--ink-oil) 75%,
-    var(--ink-deep) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--ink-deep) 0%,
+      var(--ink-oil) 25%,
+      var(--ink-chrome) 50%,
+      var(--ink-oil) 75%,
+      var(--ink-deep) 100%);
   background-size: 400% 400%;
   animation: shimmer 15s ease infinite;
 }
 
 @keyframes shimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Glow effect for borders */
 .glow-border {
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.05),
     0 0 20px rgba(255, 255, 255, 0.02),
     inset 0 0 20px rgba(255, 255, 255, 0.01);
 }
 
 .glow-border-hover:hover {
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.15),
     0 0 30px rgba(255, 255, 255, 0.05),
     inset 0 0 30px rgba(255, 255, 255, 0.02);
@@ -178,19 +180,17 @@ body {
 
 /* Engraved text effect */
 .text-engraved {
-  text-shadow: 
+  text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.1),
     0 -1px 0 rgba(0, 0, 0, 0.8);
 }
 
 /* Chrome text */
 .text-chrome {
-  background: linear-gradient(
-    180deg,
-    var(--engrave-fresco) 0%,
-    var(--stone-graphite) 50%,
-    var(--engrave-line) 100%
-  );
+  background: linear-gradient(180deg,
+      var(--engrave-fresco) 0%,
+      var(--stone-graphite) 50%,
+      var(--engrave-line) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -236,7 +236,7 @@ body {
 
 /* Wireframe grid background */
 .wireframe-grid {
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -253,21 +253,35 @@ body {
 }
 
 @keyframes glitch {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
+
+  0%,
+  100% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    transform: translate(2px, 2px);
+  }
+
+  80% {
+    transform: translate(2px, -2px);
+  }
 }
 
 /* Chrome text gradient */
 .text-chrome {
-  background: linear-gradient(
-    180deg,
-    var(--engrave-fresco) 0%,
-    var(--stone-graphite) 50%,
-    var(--engrave-line) 100%
-  );
+  background: linear-gradient(180deg,
+      var(--engrave-fresco) 0%,
+      var(--stone-graphite) 50%,
+      var(--engrave-line) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -295,18 +309,21 @@ body {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
   animation: scan-line 4s linear infinite;
 }
 
 @keyframes scan-line {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
 }
 
 /* Breathing glow */
@@ -315,29 +332,35 @@ body {
 }
 
 @keyframes breathing {
-  0%, 100% { 
+
+  0%,
+  100% {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
   }
-  50% { 
+
+  50% {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
   }
 }
 
 /* Data flow lines */
 .data-flow {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--stone-graphite) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--stone-graphite) 50%,
+      transparent 100%);
   background-size: 200% 100%;
   animation: data-flow 3s linear infinite;
 }
 
 @keyframes data-flow {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Terminal cursor */
@@ -350,28 +373,42 @@ body {
 }
 
 @keyframes cursor-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Holographic shimmer */
 .holo-shimmer {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0) 50%,
-    rgba(255, 255, 255, 0.05) 75%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 0.05) 75%,
+      rgba(255, 255, 255, 0) 100%);
   background-size: 400% 400%;
   animation: holo-shimmer 8s ease infinite;
 }
 
 @keyframes holo-shimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* ========== ANIMATIONS ========== */
@@ -383,8 +420,16 @@ body {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Pulse ring */
@@ -397,6 +442,7 @@ body {
     transform: scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.5);
     opacity: 0;
@@ -405,18 +451,21 @@ body {
 
 /* Data stream */
 .data-stream {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%);
   animation: data-flow 3s linear infinite;
 }
 
 @keyframes data-flow {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
 }
 
 /* ========== UTILITIES ========== */
@@ -434,9 +483,18 @@ body {
 }
 
 .bg-glass {
-  background: rgba(10, 10, 10, 0.8);
+  background: rgba(10, 10, 10, 0.03);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.bg-glass-matte {
+  background: rgba(5, 5, 5, 0.15);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Touch-friendly */
@@ -455,4 +513,3 @@ body {
 .safe-bottom {
   padding-bottom: max(1rem, var(--safe-bottom));
 }
-

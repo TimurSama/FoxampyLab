@@ -63,9 +63,9 @@ export default function Header() {
   }, [searchQuery]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 mt-2">
-      <div className="mx-4 md:mx-8 border border-stone-anthracite/30 bg-ink-deep/80 backdrop-blur-xl">
-        <div className="px-4 md:px-6 py-3 flex items-center justify-between relative">
+    <header className="fixed top-0 left-0 right-0 z-50 mt-4">
+      <div className="mx-4 md:mx-12 bg-glass-matte shadow-[0_4px_16px_0_rgba(0,0,0,0.15)] rounded-sm">
+        <div className="px-6 md:px-10 py-4 flex items-center justify-between relative">
           {/* Burger Menu - Left */}
           <div className="relative" ref={menuRef}>
             <button
@@ -84,8 +84,8 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full left-0 mt-2 bg-ink-chrome border border-stone-anthracite/50 
-                           backdrop-blur-xl min-w-[180px] z-50"
+                  className="absolute top-full left-0 mt-2 bg-ink-chrome/03 border border-stone-anthracite/50 
+                           backdrop-blur-sm min-w-[180px] z-50"
                 >
                   {menuItemsConfig.map((item) => (
                     <button
@@ -126,7 +126,7 @@ export default function Header() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t('header.searchPlaceholder')}
                     autoFocus
-                    className="w-32 md:w-48 px-3 py-1.5 bg-ink-chrome border border-stone-anthracite/50 
+                    className="w-32 md:w-48 px-3 py-1.5 bg-ink-chrome/03 border border-stone-anthracite/50 
                              font-mono text-xs text-engrave-fresco placeholder-stone-anthracite
                              focus:border-engrave-line/30 focus:outline-none"
                   />
@@ -170,7 +170,7 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-2 bg-ink-chrome border border-stone-anthracite/50 
+                    className="absolute top-full right-0 mt-2 bg-ink-chrome/03 border border-stone-anthracite/50 
                              backdrop-blur-xl min-w-[120px] z-50"
                   >
                     {languages.map((lang) => (

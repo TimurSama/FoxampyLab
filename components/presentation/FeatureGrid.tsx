@@ -29,7 +29,7 @@ export default function FeatureGrid({ features, columns = 3 }: FeatureGridProps)
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          className="border border-[#E0E0E0]/20 bg-[#050505]/50 p-6 hover:border-[#E0E0E0]/40 hover:bg-[#E0E0E0]/5 transition-all group"
+          className="border border-[#E0E0E0]/20 bg-[#050505]/15 p-6 hover:border-[#E0E0E0]/40 hover:bg-[#E0E0E0]/5 transition-all group"
         >
           <div className="mb-4">
             <div className="w-12 h-12 border border-[#E0E0E0]/20 flex items-center justify-center group-hover:border-[#E0E0E0] transition-colors">

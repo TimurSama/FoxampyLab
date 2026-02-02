@@ -98,7 +98,7 @@ export default function JoinPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-ink-deep">
+    <div className="relative min-h-screen bg-transparent">
       {/* Background */}
       <div className="fixed inset-0 oil-shimmer opacity-30 pointer-events-none" />
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
@@ -153,7 +153,7 @@ export default function JoinPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 border border-stone-anthracite/30 bg-ink-chrome/20"
+                  className="p-6 bg-glass-matte rounded-sm"
                 >
                   <h3 className="font-mono text-lg text-engrave-fresco mb-3">
                     {value.title}
@@ -183,9 +183,9 @@ export default function JoinPage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   onClick={() => setSelectedRole(selectedRole === role.id ? null : role.id)}
-                  className={`p-6 border cursor-pointer transition-all ${selectedRole === role.id
-                      ? 'border-engrave-line/50 bg-ink-chrome/50'
-                      : 'border-stone-anthracite/30 bg-ink-chrome/20 hover:border-engrave-line/20'
+                  className={`p-6 border cursor-pointer transition-all rounded-sm ${selectedRole === role.id
+                    ? 'border-white/40 bg-black/40 backdrop-blur-2xl'
+                    : 'bg-glass-matte hover:border-white/20'
                     }`}
                 >
                   {/* Header */}

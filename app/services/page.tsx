@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Layers, 
-  Code, 
-  Palette, 
-  TrendingUp, 
-  FileText, 
+import {
+  Layers,
+  Code,
+  Palette,
+  TrendingUp,
+  FileText,
   Film,
   Rocket,
   X,
@@ -15,9 +15,12 @@ import {
   Mail,
   Phone,
   MessageSquare,
-  ArrowRight
+  ArrowRight,
+  Zap,
+  Gamepad2
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
 
 export default function ServicesPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -30,10 +33,10 @@ export default function ServicesPage() {
     {
       id: 'ecosystems',
       icon: <Layers size={32} />,
-      title: 'Цифровые экосистемы',
-      description: 'Разработка комплексных цифровых решений с интеграцией множества сервисов в единую архитектуру',
+      title: 'Бизнес стратегирование',
+      description: 'Разработка комплексных продуктов и проектов с полной поддержкой от идеи до реализации',
       features: [
-        'Стратегия цифровой экосистемы',
+        'Разработка продуктов под ключ',
         'Интеграция сервисов и платформ',
         'API и микросервисная архитектура',
         'Управление данными',
@@ -44,7 +47,7 @@ export default function ServicesPage() {
     {
       id: 'web-app',
       icon: <Code size={32} />,
-      title: 'Веб и мобильная разработка',
+      title: 'Разработка экосистем',
       description: 'Создание современных веб-приложений и нативных мобильных решений с использованием передовых технологий',
       features: [
         'Разработка веб-приложений',
@@ -72,8 +75,8 @@ export default function ServicesPage() {
     {
       id: 'design',
       icon: <Palette size={32} />,
-      title: 'UI/UX и 3D дизайн',
-      description: 'Создание визуальных концепций от интерфейсов до 3D миров и брендинга',
+      title: 'Дизайн и брендинг',
+      description: 'Создание визуальных концепций от интерфейсов до 3D миров и комплексных брендинговых стратегий',
       features: [
         'UI/UX дизайн',
         'Брендинг и айдентика',
@@ -93,8 +96,11 @@ export default function ServicesPage() {
         'SMM и контент-маркетинг',
         'SEO оптимизация',
         'Таргетированная реклама',
-        'Email маркетинг',
-        'Аналитика и отчетность'
+        'Аналитика и отчетность',
+        'Привлечение трафика',
+        'Настройка воронок продаж',
+        'Автоматизация систем и процессов',
+        'CRM внедрение и настройка'
       ],
     },
     {
@@ -125,6 +131,34 @@ export default function ServicesPage() {
         'Монтаж и постпродакшн'
       ],
     },
+    {
+      id: 'fashion',
+      icon: <Zap size={32} />,
+      title: 'Фэшн и архитектура',
+      description: 'Создание цифровых моделей одежды, архитектурных визуализаций и Fashion Tech решений',
+      features: [
+        '3D моделирование одежды',
+        'Digital Fashion',
+        'Архитектурная визуализация',
+        'Виртуальные примерочные',
+        'Fashion Tech решения',
+        'AR/VR для моды'
+      ],
+    },
+    {
+      id: 'gamedev',
+      icon: <Gamepad2 size={32} />,
+      title: 'Геймдев и геймификация',
+      description: 'Разработка игр и игровых механик для вовлечения пользователей и обучения',
+      features: [
+        'Разработка мобильных и веб игр',
+        'Геймификация бизнес-процессов',
+        'Обучающие симуляторы',
+        'Игровые механики в приложениях',
+        'VR/AR игры',
+        'Gamification стратегия'
+      ],
+    },
   ];
 
   const toggleService = (id: string) => {
@@ -137,7 +171,7 @@ export default function ServicesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (selectedServices.length === 0) {
       alert('Пожалуйста, выберите хотя бы одну услугу');
       return;
@@ -207,11 +241,11 @@ Email: ${email}
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050505]">
+    <div className="relative min-h-screen bg-transparent">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
-      
+
       <Header />
-      
+
       <main className="relative z-10 pt-32 pb-24">
         {/* Hero */}
         <section className="px-4 mb-16">
@@ -223,11 +257,11 @@ Email: ${email}
               <div className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6">
                 ─── УСЛУГИ ───
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl font-mono text-[#E0E0E0] tracking-tight mb-6">
                 Комплексные решения для вашего бизнеса
               </h1>
-              
+
               <p className="font-mono text-sm text-[#E0E0E0]/80 max-w-2xl mx-auto leading-relaxed">
                 От стратегии до реализации — создаем цифровые продукты, которые работают и приносят результат
               </p>
@@ -238,7 +272,7 @@ Email: ${email}
         {/* Services Grid */}
         <section className="px-4 mb-16">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((service, i) => {
                 const isSelected = selectedServices.includes(service.id);
                 const isExpanded = expandedServiceId === service.id;
@@ -247,15 +281,21 @@ Email: ${email}
                   <motion.div
                     key={service.id}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      zIndex: isExpanded ? 50 : 1
+                    }}
                     transition={{ delay: i * 0.1 }}
                     onClick={() => toggleService(service.id)}
-                    className={`relative border cursor-pointer p-6 transition-all duration-300 group ${
-                      isSelected 
-                          ? 'border-[#E0E0E0] bg-[#E0E0E0]/5' 
-                          : 'border-[#E0E0E0]/20 bg-[#050505] hover:border-[#E0E0E0]/30'
-                        }
+                    className={`relative cursor-pointer p-6 transition-all duration-300 group rounded-sm ${isSelected
+                      ? 'border-white/40 bg-black/40 backdrop-blur-2xl'
+                      : 'bg-glass-matte hover:border-white/20'
+                      }
                     `}
+                    style={{
+                      zIndex: isExpanded ? 50 : 1
+                    }}
                   >
                     {/* Пиксельная звезда */}
                     <AnimatePresence>
@@ -264,7 +304,7 @@ Email: ${email}
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           exit={{ scale: 0, rotate: 180 }}
-                          className="absolute top-4 right-4"
+                          className="absolute top-4 right-4 z-10"
                         >
                           <div className="relative">
                             {/* Центральная точка */}
@@ -279,42 +319,119 @@ Email: ${email}
                       )}
                     </AnimatePresence>
 
-                    <div className={`mb-3 md:mb-4 transition-colors ${
-                      isSelected ? 'text-[#E0E0E0]' : 'text-[#E0E0E0]/80 group-hover:text-[#E0E0E0]'
-                    }`}>
+                    <div className={`mb-3 md:mb-4 transition-colors ${isSelected ? 'text-[#E0E0E0]' : 'text-[#E0E0E0]/80 group-hover:text-[#E0E0E0]'
+                      }`}>
                       {service.icon}
                     </div>
-                    
-                    <h3 className={`font-mono text-xs md:text-sm text-center transition-colors ${
-                      isSelected ? 'text-[#E0E0E0]' : 'text-[#E0E0E0]/80'
-                    }`}>
+
+                    <h3 className={`font-mono text-xs md:text-sm text-center transition-colors ${isSelected ? 'text-[#E0E0E0]' : 'text-[#E0E0E0]/80'
+                      }`}>
                       {service.title}
                     </h3>
-                    
-                    <p className={`font-mono text-[10px] text-center mt-2 leading-relaxed ${
-                      isSelected ? 'text-[#E0E0E0]/90' : 'text-[#E0E0E0]/60'
-                    }`}>
+
+                    <p className={`font-mono text-[10px] text-center mt-2 leading-relaxed ${isSelected ? 'text-[#E0E0E0]/90' : 'text-[#E0E0E0]/60'
+                      }`}>
                       {service.description}
                     </p>
 
                     {/* Расширенная информация */}
                     <AnimatePresence>
                       {isExpanded && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="mt-4 pt-4 border-t border-[#E0E0E0]/20"
-                        >
-                          <ul className="space-y-1">
-                            {service.features.map((feature, idx) => (
-                              <li key={idx} className="font-mono text-[10px] text-[#E0E0E0]/70 flex items-center">
-                                <span className="w-1 h-1 bg-[#E0E0E0]/50 rounded-full mr-2"></span>
-                                {feature}
-                              </li>
-                            ))}
-                          </ul>
-                        </motion.div>
+                        <>
+                          {/* Mobile версия - внутри карточки */}
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="md:hidden mt-4 pt-4 border-t border-[#E0E0E0]/20"
+                          >
+                            <ul className="space-y-1">
+                              {service.features.map((feature, idx) => (
+                                <li key={idx} className="font-mono text-[10px] text-[#E0E0E0]/70 flex items-center">
+                                  <span className="w-1 h-1 bg-[#E0E0E0]/50 rounded-full mr-2"></span>
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+
+                          {/* Desktop версия - оверлей */}
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.7, y: 50 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: -50 }}
+                            transition={{ 
+                              type: "spring", 
+                              stiffness: 300, 
+                              damping: 30,
+                              mass: 0.8
+                            }}
+                            className="hidden md:block fixed inset-0 z-40 flex items-center justify-center p-8 bg-[#030303]/95 backdrop-blur-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleService(service.id);
+                            }}
+                          >
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.7, y: 50 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              exit={{ opacity: 0, scale: 0.9, y: -50 }}
+                              transition={{ 
+                                type: "spring", 
+                                stiffness: 300, 
+                                damping: 30,
+                                mass: 0.8
+                              }}
+                              className="max-w-2xl w-full bg-[#050505] border border-[#E0E0E0]/30 p-8"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-4">
+                                  <div className="text-[#E0E0E0]">
+                                    {service.icon}
+                                  </div>
+                                  <h3 className="font-mono text-xl text-[#E0E0E0]">
+                                    {service.title}
+                                  </h3>
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleService(service.id);
+                                  }}
+                                  className="p-2 hover:bg-[#E0E0E0]/10 transition-colors"
+                                >
+                                  <X size={20} className="text-[#E0E0E0]" />
+                                </button>
+                              </div>
+
+                              <p className="font-mono text-sm text-[#E0E0E0]/80 mb-6 leading-relaxed">
+                                {service.description}
+                              </p>
+
+                              <ul className="space-y-2">
+                                {service.features.map((feature, idx) => (
+                                  <li key={idx} className="font-mono text-sm text-[#E0E0E0]/70 flex items-start">
+                                    <span className="w-1.5 h-1.5 bg-[#E0E0E0]/50 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                                    {feature}
+                                  </li>
+                                ))}
+                              </ul>
+
+                              <div className="mt-8 flex justify-center">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleService(service.id);
+                                  }}
+                                  className="px-6 py-2 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all"
+                                >
+                                  Закрыть
+                                </button>
+                              </div>
+                            </motion.div>
+                          </motion.div>
+                        </>
                       )}
                     </AnimatePresence>
                   </motion.div>
@@ -330,12 +447,12 @@ Email: ${email}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 border border-[#E0E0E0]/20 bg-[#050505]/50"
+              className="p-8 bg-glass-matte"
             >
               <h2 className="font-mono text-2xl text-[#E0E0E0] mb-6 text-center">
                 Заказать консультацию
               </h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -351,7 +468,7 @@ Email: ${email}
                       placeholder="your@email.com"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block font-mono text-[10px] text-[#E0E0E0]/60 tracking-widest mb-2">
                       ТЕЛЕФОН
@@ -366,7 +483,7 @@ Email: ${email}
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block font-mono text-[10px] text-[#E0E0E0]/60 tracking-widest mb-2">
                     МЕССЕНДЖЕР (опционально)
@@ -379,7 +496,7 @@ Email: ${email}
                     placeholder="@username"
                   />
                 </div>
-                
+
                 <button
                   type="submit"
                   className="w-full px-6 py-3 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest hover:bg-[#E0E0E0]/90 transition-colors"

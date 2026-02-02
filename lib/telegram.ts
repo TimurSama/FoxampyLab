@@ -14,11 +14,12 @@ export interface TelegramResponse {
 
 // Получаем конфигурацию из environment variables
 const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
+const TELEGRAM_ADMIN_ID = process.env.NEXT_PUBLIC_TELEGRAM_ADMIN_ID;
 
 export class TelegramService {
   static async sendMessage(message: string): Promise<TelegramResponse> {
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_ADMIN_ID) {
+      console.error('Telegram bot credentials not configured');
       throw new Error('Telegram bot credentials not configured');
     }
 
@@ -31,7 +32,7 @@ export class TelegramService {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
+            chat_id: TELEGRAM_ADMIN_ID,
             text: message,
             parse_mode: 'HTML',
             disable_web_page_preview: true,
@@ -40,8 +41,9 @@ export class TelegramService {
       );
 
       const data: TelegramResponse = await response.json();
-      
+
       if (!data.ok) {
+        console.error('Telegram API Error:', data.description);
         throw new Error(`Telegram API Error: ${data.description}`);
       }
 
@@ -62,7 +64,7 @@ export class TelegramService {
     message?: string;
   }): string {
     const { name, email, phone, date, time, message } = data;
-    
+
     return `
 <b>📅 НОВАЯ ЗАЯВКА НА КОНСУЛЬТАЦИЮ</b>
 
@@ -86,7 +88,7 @@ ${message ? `<b>📝 Сообщение:</b> ${message}` : ''}
     message: string;
   }): string {
     const { name, email, subject, message } = data;
-    
+
     return `
 <b>✉️ НОВОЕ СООБЩЕНИЕ С КОНТАКТНОЙ ФОРМЫ</b>
 
@@ -103,7 +105,7 @@ ${message}
 
   // Проверка конфигурации
   static isConfigured(): boolean {
-    return !!(TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID);
+    return !!(TELEGRAM_BOT_TOKEN && TELEGRAM_ADMIN_ID);
   }
 
   // Получение URL для прямого обращения к боту
@@ -111,6 +113,7 @@ ${message}
     if (!TELEGRAM_BOT_TOKEN) {
       return '#';
     }
-    return `https://t.me/${TELEGRAM_BOT_TOKEN.split(':')[0]}`;
+    const botUsername = TELEGRAM_BOT_TOKEN.split(':')[0];
+    return `https://t.me/bot${botUsername}`;
   }
 }

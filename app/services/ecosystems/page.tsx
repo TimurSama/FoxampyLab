@@ -8,7 +8,7 @@ import { useI18n } from '@/lib/i18n/context';
 
 export default function EcosystemsPage() {
   const { t } = useI18n();
-  
+
   const services = [
     {
       title: t('ecosystemsPage.service1.title'),
@@ -39,11 +39,11 @@ export default function EcosystemsPage() {
     { step: t('ecosystemsPage.step4.step'), title: t('ecosystemsPage.step4.title'), desc: t('ecosystemsPage.step4.desc') }
   ];
   return (
-    <div className="relative min-h-screen bg-ink-deep">
+    <div className="relative min-h-screen bg-transparent">
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
-      
+
       <Header />
-      
+
       <main className="relative z-10 pt-32 pb-24">
         {/* Hero */}
         <section className="px-4 mb-24">
@@ -56,11 +56,11 @@ export default function EcosystemsPage() {
               <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-6">
                 ─── {t('ecosystemsPage.tagline')} ───
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
                 {t('ecosystemsPage.title')}
               </h1>
-              
+
               <p className="font-mono text-sm md:text-base text-stone-slate max-w-3xl leading-relaxed mb-8">
                 {t('ecosystemsPage.description')}
               </p>
@@ -88,7 +88,7 @@ export default function EcosystemsPage() {
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── {t('ecosystemsPage.servicesTitle')} ───
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               {services.map((service, i) => (
                 <motion.div
@@ -126,7 +126,7 @@ export default function EcosystemsPage() {
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── {t('ecosystemsPage.processTitle')} ───
             </div>
-            
+
             <div className="grid md:grid-cols-4 gap-4">
               {process.map((item, i) => (
                 <motion.div

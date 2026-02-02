@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { 
-  Atom, 
-  Brain, 
-  Dna, 
-  Cpu, 
+import {
+  Atom,
+  Brain,
+  Dna,
+  Cpu,
   Microscope,
   Lightbulb,
   Rocket,
@@ -104,13 +104,13 @@ export default function ResearchPage() {
     }
   ];
   return (
-    <div className="relative min-h-screen bg-ink-deep">
+    <div className="relative min-h-screen bg-transparent">
       {/* Background */}
       <div className="fixed inset-0 oil-shimmer opacity-30 pointer-events-none" />
       <div className="fixed inset-0 wireframe-grid pointer-events-none" />
-      
+
       <Header />
-      
+
       <main className="relative z-10 pt-32 pb-24">
         {/* Hero */}
         <section className="px-4 mb-24">
@@ -126,13 +126,13 @@ export default function ResearchPage() {
                   {t('research.badge')}
                 </span>
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl font-mono text-engrave-fresco tracking-tight mb-6">
                 {t('research.title')}
                 <br />
                 <span className="text-chrome">{t('research.subtitle')}</span>
               </h1>
-              
+
               <p className="font-mono text-sm text-stone-slate max-w-2xl mx-auto leading-relaxed">
                 {t('research.description')}
               </p>
@@ -171,7 +171,7 @@ export default function ResearchPage() {
             <div className="font-mono text-[10px] text-stone-slate tracking-[0.5em] mb-8">
               ─── {t('research.areas.title')} ───
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {researchAreas.map((area, i) => (
                 <motion.div
@@ -181,21 +181,19 @@ export default function ResearchPage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   whileHover={{ y: -4 }}
-                  className="group p-6 border border-stone-anthracite/30 bg-ink-chrome/30 
-                           hover:border-engrave-line/20 transition-all cursor-pointer"
+                  className="group p-6 bg-glass-matte hover:border-white/20 transition-all cursor-pointer rounded-sm"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="text-stone-slate group-hover:text-engrave-line transition-colors">
                       {area.icon}
                     </div>
-                    <span className={`font-mono text-[8px] px-2 py-1 border ${
-                      area.status === 'ACTIVE' 
+                    <span className={`font-mono text-[8px] px-2 py-1 border ${area.status === 'ACTIVE'
                         ? 'text-engrave-line border-engrave-line/30 bg-engrave-line/5'
                         : area.status === 'RESEARCH'
-                        ? 'text-engrave-mid border-engrave-mid/30 bg-engrave-mid/5'
-                        : 'text-stone-slate border-stone-anthracite/30'
-                    }`}>
+                          ? 'text-engrave-mid border-engrave-mid/30 bg-engrave-mid/5'
+                          : 'text-stone-slate border-stone-anthracite/30'
+                      }`}>
                       {t(`research.status.${area.status.toLowerCase()}`)}
                     </span>
                   </div>
@@ -216,7 +214,7 @@ export default function ResearchPage() {
                   {/* Projects */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {area.projects.map((project, j) => (
-                      <span 
+                      <span
                         key={j}
                         className="font-mono text-[9px] text-stone-slate px-2 py-1 
                                  bg-stone-anthracite/20 border border-stone-anthracite/30"
@@ -229,7 +227,7 @@ export default function ResearchPage() {
                   {/* Progress */}
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-1 bg-stone-anthracite/30 overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${area.progress}%` }}
                         viewport={{ once: true }}
@@ -318,7 +316,7 @@ export default function ResearchPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="p-8 md:p-12 border border-stone-anthracite/30 bg-ink-chrome/20"
+              className="p-8 md:p-12 bg-glass-matte rounded-sm"
             >
               <Lightbulb size={32} className="text-engrave-line mx-auto mb-4" />
               <h2 className="font-mono text-2xl md:text-3xl text-engrave-fresco mb-4">
