@@ -6,6 +6,17 @@ import { isMobile } from '@/lib/device';
 import InteractiveSphere from '@/components/visuals/InteractiveSphere';
 import TerrainGrid from '@/components/visuals/TerrainGrid';
 import GalleryCarousel from '@/components/sections/GalleryCarousel';
+import { 
+  Layers, 
+  Code, 
+  Palette, 
+  TrendingUp, 
+  FileText, 
+  Film,
+  Rocket,
+  Zap,
+  Gamepad2
+} from 'lucide-react';
 import FAQSection from '@/components/sections/FAQSection';
 
 import BootSequence from '@/components/boot/BootSequence';
@@ -24,8 +35,7 @@ import { getFAQSchema } from '@/lib/seo/structured-data';
 export default function Home() {
   const { t, language } = useI18n();
   const [isBooting, setIsBooting] = useState(true);
-  const [selectedService, setSelectedService] = useState<any | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +66,132 @@ export default function Home() {
   const projectsData = useMemo(() => {
     return t('home.ventures.projects', { returnObjects: true }) as any[];
   }, [t, language]);
+
+  // Данные сервисов для мультидисциплинарного синтеза
+  const synthesisServices = [
+    {
+      id: 'ecosystems',
+      icon: <Layers size={20} />,
+      title: 'Бизнес стратегирование',
+      description: 'Разработка комплексных продуктов и проектов с полной поддержкой от идеи до реализации',
+      features: [
+        'Разработка продуктов под ключ',
+        'Интеграция сервисов и платформ',
+        'API и микросервисная архитектура',
+        'Управление данными',
+        'Масштабируемость и надежность',
+        'Техническая документация'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'web-mobile',
+      icon: <Code size={20} />,
+      title: 'Разработка экосистем',
+      description: 'Создание современных веб-приложений и нативных мобильных решений',
+      features: [
+        'Разработка веб-приложений',
+        'Мобильные приложения (iOS, Android)',
+        'Progressive Web Apps (PWA)',
+        'Backend разработка',
+        'База данных и API',
+        'Оптимизация производительности'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'blockchain',
+      icon: <Rocket size={20} />,
+      title: 'Веб и мобильная разработка',
+      description: 'Разработка децентрализованных приложений и интеграция с блокчейн технологиями',
+      features: [
+        'Smart-контракты',
+        'DeFi приложения',
+        'NFT платформы',
+        'DAO системы',
+        'Токеномика',
+        'Аудит безопасности'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'design-branding',
+      icon: <Palette size={20} />,
+      title: 'Блокчейн и Web3 решения',
+      description: 'Создание визуальных концепций от интерфейсов до 3D миров и брендинга',
+      features: [
+        'UI/UX дизайн',
+        'Брендинг и айдентика',
+        'Дизайн-система',
+        'Прототипирование',
+        'Адаптивный дизайн',
+        '3D визуализация'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'marketing',
+      icon: <TrendingUp size={20} />,
+      title: 'Дизайн и брендинг',
+      description: 'Комплексное продвижение цифровых продуктов и брендов в онлайн-пространстве',
+      features: [
+        'Маркетинговая стратегия',
+        'SMM и контент-маркетинг',
+        'SEO оптимизация',
+        'Таргетированная реклама',
+        'Привлечение трафика',
+        'Настройка воронок продаж',
+        'Автоматизация систем и процессов',
+        'CRM внедрение и настройка'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'fashion-architecture',
+      icon: <Zap size={20} />,
+      title: 'Digital маркетинг',
+      description: 'Создание цифровых моделей одежды, архитектурных визуализаций и Fashion Tech решений',
+      features: [
+        '3D моделирование одежды',
+        'Digital Fashion',
+        'Архитектурная визуализация',
+        'Виртуальные примерочные',
+        'Fashion Tech решения',
+        'AR/VR для моды'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'video-animation',
+      icon: <Film size={20} />,
+      title: 'Фэшн и архитектура',
+      description: 'Создание промо-контента, анимаций и визуальных материалов для брендов',
+      features: [
+        'Промо-видео',
+        'Explainer видео',
+        'Анимация и моушн-дизайн',
+        'Видео для соцсетей',
+        '3D анимация',
+        'Монтаж и постпродакшн'
+      ],
+      link: '/services'
+    },
+    {
+      id: 'gamedev-gamification',
+      icon: <Gamepad2 size={20} />,
+      title: 'Видео и анимация',
+      description: 'Разработка игр и игровых механик для вовлечения пользователей',
+      features: [
+        'Разработка мобильных и веб игр',
+        'Геймификация бизнес-процессов',
+        'Обучающие симуляторы',
+        'Игровые механики в приложениях',
+        'VR/AR игры',
+        'Gamification стратегия'
+      ],
+      link: '/services'
+    }
+  ];
 
   const cases = useMemo(() => [
     {
@@ -215,101 +351,83 @@ export default function Home() {
                 />
               </div>
               
-              {/* Мультидисциплинарный синтез - карточки услуг */}
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                {[
-                  {
-                    id: 'ecosystems',
-                    title: 'Создаем продукты и проекты',
-                    description: 'Разработка комплексных продуктов и проектов с полной поддержкой от идеи до реализации',
-                    features: ['Разработка продуктов под ключ', 'Интеграция сервисов', 'API архитектура', 'Управление данными', 'Масштабируемость']
-                  },
-                  {
-                    id: 'web-mobile',
-                    title: 'Веб и мобильная разработка',
-                    description: 'Создание современных веб-приложений и нативных мобильных решений',
-                    features: ['React/Next.js', 'iOS/Android', 'PWA', 'Backend', 'База данных', 'Оптимизация']
-                  },
-                  {
-                    id: 'blockchain',
-                    title: 'Блокчейн и Web3 решения',
-                    description: 'Разработка децентрализованных приложений и интеграция с блокчейн технологиями',
-                    features: ['Smart-контракты', 'DeFi приложения', 'NFT платформы', 'DAO системы', 'Токеномика']
-                  },
-                  {
-                    id: 'design-branding',
-                    title: 'Дизайн и брендинг',
-                    description: 'Создание визуальных концепций и комплексных брендинговых стратегий',
-                    features: ['UI/UX дизайн', 'Брендинг и айдентика', 'Дизайн-система', 'Прототипирование', '3D визуализация']
-                  },
-                  {
-                    id: 'marketing',
-                    title: 'Digital маркетинг',
-                    description: 'Комплексное продвижение цифровых продуктов и брендов',
-                    features: ['Маркетинговая стратегия', 'SMM и контент', 'SEO оптимизация', 'Таргетированная реклама', 'Привлечение трафика', 'Настройка воронок', 'Автоматизация', 'CRM системы']
-                  },
-                  {
-                    id: 'fashion-architecture',
-                    title: 'Фэшн и архитектура',
-                    description: 'Создание цифровых моделей одежды и архитектурных визуализаций',
-                    features: ['3D моделирование', 'Digital Fashion', 'Архитектурная визуализация', 'Виртуальные примерочные', 'Fashion Tech', 'AR/VR решения']
-                  },
-                  {
-                    id: 'video-animation',
-                    title: 'Видео и анимация',
-                    description: 'Создание промо-контента, анимаций и визуальных материалов',
-                    features: ['Промо-видео', 'Explainer видео', 'Моушн-дизайн', '3D анимация', 'Видео для соцсетей', 'Монтаж и постпродакшн']
-                  },
-                  {
-                    id: 'gamedev-gamification',
-                    title: 'Геймдев и геймификация',
-                    description: 'Разработка игр и игровых механик для вовлечения пользователей',
-                    features: ['Разработка игр', 'Геймификация процессов', 'Обучающие симуляторы', 'VR/AR игры', 'Игровые механики', 'Gamification стратегия']
-                  }
-                ].map((service, idx) => (
-                  <motion.div
-                    key={service.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
-                             hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm"
-                  >
-                    <div className="mb-4">
-                      <div className="w-10 h-10 border border-[#E0E0E0]/40 flex items-center justify-center mb-3">
-                        <div className="font-mono text-xs text-[#E0E0E0]/80">◈</div>
+              {/* Секция с карточками услуг */}
+              <div className="max-w-6xl mx-auto px-4">
+                <div className="text-center mb-12">
+                  <div className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6">
+                    ─── {section.title} ───
+                  </div>
+
+                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6">
+                    {section.subtitle}
+                  </h1>
+
+                  <p className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/70 max-w-4xl mx-auto mb-8 md:mb-10 leading-relaxed">
+                    {section.description}
+                  </p>
+                </div>
+
+                {/* Сетка карточек */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                  {synthesisServices.map((service, idx) => (
+                    <motion.div
+                      key={service.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      onClick={() => {
+                        // Открываем страницу услуг и прокручиваем к нужной услуге
+                        window.location.href = `${service.link}#${service.id}`;
+                      }}
+                      className="border border-[#E0E0E0]/20 bg-[#050505]/50 hover:border-[#E0E0E0]/50 
+                               hover:bg-[#E0E0E0]/5 transition-all p-6 group backdrop-blur-sm cursor-pointer"
+                    >
+                      <div className="mb-4">
+                        <div className="w-12 h-12 border border-[#E0E0E0]/40 flex items-center justify-center mb-3">
+                          <div className="font-mono text-[#E0E0E0] opacity-80">
+                            {service.icon}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <h3 className="font-mono text-lg text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors mb-3">
-                      {service.title}
-                    </h3>
-                    
-                    <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-4">
-                      {service.description}
-                    </p>
-                    
-                    <div className="space-y-1">
-                      {service.features.slice(0, 3).map((feature, i) => (
-                        <div key={i} className="font-mono text-[10px] text-[#E0E0E0]/60 flex items-center">
-                          <span className="w-1 h-1 bg-[#E0E0E0]/40 rounded-full mr-2 flex-shrink-0"></span>
-                          {feature}
-                        </div>
-                      ))}
-                      {service.features.length > 3 && (
-                        <div className="font-mono text-[10px] text-[#E0E0E0]/50">
-                          +{service.features.length - 3} еще
-                        </div>
-                      )}
-                    </div>
-                    
-                    <Link href="/services">
+                      
+                      <h3 className="font-mono text-lg text-[#E0E0E0] group-hover:text-[#FFFFFF] transition-colors mb-3">
+                        {service.title}
+                      </h3>
+                      
+                      <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-4">
+                        {service.description}
+                      </p>
+                      
+                      <div className="space-y-1">
+                        {service.features.slice(0, 3).map((feature, i) => (
+                          <div key={i} className="font-mono text-[10px] text-[#E0E0E0]/60 flex items-center">
+                            <span className="w-1.5 h-1.5 bg-[#E0E0E0]/50 rounded-full mr-3 mt-0.5 flex-shrink-0"></span>
+                            {feature}
+                          </div>
+                        ))}
+                        {service.features.length > 3 && (
+                          <div className="font-mono text-[10px] text-[#E0E0E0]/50">
+                            +{service.features.length - 3} еще
+                          </div>
+                        )}
+                      </div>
+                      
                       <div className="font-mono text-[10px] text-[#E0E0E0] tracking-wider mt-4 hover:text-[#FFFFFF] transition-colors">
                         Подробнее в услугах →
                       </div>
-                    </Link>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="flex justify-center mt-12">
+                  <Link href="/services">
+                    <button className="px-10 py-4 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest
+                                     flex items-center gap-4 mx-auto transition-all hover:bg-[#FFFFFF] transform hover:scale-105">
+                      Все услуги
+                      <ArrowRight size={18} />
+                    </button>
+                  </Link>
+                </div>
               </div>
             </>
           )}
