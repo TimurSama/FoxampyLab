@@ -39,9 +39,7 @@ const [submitted, setSubmitted] = useState(false);
       };
 
       if (TelegramService.isConfigured()) {
-        await TelegramService.sendMessage(
-          TelegramService.formatContactMessage(contactData)
-        );
+        await TelegramService.sendContactMessage(contactData);
         setSubmitted(true);
         setFormState({
           name: '',
@@ -53,7 +51,7 @@ const [submitted, setSubmitted] = useState(false);
       } else {
         // Fallback - открываем Telegram бота
         const telegramMessage = TelegramService.formatContactMessage(contactData);
-        const telegramUrl = `${TelegramService.getBotUrl()}?start=${encodeURIComponent(telegramMessage)}`;
+        const telegramUrl = TelegramService.getBotUrlWithMessage(telegramMessage);
         window.open(telegramUrl, '_blank');
         setSubmitted(true);
       }

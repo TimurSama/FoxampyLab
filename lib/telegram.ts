@@ -80,6 +80,66 @@ ${message ? `<b>📝 Сообщение:</b> ${message}` : ''}
     `.trim();
   }
 
+  // Отправка заявки на консультацию
+  static async sendConsultationRequest(data: {
+    name: string;
+    email: string;
+    phone: string;
+    date: string;
+    time: string;
+    message?: string;
+  }): Promise<TelegramResponse> {
+    const formattedMessage = this.formatConsultationMessage({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      date: new Date(data.date).toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }),
+      time: data.time,
+      message: data.message,
+    });
+
+    return this.sendMessage(formattedMessage);
+  }
+
+  // Форматирование сообщения о заявке на услуги
+  static formatServiceRequestMessage(data: {
+    services: string[];
+    email: string;
+    phone: string;
+    messenger?: string;
+  }): string {
+    const { services, email, phone, messenger } = data;
+
+    return `
+<b>🎯 НОВАЯ ЗАЯВКА НА УСЛУГИ</b>
+
+<b>📋 Выбранные услуги:</b>
+${services.map((s, i) => `${i + 1}. ${s}`).join('\n')}
+
+<b>📞 Контактная информация:</b>
+<b>📧 Email:</b> ${email}
+<b>📱 Телефон:</b> ${phone}
+${messenger ? `<b>💬 Мессенджер:</b> ${messenger}` : ''}
+
+<i>Заявка отправлена с сайта Foxampy Lab</i>
+    `.trim();
+  }
+
+  // Отправка заявки на услуги
+  static async sendServiceRequest(data: {
+    services: string[];
+    email: string;
+    phone: string;
+    messenger?: string;
+  }): Promise<TelegramResponse> {
+    const formattedMessage = this.formatServiceRequestMessage(data);
+    return this.sendMessage(formattedMessage);
+  }
+
   // Форматирование контактного сообщения
   static formatContactMessage(data: {
     name: string;
@@ -103,6 +163,17 @@ ${message}
     `.trim();
   }
 
+  // Отправка контактного сообщения
+  static async sendContactMessage(data: {
+    name: string;
+    email: string;
+    subject?: string;
+    message: string;
+  }): Promise<TelegramResponse> {
+    const formattedMessage = this.formatContactMessage(data);
+    return this.sendMessage(formattedMessage);
+  }
+
   // Проверка конфигурации
   static isConfigured(): boolean {
     return !!(TELEGRAM_BOT_TOKEN && TELEGRAM_ADMIN_ID);
@@ -113,7 +184,13 @@ ${message}
     if (!TELEGRAM_BOT_TOKEN) {
       return '#';
     }
-    const botUsername = TELEGRAM_BOT_TOKEN.split(':')[0];
-    return `https://t.me/bot${botUsername}`;
+    // Username бота
+    return `https://t.me/FoxampyLab_contact_bot`;
+  }
+
+  // Получение fallback URL с сообщением
+  static getBotUrlWithMessage(message: string): string {
+    const botUrl = this.getBotUrl();
+    return `${botUrl}?start=${encodeURIComponent(message)}`;
   }
 }

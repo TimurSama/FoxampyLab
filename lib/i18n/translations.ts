@@ -189,6 +189,23 @@ export interface Translations {
     contact: string;
     cancel: string;
   };
+  contact: {
+    phoneLabel: string;
+    optional: string;
+    openFullCalendar: string;
+    consultation: {
+      title: string;
+      service: string;
+      selectDate: string;
+      selectTime: string;
+      nameLabel: string;
+      emailLabel: string;
+      descriptionLabel: string;
+      descriptionPlaceholder: string;
+      optional: string;
+      confirm: string;
+    };
+  };
   modals: {
     sendResearch: {
       title: string;
@@ -726,6 +743,7 @@ const enHomeTranslations = {
   footer: '© 2025 Foxampy LAB. All rights reserved.',
   vacancies: 'VACANCIES',
   learnMore: 'Learn More',
+  more: 'more',
   scrollToExplore: 'Scroll to Explore',
   synergy: 'SYNERGY',
   ctaButton1: 'Commission a Project',
@@ -736,6 +754,12 @@ const enHomeTranslations = {
     subtitle: 'FOXAMPY LAB: MULTIDISCIPLINARY SYNTHESIS',
     description: 'Designing the future at the intersection of IT architecture, parametric spaces, fashion and cinematography. Creating products that feel like a single organism.',
     cta: 'Enter the Core',
+  },
+  gallery: {
+    title: 'Gallery',
+    subtitle: 'Showcase',
+    description: '',
+    cta: 'Open Gallery',
   },
   solutions: {
     title: 'SYNERGETIC SOLUTIONS',
@@ -827,12 +851,6 @@ const enHomeTranslations = {
         ],
       },
     ],
-  },
-  gallery: {
-    title: 'Галерея',
-    subtitle: 'Витрина кейсов и работ',
-    description: '',
-    cta: 'Открыть галерею',
   },
   ventures: {
     title: 'VENTURE TERMINAL',
@@ -1119,6 +1137,23 @@ export const translations: Record<Language, Translations> = {
       contact: 'CONTACT',
       cancel: 'Cancel',
     },
+    contact: {
+      phoneLabel: 'Phone',
+      optional: 'Optional',
+      openFullCalendar: 'Open Full Calendar',
+      consultation: {
+        title: 'Contact Request',
+        service: 'Service',
+        selectDate: 'Select Date',
+        selectTime: 'Select Time',
+        nameLabel: 'Your Name',
+        emailLabel: 'Your Email',
+        descriptionLabel: 'Project Description',
+        descriptionPlaceholder: 'Brief description of your project...',
+        optional: 'Optional',
+        confirm: 'Send Request',
+      },
+    },
     modals: {
       sendResearch: {
         title: 'Send Project for Research',
@@ -1135,7 +1170,7 @@ export const translations: Record<Language, Translations> = {
         send: 'Send',
       },
       consultation: {
-        title: 'Schedule a Consultation',
+        title: 'Contact Request',
         service: 'Service',
         selectDate: 'Select Date',
         selectTime: 'Select Time',
@@ -1144,8 +1179,9 @@ export const translations: Record<Language, Translations> = {
         descriptionLabel: 'Project Description',
         descriptionPlaceholder: 'Brief description of your project...',
         optional: 'Optional',
-        confirm: 'Confirm Booking',
+        confirm: 'Send Request',
       },
+      openFullCalendar: 'Open Full Calendar',
     },
     about: {
       tagline: 'ABOUT',
@@ -1673,7 +1709,9 @@ export const translations: Record<Language, Translations> = {
     gallery: {
       tagline: 'GALLERY',
       title: 'Gallery',
+      subtitle: 'Showcase',
       description: '',
+      cta: 'Open Gallery',
       ctaButton: '',
       apps: {
         accent: 'Interactive Prototypes',
@@ -1902,6 +1940,7 @@ export const translations: Record<Language, Translations> = {
       footer: '© 2025 Foxampy LAB. Все права защищены.',
       vacancies: 'ВАКАНСИИ',
       learnMore: 'Узнать больше',
+      more: 'еще',
       scrollToExplore: 'Прокрутите для изучения',
       synergy: 'СИНЕРГИЯ',
       ctaButton1: 'Заказать проект',
@@ -2006,7 +2045,7 @@ export const translations: Record<Language, Translations> = {
       },
       gallery: {
         title: 'Галерея',
-        subtitle: 'Витрина кейсов и работ',
+        subtitle: 'Витрина',
         description: '',
         cta: 'Открыть галерею',
       },
@@ -2255,6 +2294,23 @@ export const translations: Record<Language, Translations> = {
       contact: 'КОНТАКТЫ',
       cancel: 'Отмена',
     },
+    contact: {
+      phoneLabel: 'Телефон',
+      optional: 'Необязательно',
+      openFullCalendar: 'Открыть полный календарь',
+      consultation: {
+        title: 'Заявка на консультацию',
+        service: 'Услуга',
+        selectDate: 'Выберите дату',
+        selectTime: 'Выберите время',
+        nameLabel: 'Ваше имя',
+        emailLabel: 'Ваш email',
+        descriptionLabel: 'Описание проекта',
+        descriptionPlaceholder: 'Краткое описание вашего проекта...',
+        optional: 'Необязательно',
+        confirm: 'Отправить заявку',
+      },
+    },
     modals: {
       sendResearch: {
         title: 'Отправить проект на исследование',
@@ -2271,7 +2327,7 @@ export const translations: Record<Language, Translations> = {
         send: 'Отправить',
       },
       consultation: {
-        title: 'Записаться на консультацию',
+        title: 'Заявка на консультацию',
         service: 'Услуга',
         selectDate: 'Выберите дату',
         selectTime: 'Выберите время',
@@ -2280,8 +2336,9 @@ export const translations: Record<Language, Translations> = {
         descriptionLabel: 'Описание проекта',
         descriptionPlaceholder: 'Краткое описание вашего проекта...',
         optional: 'Необязательно',
-        confirm: 'Подтвердить запись',
+        confirm: 'Отправить заявку',
       },
+      openFullCalendar: 'Открыть полный календарь',
     },
     about: {
       tagline: 'О НАС',

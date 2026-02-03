@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, X } from 'lucide-react';
 
@@ -18,12 +18,32 @@ interface FlippableServiceCardProps {
 
 export default function FlippableServiceCard({ service, t }: FlippableServiceCardProps) {
     const [isFlipped, setIsFlipped] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const cardRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!cardRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                    }
+                });
+            },
+            { threshold: 0.3 }
+        );
+
+        observer.observe(cardRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     // Extract the first sentence or first 120 chars for the thesis
     const thesis = service.description.split('.')[0] + '.';
 
     return (
-        <div className="relative h-[400px] w-full perspective-1000 group">
+        <div ref={cardRef} className="relative h-[400px] w-full perspective-1000 group">
             <motion.div
                 className="w-full h-full relative preserve-3d transition-all duration-700"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -35,7 +55,12 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                     className="absolute inset-0 backface-hidden border border-white/5 bg-glass-matte
                      hover:border-white/20 hover:bg-black/03 hover:backdrop-blur-2xl 
                      transition-all duration-500 cursor-pointer p-6 md:p-8 flex flex-col justify-center rounded-sm"
-                    style={{ backfaceVisibility: 'hidden' }}
+                    style={{ 
+                        backfaceVisibility: 'hidden',
+                        background: 'rgba(5, 5, 5, 0.25)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)'
+                    }}
                     onClick={() => setIsFlipped(true)}
                 >
                     <div className="space-y-6">
@@ -48,17 +73,31 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                                 {service.subtitle}
                             </p>
 
-                            <div className="w-12 h-[1px] bg-[#E0E0E0]/20 group-hover:w-20 group-hover:bg-[#E0E0E0]/40 transition-all duration-500" />
+                            <motion.div 
+                                className="w-12 h-[1px] bg-[#E0E0E0]/20 transition-all duration-500"
+                                animate={isVisible ? { width: '5rem', backgroundColor: 'rgba(224, 224, 224, 0.4)' } : { width: '3rem', backgroundColor: 'rgba(224, 224, 224, 0.2)' }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                            />
 
-                            <p className="font-mono text-xs text-[#E0E0E0]/60 leading-relaxed uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                            <motion.p 
+                                className="font-mono text-xs text-[#E0E0E0]/60 leading-relaxed uppercase tracking-widest"
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                                transition={{ duration: 0.5, delay: 0.4 }}
+                            >
                                 {thesis}
-                            </p>
+                            </motion.p>
                         </div>
                     </div>
 
-                    <div className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <motion.div 
+                        className="absolute bottom-10 right-10"
+                        initial={{ opacity: 0 }}
+                        animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                    >
                         <ArrowRight size={18} className="text-[#E0E0E0]/40" />
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* BACK SIDE */}
@@ -66,7 +105,10 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                     className="absolute inset-0 backface-hidden bg-glass-matte border border-white/10 p-6 md:p-8 rounded-sm overflow-hidden"
                     style={{
                         backfaceVisibility: 'hidden',
-                        transform: 'rotateY(180deg)'
+                        transform: 'rotateY(180deg)',
+                        background: 'rgba(5, 5, 5, 0.25)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)'
                     }}
                     onClick={() => setIsFlipped(false)}
                 >

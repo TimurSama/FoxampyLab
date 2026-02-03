@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { TelegramService } from '@/lib/telegram';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Layers,
@@ -180,48 +181,30 @@ export default function ServicesPage() {
     try {
       const selectedServicesList = selectedServices
         .map(id => services.find(s => s.id === id)?.title)
-        .filter(Boolean)
-        .join(', ');
+        .filter(Boolean);
 
-      const message = `
-🎯 Новая заявка на услуги
-
-📋 Выбранные услуги:
-${selectedServicesList}
-
-📞 Контактная информация:
-Email: ${email}
-Телефон: ${phone}
-Мессенджер: ${messenger || 'Не указан'}
-      `.trim();
-
-      const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-      const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
-      if (botToken && chatId) {
-        const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: message,
-            parse_mode: 'HTML',
-          }),
+      if (TelegramService.isConfigured()) {
+        await TelegramService.sendServiceRequest({
+          services: selectedServicesList,
+          email,
+          phone,
+          messenger: messenger || undefined,
         });
 
-        if (response.ok) {
-          alert('✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
-          setSelectedServices([]);
-          setEmail('');
-          setPhone('+');
-          setMessenger('');
-        } else {
-          throw new Error('Failed to send message');
-        }
+        alert('✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
+        setSelectedServices([]);
+        setEmail('');
+        setPhone('+');
+        setMessenger('');
       } else {
-        const telegramUrl = `https://t.me/FoxampyLab_contact_bot?start=${encodeURIComponent(message)}`;
+        // Fallback - открываем Telegram бота
+        const message = TelegramService.formatServiceRequestMessage({
+          services: selectedServicesList,
+          email,
+          phone,
+          messenger: messenger || undefined,
+        });
+        const telegramUrl = TelegramService.getBotUrlWithMessage(message);
         window.open(telegramUrl, '_blank');
         alert('📱 Перенаправляем в Telegram для завершения заявки...');
       }

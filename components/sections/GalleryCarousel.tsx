@@ -1,82 +1,95 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-// Реальные данные из галереи с фото и видео
-const carouselItems = [
-  {
-    id: 'fashion-collage',
-    type: 'photo',
-    title: 'Digital Fashion Week',
-    description: 'Цифровая показа коллекций в метавселенной с авангардными образами и интерактивными элементами',
-    images: [
-      '/gallery/photo_2026-01-30_12-27-19.jpg',
-      '/gallery/photo_2026-01-30_12-27-28.jpg',
-      '/gallery/photo_2026-01-30_12-27-32.jpg',
-      '/gallery/photo_2026-01-30_12-27-35.jpg'
-    ]
-  },
-  {
-    id: 'architecture-collage',
-    type: 'design',
-    title: 'Future Architecture',
-    description: 'Архитектурные визуализации будущего города с параметрическим дизайном и инновационными решениями',
-    images: [
-      '/architecture/image_2024-08-21_21-32-32.png',
-      '/architecture/image_2024-08-21_21-32-39.png',
-      '/architecture/image_2024-08-21_21-32-44.png',
-      '/architecture/image_2024-08-21_21-32-49.png'
-    ]
-  },
-  {
-    id: 'web3-bank',
-    type: 'project',
-    title: 'Web3 Bank',
-    category: 'FinTech Platform',
-    description: 'Децентрализованная банковская система на блокчейне с умными контрактами и безопасными транзакциями',
-    image: '/api/placeholder/800/400?text=Web3+Bank',
-    technologies: ['Solidity', 'Web3.js', 'Everscale', 'Ethereum', 'Smart Contracts']
-  },
-  {
-    id: 'mail-services',
-    type: 'project',
-    title: 'Mail Services',
-    category: 'Communication Platform',
-    description: 'Современная почтовая служба с реальным временем, шифрованием и интеграцией с другими сервисами',
-    image: '/api/placeholder/800/400?text=Mail+Services',
-    technologies: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'REST API']
-  },
-  {
-    id: 'cgi-cinema',
-    type: 'video',
-    title: 'CGI 3D Cinema',
-    category: 'Video Production',
-    description: 'CGI 3D кино с динамичными эффектами, биоморфными формами и синтезом потоков',
-    videoSrc: '/media/need-for-speed-underground-2-remaster-2022.mp4',
-    previewImage: '/api/placeholder/800/400?text=CGI+3D+Cinema'
-  },
-  {
-    id: 'advertising-showreel',
-    type: 'video',
-    title: 'Advertising Showreel',
-    category: 'Video Production',
-    description: 'Рекламный шоурилс с биоморфным синтезом, динамичными переходами и современными эффектами',
-    videoSrc: '/media/ryabov.mp4',
-    previewImage: '/api/placeholder/800/400?text=Advertising+Showreel'
-  }
-];
+import { useI18n } from '@/lib/i18n/context';
 
 export default function GalleryCarousel() {
+  const { t, language } = useI18n();
+  
+  // Реальные данные из галереи с фото и видео с переводами
+  const carouselItems = useMemo(() => [
+    {
+      id: 'fashion-collage',
+      type: 'photo',
+      title: language === 'ru' ? 'Digital Fashion Week' : 'Digital Fashion Week',
+      description: language === 'ru' 
+        ? 'Цифровая показ коллекций в метавселенной с авангардными образами и интерактивными элементами'
+        : 'Digital fashion show in the metaverse with avant-garde looks and interactive elements',
+      images: [
+        '/gallery/photo_2026-01-30_12-27-19.jpg',
+        '/gallery/photo_2026-01-30_12-27-28.jpg',
+        '/gallery/photo_2026-01-30_12-27-32.jpg',
+        '/gallery/photo_2026-01-30_12-27-35.jpg'
+      ]
+    },
+    {
+      id: 'architecture-collage',
+      type: 'design',
+      title: language === 'ru' ? 'Future Architecture' : 'Future Architecture',
+      description: language === 'ru'
+        ? 'Архитектурные визуализации будущего города с параметрическим дизайном и инновационными решениями'
+        : 'Architectural visualizations of the future city with parametric design and innovative solutions',
+      images: [
+        '/architecture/image_2024-08-21_21-32-32.png',
+        '/architecture/image_2024-08-21_21-32-39.png',
+        '/architecture/image_2024-08-21_21-32-44.png',
+        '/architecture/image_2024-08-21_21-32-49.png'
+      ]
+    },
+    {
+      id: 'web3-bank',
+      type: 'project',
+      title: t('cases.web3Bank.title'),
+      category: t('cases.web3Bank.category'),
+      description: t('cases.web3Bank.description'),
+      solution: t('cases.web3Bank.solution'),
+      image: '/api/placeholder/800/400?text=Web3+Bank',
+      technologies: ['Solidity', 'Web3.js', 'Everscale', 'Ethereum', 'Smart Contracts', 'Bridge Technology']
+    },
+    {
+      id: 'mail-services',
+      type: 'project',
+      title: t('cases.mailServices.title'),
+      category: t('cases.mailServices.category'),
+      description: t('cases.mailServices.description'),
+      solution: t('cases.mailServices.solution'),
+      image: '/api/placeholder/800/400?text=Mail+Services',
+      technologies: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'REST API']
+    },
+    {
+      id: 'cgi-cinema',
+      type: 'video',
+      title: language === 'ru' ? 'CGI 3D кино' : 'CGI 3D Cinema',
+      category: language === 'ru' ? 'Видеопродакшн' : 'Video Production',
+      description: language === 'ru'
+        ? 'CGI 3D кино с динамичными эффектами, биоморфными формами и синтезом потоков'
+        : 'CGI 3D cinema with dynamic effects, biomorphic forms and flow synthesis',
+      videoSrc: '/media/need-for-speed-underground-2-remaster-2022.mp4',
+      previewImage: '/api/placeholder/800/400?text=CGI+3D+Cinema'
+    },
+    {
+      id: 'advertising-showreel',
+      type: 'video',
+      title: language === 'ru' ? 'Рекламный шоурилс' : 'Advertising Showreel',
+      category: language === 'ru' ? 'Видеопродакшн' : 'Video Production',
+      description: language === 'ru'
+        ? 'Рекламный шоурилс с биоморфным синтезом, динамичными переходами и современными эффектами'
+        : 'Advertising showreel with biomorphic synthesis, dynamic transitions and modern effects',
+      videoSrc: '/media/ryabov.mp4',
+      previewImage: '/api/placeholder/800/400?text=Advertising+Showreel'
+    }
+  ], [t, language]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
-  }, []);
+  }, [carouselItems.length]);
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % carouselItems.length);
-  }, []);
+  }, [carouselItems.length]);
 
   useEffect(() => {
     if (isPaused) return;
@@ -101,7 +114,7 @@ export default function GalleryCarousel() {
     >
       {/* Основная карусель */}
       <div className="relative group">
-        <div className="relative aspect-video md:aspect-[16/9] overflow-hidden rounded-sm border border-white/10 bg-glass-matte">
+        <div className="relative aspect-video md:aspect-[16/9] overflow-hidden rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm">
 
           {/* Коллаж фото для Fashion */}
           {currentItem.type === 'photo' && currentItem.images && (
@@ -149,26 +162,103 @@ export default function GalleryCarousel() {
               </div>
               <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-between">
                 <div>
-                  <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-4 uppercase">
-                    ─── Проект ───
+                  <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-4 uppercase relative" style={{ 
+                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.15em 0.3em',
+                      margin: '-0.15em -0.3em',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      borderRadius: '3px',
+                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      ─── {language === 'ru' ? 'Проект' : 'Project'} ───
+                    </span>
                   </div>
-                  <h3 className="font-mono text-xl md:text-3xl text-[#E0E0E0] mb-4 uppercase tracking-tighter">
-                    {currentItem.title}
+                  <h3 className="font-mono text-xl md:text-3xl text-[#E0E0E0] mb-4 uppercase tracking-tighter relative" style={{ 
+                    textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.1em 0.2em',
+                      margin: '-0.1em -0.2em',
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '4px',
+                      boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
+                    }}>
+                      {currentItem.title}
+                    </span>
                   </h3>
-                  <div className="font-mono text-xs text-[#E0E0E0]/60 mb-6 uppercase tracking-widest">
-                    {currentItem.category}
+                  <div className="font-mono text-xs text-[#E0E0E0]/60 mb-6 uppercase tracking-widest relative" style={{ 
+                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.1em 0.2em',
+                      margin: '-0.1em -0.2em',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      borderRadius: '3px',
+                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      {currentItem.category}
+                    </span>
                   </div>
                 </div>
                 <div>
-                  <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/80 leading-relaxed mb-8">
-                    {currentItem.description}
+                  <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/80 leading-relaxed mb-4 relative" style={{ 
+                    textShadow: '0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 0, 0, 0.85), 0 3px 10px rgba(0, 0, 0, 0.75)',
+                    filter: 'drop-shadow(0 0 25px rgba(0, 0, 0, 0.85))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.15em 0.25em',
+                      margin: '-0.15em -0.25em',
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      backdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      {currentItem.description}
+                    </span>
                   </p>
+                  {currentItem.solution && (
+                    <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-6 relative" style={{ 
+                      textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
+                      filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
+                    }}>
+                      <span style={{ 
+                        position: 'relative',
+                        display: 'inline-block',
+                        padding: '0.1em 0.2em',
+                        margin: '-0.1em -0.2em',
+                        background: 'rgba(0, 0, 0, 0.3)',
+                        backdropFilter: 'blur(12px)',
+                        borderRadius: '3px',
+                        boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
+                      }}>
+                        <span className="font-semibold">{language === 'ru' ? 'Решение: ' : 'Solution: '}</span>
+                        {currentItem.solution}
+                      </span>
+                    </p>
+                  )}
                   {currentItem.technologies && (
                     <div className="flex flex-wrap gap-2">
-                      {currentItem.technologies.slice(0, 3).map((tech, i) => (
+                      {currentItem.technologies.map((tech, i) => (
                         <span
                           key={i}
                           className="font-mono text-[9px] text-[#E0E0E0]/60 border border-white/10 px-3 py-1.5 uppercase tracking-widest"
+                          style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.7)' }}
                         >
                           {tech}
                         </span>
@@ -188,19 +278,75 @@ export default function GalleryCarousel() {
                 alt={currentItem.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-8">
+              <div className="absolute inset-0 bg-black/20 flex items-center justify-center p-8">
                 <div className="text-center text-white max-w-2xl">
-                  <div className="font-mono text-[10px] tracking-[0.4em] mb-4 text-white/40 uppercase">
-                    ─── Видео ───
+                  <div className="font-mono text-[10px] tracking-[0.4em] mb-4 text-white/40 uppercase relative" style={{ 
+                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.15em 0.3em',
+                      margin: '-0.15em -0.3em',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      borderRadius: '3px',
+                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      ─── {language === 'ru' ? 'Видео' : 'Video'} ───
+                    </span>
                   </div>
-                  <h3 className="font-mono text-2xl md:text-4xl mb-4 uppercase tracking-tighter">
-                    {currentItem.title}
+                  <h3 className="font-mono text-2xl md:text-4xl mb-4 uppercase tracking-tighter relative" style={{ 
+                    textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.1em 0.2em',
+                      margin: '-0.1em -0.2em',
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '4px',
+                      boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
+                    }}>
+                      {currentItem.title}
+                    </span>
                   </h3>
-                  <div className="font-mono text-xs mb-6 text-white/60 uppercase tracking-widest">
-                    {currentItem.category}
+                  <div className="font-mono text-xs mb-6 text-white/60 uppercase tracking-widest relative" style={{ 
+                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.1em 0.2em',
+                      margin: '-0.1em -0.2em',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      borderRadius: '3px',
+                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      {currentItem.category}
+                    </span>
                   </div>
-                  <p className="font-mono text-xs md:text-sm max-w-md mx-auto leading-relaxed text-white/80">
-                    {currentItem.description}
+                  <p className="font-mono text-xs md:text-sm max-w-md mx-auto leading-relaxed text-white/80 relative" style={{ 
+                    textShadow: '0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 0, 0, 0.85), 0 3px 10px rgba(0, 0, 0, 0.75)',
+                    filter: 'drop-shadow(0 0 25px rgba(0, 0, 0, 0.85))'
+                  }}>
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.15em 0.25em',
+                      margin: '-0.15em -0.25em',
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      backdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      {currentItem.description}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -240,7 +386,7 @@ export default function GalleryCarousel() {
           href="/gallery"
           className="inline-flex items-center gap-4 px-10 py-5 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-[0.3em] uppercase hover:bg-white transition-all transform hover:scale-105 active:scale-95"
         >
-          Открыть галерею
+          {t('home.gallery.cta')}
           <ChevronRight size={18} />
         </a>
       </div>
