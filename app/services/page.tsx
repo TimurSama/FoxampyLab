@@ -181,7 +181,7 @@ export default function ServicesPage() {
     try {
       const selectedServicesList = selectedServices
         .map(id => services.find(s => s.id === id)?.title)
-        .filter(Boolean);
+        .filter((title): title is string => Boolean(title));
 
       if (TelegramService.isConfigured()) {
         await TelegramService.sendServiceRequest({

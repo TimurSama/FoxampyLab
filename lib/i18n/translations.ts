@@ -139,6 +139,7 @@ export interface Translations {
     footer: string;
     vacancies: string;
     learnMore: string;
+    more: string;
     scrollToExplore: string;
     synergy: string;
   };
@@ -560,7 +561,9 @@ export interface Translations {
   gallery: {
     tagline: string;
     title: string;
+    subtitle: string;
     description: string;
+    cta: string;
     ctaButton: string;
     apps: {
       accent: string;
@@ -1181,7 +1184,6 @@ export const translations: Record<Language, Translations> = {
         optional: 'Optional',
         confirm: 'Send Request',
       },
-      openFullCalendar: 'Open Full Calendar',
     },
     about: {
       tagline: 'ABOUT',
@@ -2338,7 +2340,6 @@ export const translations: Record<Language, Translations> = {
         optional: 'Необязательно',
         confirm: 'Отправить заявку',
       },
-      openFullCalendar: 'Открыть полный календарь',
     },
     about: {
       tagline: 'О НАС',
@@ -2761,7 +2762,9 @@ export const translations: Record<Language, Translations> = {
     gallery: {
       tagline: 'ГАЛЕРЕЯ',
       title: 'Галерея',
+      subtitle: 'Витрина',
       description: '',
+      cta: 'Открыть галерею',
       ctaButton: '',
       apps: {
         accent: 'Интерактивные прототипы',

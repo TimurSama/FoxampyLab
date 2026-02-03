@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Для Vercel не используем статический экспорт (нужны API routes)
+  // Для GitHub Pages используем статический экспорт
+  ...(process.env.VERCEL ? {} : { output: 'export' }),
   trailingSlash: true,
   images: {
     unoptimized: true,
@@ -18,6 +20,13 @@ const nextConfig = {
       config.resolve.alias = {
         ...config.resolve.alias,
         'three': require.resolve('three'),
+      };
+
+      // Исключаем node-telegram-bot-api из клиентской сборки
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        'node-telegram-bot-api': false,
+        'supports-color': false,
       };
 
       // Оптимизация для production

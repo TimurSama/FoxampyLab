@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "app/api/telegram/webhook/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
+    "TELEGRAM_ADMIN_ID": "@telegram_admin_id",
+    "TELEGRAM_WEBHOOK_SECRET": "@telegram_webhook_secret"
+  }
+}

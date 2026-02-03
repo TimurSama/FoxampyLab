@@ -70,9 +70,11 @@ export default function Home() {
   };
 
   // Обработка выбора даты
-  const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
-    setShowCalendar(false);
+  const handleDateSelect = (date: Date | null) => {
+    if (date) {
+      setSelectedDate(date);
+      setShowCalendar(false);
+    }
   };
 
   // Обработка отправки формы
@@ -113,6 +115,12 @@ export default function Home() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
+  // Определение мобильного устройства
+  const mobileDevice = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return isMobile();
+  }, []);
+
   // Упрощенные анимации для мобильных устройств (лучшая производительность)
   const animationConfig = useMemo(() => {
     if (prefersReducedMotion) {
@@ -123,7 +131,7 @@ export default function Home() {
         rotate: false,
       };
     }
-    if (isMobile) {
+    if (mobileDevice) {
       return {
         duration: 0.5,
         blur: false, // Отключаем blur на мобильных для производительности
@@ -137,7 +145,7 @@ export default function Home() {
       scale: true,
       rotate: true,
     };
-  }, [isMobile, prefersReducedMotion]);
+  }, [mobileDevice, prefersReducedMotion]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsBooting(false), 800);
@@ -173,7 +181,7 @@ export default function Home() {
 
     const observerOptions = {
       root: null,
-      rootMargin: isMobile ? '-20% 0px -20% 0px' : '-30% 0px -30% 0px', // Элементы появляются только когда в центральной области экрана
+      rootMargin: mobileDevice ? '-20% 0px -20% 0px' : '-30% 0px -30% 0px', // Элементы появляются только когда в центральной области экрана
       threshold: [0, 0.2, 0.3, 0.5, 0.7, 1], // Несколько порогов для плавного появления
     };
 
@@ -204,7 +212,7 @@ export default function Home() {
       elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
-  }, [isMobile, prefersReducedMotion]);
+  }, [mobileDevice, prefersReducedMotion]);
 
   const servicesData = useMemo(() => {
     return t('home.solutions.services', { returnObjects: true }) as any[];
@@ -572,7 +580,7 @@ export default function Home() {
                       duration: 0.3
                     } : { 
                       duration: 0.8, 
-                      delay: isMobile ? idx * 0.05 : idx * 0.08,
+                      delay: mobileDevice ? idx * 0.05 : idx * 0.08,
                       ease: [0.16, 1, 0.3, 1],
                       filter: { duration: 0.6 }
                     }}
