@@ -6,6 +6,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import TelegramBot from 'node-telegram-bot-api';
 import { setupBotHandlers, BotConfig } from '@/lib/bot/handler';
 
+// Важно: отключаем кэширование для этой функции, чтобы она всегда выполнялась динамически
+export const dynamic = 'force-dynamic';
+
 // Инициализация бота (без polling)
 let bot: TelegramBot | null = null;
 

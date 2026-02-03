@@ -2,7 +2,8 @@
 const nextConfig = {
   // Для Vercel не используем статический экспорт (нужны API routes)
   // Для GitHub Pages используем статический экспорт
-  ...(process.env.VERCEL ? {} : { output: 'export' }),
+  // Vercel автоматически устанавливает переменную VERCEL=1
+  ...(process.env.VERCEL || process.env.VERCEL_ENV ? {} : { output: 'export' }),
   trailingSlash: true,
   images: {
     unoptimized: true,
