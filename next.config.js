@@ -15,7 +15,7 @@ const nextConfig = {
     NEXT_PUBLIC_BASE_PATH: process.env.GITHUB_ACTIONS === 'true' ? '/FoxampyLab' : '',
   },
   // Оптимизация bundle
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
       // Tree shaking для Three.js
       config.resolve.alias = {
@@ -39,6 +39,17 @@ const nextConfig = {
         };
       }
     }
+
+    // Исключаем API routes из сборки для GitHub Pages (output: export)
+    if (process.env.GITHUB_ACTIONS === 'true' || (!process.env.VERCEL && !process.env.VERCEL_ENV)) {
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^\.\/api\/telegram\/webhook/,
+        })
+      );
+    }
+
     return config;
   },
   // Экспериментальные оптимизации

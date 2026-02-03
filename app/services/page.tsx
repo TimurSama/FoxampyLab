@@ -18,10 +18,12 @@ import {
   MessageSquare,
   ArrowRight,
   Zap,
-  Gamepad2
+  Gamepad2,
+  Send
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
+import ErrorModal from '@/components/modals/ErrorModal';
 
 export default function ServicesPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -29,6 +31,11 @@ export default function ServicesPage() {
   const [phone, setPhone] = useState('+');
   const [messenger, setMessenger] = useState('');
   const [expandedServiceId, setExpandedServiceId] = useState<string | null>(null);
+  const [errorModal, setErrorModal] = useState<{ isOpen: boolean; error: string; telegramMessage?: string }>({
+    isOpen: false,
+    error: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const services = [
     {
@@ -174,10 +181,14 @@ export default function ServicesPage() {
     e.preventDefault();
 
     if (selectedServices.length === 0) {
-      alert('Пожалуйста, выберите хотя бы одну услугу');
+      setErrorModal({
+        isOpen: true,
+        error: 'Пожалуйста, выберите хотя бы одну услугу',
+      });
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const selectedServicesList = selectedServices
         .map(id => services.find(s => s.id === id)?.title)
@@ -210,7 +221,20 @@ export default function ServicesPage() {
       }
     } catch (error) {
       console.error('Failed to submit form:', error);
-      alert('❌ Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
+      const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.';
+      const telegramMessage = TelegramService.formatServiceRequestMessage({
+        services: selectedServices.map(id => services.find(s => s.id === id)?.title || '').filter(Boolean),
+        email,
+        phone,
+        messenger: messenger || undefined,
+      });
+      setErrorModal({
+        isOpen: true,
+        error: errorMessage,
+        telegramMessage,
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -480,17 +504,46 @@ export default function ServicesPage() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full px-6 py-3 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest hover:bg-[#E0E0E0]/90 transition-colors"
-                >
-                  ОТПРАВИТЬ ЗАЯВКУ
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 px-6 py-3 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-widest hover:bg-[#E0E0E0]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#050505]/30 border-t-[#050505] rounded-full animate-spin" />
+                        ОТПРАВКА...
+                      </>
+                    ) : (
+                      <>
+                        <Send size={16} />
+                        ОТПРАВИТЬ ЗАЯВКУ
+                      </>
+                    )}
+                  </button>
+                  <a
+                    href={TelegramService.getBotUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-3 bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-sm tracking-widest transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageSquare size={16} />
+                    Telegram
+                  </a>
+                </div>
               </form>
             </motion.div>
           </div>
         </section>
       </main>
+
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, error: '' })}
+        error={errorModal.error}
+        telegramMessage={errorModal.telegramMessage}
+      />
     </div>
   );
 }

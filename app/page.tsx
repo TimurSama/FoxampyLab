@@ -9,10 +9,11 @@ import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
 import Link from 'next/link';
-import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, MessageSquare, X } from 'lucide-react';
+import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, MessageSquare, X, Send } from 'lucide-react';
 import CalendarPicker from '@/components/forms/CalendarPicker';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
 import FlippableServiceCard from '@/components/sections/FlippableServiceCard';
+import ErrorModal from '@/components/modals/ErrorModal';
 import { useI18n } from '@/lib/i18n/context';
 import { TelegramService } from '@/lib/telegram';
 
@@ -31,6 +32,19 @@ export default function Home() {
   const [phone, setPhone] = useState('');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState('');
+  const [errorModal, setErrorModal] = useState<{ isOpen: boolean; error: string; telegramMessage?: string }>({
+    isOpen: false,
+    error: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Screen-based navigation states
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollTime = useRef<number>(0);
+  const SCROLL_THROTTLE = 800; // Защита от быстрого пролистывания
 
   // Генерация доступных дат (следующие 30 дней)
   const availableDates = useMemo(() => {
@@ -82,6 +96,7 @@ export default function Home() {
     e.preventDefault();
     if (!selectedDate || !selectedTime) return;
 
+    setIsSubmitting(true);
     try {
       await TelegramService.sendConsultationRequest({
         name,
@@ -99,10 +114,29 @@ export default function Home() {
       setSelectedTime('');
       setIsExpanded(false);
       
+      // Показываем успешное сообщение
       alert(t('contact.consultation.confirm') || 'Заявка отправлена!');
     } catch (error) {
       console.error('Ошибка отправки заявки:', error);
-      alert('Ошибка отправки заявки. Попробуйте позже.');
+      const errorMessage = error instanceof Error ? error.message : 'Ошибка отправки заявки. Попробуйте позже.';
+      const telegramMessage = TelegramService.formatConsultationMessage({
+        name,
+        email,
+        phone,
+        date: selectedDate.toLocaleDateString('ru-RU', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }),
+        time: selectedTime,
+      });
+      setErrorModal({
+        isOpen: true,
+        error: errorMessage,
+        telegramMessage,
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -270,10 +304,125 @@ export default function Home() {
     },
   ], [t, language, servicesData, cases]);
 
+  // Общее количество секций (hero + sections)
+  const totalSections = 1 + sections.length; // hero + solutions + cases + hub
+
+  // Функция переключения секций
+  const scrollToSection = (index: number, direction: 'up' | 'down' = 'down') => {
+    if (isTransitioning || index < 0 || index >= totalSections) return;
+    
+    // Проверка внутреннего скролла
+    const currentSection = sectionRefs.current[currentSectionIndex];
+    if (currentSection) {
+      const { scrollTop, scrollHeight, clientHeight } = currentSection;
+      const isAtTop = scrollTop === 0;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
+      
+      // Если скроллим вниз, но не достигли низа секции - скроллим внутри секции
+      if (direction === 'down' && !isAtBottom) {
+        currentSection.scrollTop = scrollHeight;
+        return;
+      }
+      // Если скроллим вверх, но не достигли верха секции - скроллим внутри секции
+      if (direction === 'up' && !isAtTop) {
+        currentSection.scrollTop = 0;
+        return;
+      }
+    }
+
+    setIsTransitioning(true);
+    setCurrentSectionIndex(index);
+    
+    // Обновление URL hash
+    if (index === 0) {
+      window.history.replaceState(null, '', window.location.pathname);
+    } else {
+      const sectionId = index === 1 ? 'hero' : sections[index - 1]?.id || '';
+      window.history.replaceState(null, '', `#${sectionId}`);
+    }
+
+    // Сброс состояния перехода после анимации
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 1000); // Длительность анимации
+  };
+
+  // Обработчик скролла колесом мыши
+  const handleWheel = (e: WheelEvent) => {
+    e.preventDefault();
+    
+    const now = Date.now();
+    if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+    lastScrollTime.current = now;
+
+    const direction = e.deltaY > 0 ? 'down' : 'up';
+    
+    if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+      scrollToSection(currentSectionIndex + 1, 'down');
+    } else if (direction === 'up' && currentSectionIndex > 0) {
+      scrollToSection(currentSectionIndex - 1, 'up');
+    }
+  };
+
+  // Обработчик клавиатуры
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (isTransitioning) return;
+    
+    switch (e.key) {
+      case 'ArrowDown':
+      case 'PageDown':
+        e.preventDefault();
+        if (currentSectionIndex < totalSections - 1) {
+          scrollToSection(currentSectionIndex + 1, 'down');
+        }
+        break;
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        if (currentSectionIndex > 0) {
+          scrollToSection(currentSectionIndex - 1, 'up');
+        }
+        break;
+      case 'Home':
+        e.preventDefault();
+        scrollToSection(0, 'up');
+        break;
+      case 'End':
+        e.preventDefault();
+        scrollToSection(totalSections - 1, 'down');
+        break;
+    }
+  };
+
+  // Обработчик touch для мобильных
+  const touchStartYRef = useRef<number>(0);
+  const handleTouchStart = (e: TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+  
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!touchStartYRef.current) return;
+    
+    const touchEndY = e.changedTouches[0].clientY;
+    const diff = touchStartYRef.current - touchEndY;
+    const threshold = 50; // Минимальное расстояние для переключения
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0 && currentSectionIndex < totalSections - 1) {
+        scrollToSection(currentSectionIndex + 1, 'down');
+      } else if (diff < 0 && currentSectionIndex > 0) {
+        scrollToSection(currentSectionIndex - 1, 'up');
+      }
+    }
+    
+    touchStartYRef.current = 0;
+  };
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-transparent overflow-x-hidden"
+      className="relative w-full h-screen bg-transparent overflow-hidden"
+      style={{ height: '100vh' }}
     >
       <AnimatePresence>
         {isBooting && <BootSequence />}
@@ -283,8 +432,11 @@ export default function Home() {
 
       {/* Hero */}
       <section
-        className="relative z-10 min-h-screen grid md:grid-cols-2 items-center gap-8"
-        style={{ opacity: isBooting ? 0 : 1, transition: 'opacity 0.3s ease-in-out' }}
+        ref={(el) => { sectionRefs.current[0] = el; }}
+        className={`fixed inset-0 w-full h-screen grid md:grid-cols-2 items-center gap-8 overflow-y-auto transition-opacity duration-1000 ${
+          currentSectionIndex === 0 ? 'opacity-100 z-20' : 'opacity-0 z-10 pointer-events-none'
+        }`}
+        style={{ opacity: isBooting ? 0 : (currentSectionIndex === 0 ? 1 : 0) }}
       >
         <div className="max-w-6xl mx-auto px-6 pt-24 pb-8 md:py-28 w-full md:col-span-1">
           <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-6">
@@ -410,13 +562,17 @@ export default function Home() {
 
       {/* Content Sections */}
       {sections.map((section, index) => {
+        const sectionIndex = index + 1; // Hero = 0, solutions = 1, cases = 2, hub = 3
         const isVisible = visibleElements.has(`section-${section.id}`);
         return (
         <section
           key={section.id}
+          ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
           data-scroll-id={`section-${section.id}`}
-          className={`relative z-10 min-h-screen flex items-center justify-center ${section.id === 'cases' ? 'pt-32' : ''}`}
-          style={{ opacity: isBooting ? 0 : 1 }}
+          className={`fixed inset-0 w-full h-screen flex items-center justify-center overflow-y-auto transition-opacity duration-1000 ${
+            currentSectionIndex === sectionIndex ? 'opacity-100 z-20' : 'opacity-0 z-10 pointer-events-none'
+          } ${section.id === 'cases' ? 'pt-32' : ''}`}
+          style={{ opacity: isBooting ? 0 : (currentSectionIndex === sectionIndex ? 1 : 0) }}
         >
           <div className="max-w-4xl mx-auto px-4 text-center">
             <motion.div 
@@ -775,18 +931,39 @@ export default function Home() {
                   <div>
                     <button
                       type="submit"
-                      disabled={!selectedDate || !selectedTime}
+                      disabled={!selectedDate || !selectedTime || isSubmitting}
                       className="w-full py-3 bg-[#E0E0E0] text-[#050505] font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3 hover:bg-[#FFFFFF] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      {t('contact.consultation.confirm') || 'Send Request'}
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-[#050505]/30 border-t-[#050505] rounded-full animate-spin" />
+                          {t('common.sending') || 'Отправка...'}
+                        </>
+                      ) : (
+                        <>
+                          <Send size={14} />
+                          {t('contact.consultation.confirm') || 'Send Request'}
+                        </>
+                      )}
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowCalendar(true)}
-                      className="w-full mt-3 text-center font-mono text-[9px] uppercase tracking-wider text-[#E0E0E0]/40 hover:text-[#E0E0E0]/70 transition-colors"
-                    >
-                      ─── {t('contact.openFullCalendar') || 'Open Full Calendar'} ───
-                    </button>
+                    <div className="flex gap-2 mt-3">
+                      <a
+                        href={TelegramService.getBotUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-[9px] uppercase tracking-wider transition-colors"
+                      >
+                        <MessageSquare size={12} />
+                        Telegram
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => setShowCalendar(true)}
+                        className="flex-1 text-center font-mono text-[9px] uppercase tracking-wider text-[#E0E0E0]/40 hover:text-[#E0E0E0]/70 transition-colors"
+                      >
+                        ─── {t('contact.openFullCalendar') || 'Open Full Calendar'} ───
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -804,6 +981,13 @@ export default function Home() {
           onClose={() => setShowCalendar(false)}
         />
       )}
+
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, error: '' })}
+        error={errorModal.error}
+        telegramMessage={errorModal.telegramMessage}
+      />
     </div>
   );
 }

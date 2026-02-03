@@ -13,6 +13,7 @@ import {
 import Header from '@/components/layout/Header';
 import { useI18n } from '@/lib/i18n/context';
 import { TelegramService } from '@/lib/telegram';
+import ErrorModal from '@/components/modals/ErrorModal';
 
 export default function ContactPage() {
   const { t } = useI18n();
@@ -23,8 +24,12 @@ export default function ContactPage() {
     budget: '',
     message: ''
   });
-const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorModal, setErrorModal] = useState<{ isOpen: boolean; error: string; telegramMessage?: string }>({
+    isOpen: false,
+    error: '',
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +62,19 @@ const [submitted, setSubmitted] = useState(false);
       }
     } catch (error) {
       console.error('Contact form error:', error);
-      alert('❌ Произошла ошибка. Пожалуйста, попробуйте еще раз.');
+      const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
+      const contactDataForError = {
+        name: formState.name,
+        email: formState.email,
+        subject: formState.project,
+        message: formState.message
+      };
+      const telegramMessage = TelegramService.formatContactMessage(contactDataForError);
+      setErrorModal({
+        isOpen: true,
+        error: errorMessage,
+        telegramMessage,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -258,21 +275,47 @@ const [submitted, setSubmitted] = useState(false);
                     />
                   </div>
 
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
-                             flex items-center justify-center gap-2"
-                  >
-                    {t('common.send')} <Send size={14} />
-                  </motion.button>
+                  <div className="flex gap-3">
+                    <motion.button
+                      type="submit"
+                      disabled={isLoading}
+                      whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                      whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                      className="flex-1 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
+                               flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-ink-deep/30 border-t-ink-deep rounded-full animate-spin" />
+                          {t('common.sending') || 'Отправка...'}
+                        </>
+                      ) : (
+                        <>
+                          {t('common.send')} <Send size={14} />
+                        </>
+                      )}
+                    </motion.button>
+                    <a
+                      href={TelegramService.getBotUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-4 bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-sm tracking-widest transition-colors flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle size={16} />
+                    </a>
+                  </div>
                 </form>
               )}
             </motion.div>
           </div>
         </section>
       </main>
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, error: '' })}
+        error={errorModal.error}
+        telegramMessage={errorModal.telegramMessage}
+      />
     </div>
   );
 }
