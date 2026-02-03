@@ -281,13 +281,6 @@ export default function Home() {
 
   const sections = useMemo(() => [
     {
-      id: 'solutions',
-      title: t('home.solutions.title'),
-      subtitle: t('home.solutions.subtitle'),
-      description: t('home.solutions.description'),
-      services: servicesData,
-    },
-    {
       id: 'about',
       title: t('about.tagline'),
       subtitle: t('about.title'),
@@ -679,16 +672,27 @@ export default function Home() {
           <section
             ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
             data-scroll-id={`section-${section.id}`}
-            className="w-full h-screen flex items-center justify-center overflow-y-auto"
+            className="w-full h-screen flex items-center justify-center"
             style={{ 
               minHeight: '100vh', 
               maxHeight: '100vh',
               paddingTop: '100px',
               paddingBottom: '40px',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              overflow: section.id === 'about' ? 'hidden' : 'auto'
             }}
           >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%' }}>
+          <div 
+            className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
+              section.id === 'cases' ? 'max-w-4xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
+            }`} 
+            style={{ 
+              maxHeight: 'calc(100vh - 140px)', 
+              overflowY: section.id === 'about' ? 'auto' : 'auto', 
+              boxSizing: 'border-box', 
+              width: '100%' 
+            }}
+          >
               <motion.div 
                 className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
                 data-scroll-id={`section-${section.id}-content`}
@@ -815,7 +819,7 @@ export default function Home() {
               )}
             </motion.div>
 
-            {(section.id === 'solutions' || section.id === 'services') && section.services && (
+            {section.id === 'services' && section.services && (
               <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   const cardVisible = visibleElements.has(`solution-card-${service.id}`);
@@ -1128,7 +1132,7 @@ export default function Home() {
                       )}
                     </button>
                     <a
-                      href={TelegramService.getBotUrl()}
+                      href="https://t.me/FoxampyLab_contact_bot"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
