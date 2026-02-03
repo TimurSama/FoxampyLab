@@ -282,7 +282,7 @@ export default function ContactPage() {
                       whileHover={{ scale: isLoading ? 1 : 1.02 }}
                       whileTap={{ scale: isLoading ? 1 : 0.98 }}
                       className="flex-1 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest
-                               flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                               flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isLoading ? (
                         <>
@@ -290,18 +290,16 @@ export default function ContactPage() {
                           {t('common.sending') || 'Отправка...'}
                         </>
                       ) : (
-                        <>
-                          {t('common.send')} <Send size={14} />
-                        </>
+                        t('common.send') || 'Отправить'
                       )}
                     </motion.button>
                     <a
                       href={TelegramService.getBotUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-4 bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-sm tracking-widest transition-colors flex items-center justify-center gap-2"
+                      className="px-4 py-4 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
                     >
-                      <MessageCircle size={16} />
+                      <MessageCircle size={16} className="text-[#0088cc]" strokeWidth={1.5} />
                     </a>
                   </div>
                 </form>

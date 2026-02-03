@@ -288,6 +288,31 @@ export default function Home() {
       services: servicesData,
     },
     {
+      id: 'about',
+      title: t('about.tagline'),
+      subtitle: t('about.title'),
+      description: t('about.description'),
+      mission: t('about.mission.description'),
+      values: [
+        {
+          title: t('about.values.innovation.title'),
+          description: t('about.values.innovation.description'),
+        },
+        {
+          title: t('about.values.result.title'),
+          description: t('about.values.result.description'),
+        },
+        {
+          title: t('about.values.team.title'),
+          description: t('about.values.team.description'),
+        },
+        {
+          title: t('about.values.speed.title'),
+          description: t('about.values.speed.description'),
+        },
+      ],
+    },
+    {
       id: 'cases',
       title: t('home.gallery.title'),
       subtitle: t('home.gallery.subtitle'),
@@ -611,7 +636,7 @@ export default function Home() {
       {/* Content Sections */}
       {sections.map((section, index) => {
         const sectionIndex = index + 1; // Hero = 0, solutions = 1, cases = 2, hub = 3
-        const isVisible = visibleElements.has(`section-${section.id}`);
+        const isVisible = currentSectionIndex === sectionIndex || visibleElements.has(`section-${section.id}`);
         return (
         <SectionTransition
           key={section.id}
@@ -801,6 +826,75 @@ export default function Home() {
               </div>
             )}
 
+            {section.id === 'about' && (
+              <motion.div 
+                className="mt-12 max-w-4xl mx-auto space-y-8 px-4"
+                data-scroll-id={`section-${section.id}-content`}
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                animate={isVisible ? { 
+                  opacity: 1, 
+                  scale: 1, 
+                  filter: 'blur(0px)',
+                  y: 0
+                } : { 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                transition={{ 
+                  duration: 1, 
+                  ease: [0.16, 1, 0.3, 1],
+                  filter: { duration: 0.8 }
+                }}
+                style={{ willChange: 'opacity, transform, filter' }}
+              >
+                {/* Mission */}
+                {section.mission && (
+                  <motion.div
+                    className="p-6 bg-glass-matte border border-white/10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                  >
+                    <h3 className="font-mono text-lg text-engrave-fresco mb-3">
+                      {t('about.mission.title')}
+                    </h3>
+                    <p className="font-mono text-sm text-stone-slate leading-relaxed">
+                      {section.mission}
+                    </p>
+                  </motion.div>
+                )}
+
+                {/* Values */}
+                {section.values && (
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {section.values.map((value: any, idx: number) => (
+                      <motion.div
+                        key={idx}
+                        className="p-6 bg-glass-matte border border-white/10"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        transition={{ delay: 0.3 + idx * 0.1, duration: 0.8 }}
+                      >
+                        <h4 className="font-mono text-base text-engrave-fresco mb-2">
+                          {value.title}
+                        </h4>
+                        <p className="font-mono text-sm text-stone-slate leading-relaxed">
+                          {value.description}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+
             {section.id === 'cases' && (
               <motion.div 
                 className="mt-16"
@@ -899,7 +993,7 @@ export default function Home() {
                 <div className="bg-[#0A0A0A] border border-white/20 overflow-hidden rounded-sm shadow-2xl">
                   <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#050505]">
                     <h2 className="font-mono text-sm uppercase tracking-widest text-[#E0E0E0]">
-                      {t('contact.consultation.title') || 'Contact Request'}
+                      {t('contact.consultation.title') || 'Связаться с нами'}
                     </h2>
                     <button onClick={() => setIsExpanded(false)} className="p-2 hover:bg-white/10 transition-colors rounded-full">
                       <X size={18} className="text-[#E0E0E0]/80" />
@@ -981,11 +1075,11 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="flex gap-3">
                     <button
                       type="submit"
                       disabled={!selectedDate || !selectedTime || isSubmitting}
-                      className="w-full py-3 bg-[#E0E0E0] text-[#050505] font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3 hover:bg-[#FFFFFF] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="flex-1 py-3 bg-[#E0E0E0] text-[#050505] font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center hover:bg-[#FFFFFF] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? (
                         <>
@@ -993,30 +1087,17 @@ export default function Home() {
                           {t('common.sending') || 'Отправка...'}
                         </>
                       ) : (
-                        <>
-                          <Send size={14} />
-                          {t('contact.consultation.confirm') || 'Send Request'}
-                        </>
+                        t('contact.consultation.confirm') || 'Отправить заявку'
                       )}
                     </button>
-                    <div className="flex gap-2 mt-3">
-                      <a
-                        href={TelegramService.getBotUrl()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-[9px] uppercase tracking-wider transition-colors"
-                      >
-                        <MessageSquare size={12} />
-                        Telegram
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => setShowCalendar(true)}
-                        className="flex-1 text-center font-mono text-[9px] uppercase tracking-wider text-[#E0E0E0]/40 hover:text-[#E0E0E0]/70 transition-colors"
-                      >
-                        ─── {t('contact.openFullCalendar') || 'Open Full Calendar'} ───
-                      </button>
-                    </div>
+                    <a
+                      href={TelegramService.getBotUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
+                    >
+                      <MessageSquare size={16} className="text-[#0088cc]" strokeWidth={1.5} />
+                    </a>
                   </div>
                 </form>
               </div>

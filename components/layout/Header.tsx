@@ -9,6 +9,7 @@ import { useI18n } from '@/lib/i18n/context';
 import type { Language } from '@/lib/i18n/translations';
 
 const menuItemsConfig = [
+  { path: '/', label: 'ГЛАВНАЯ', labelEn: 'HOME' },
   { path: '/hub', label: 'HUB', labelEn: 'HUB' },
   { path: '/gallery', label: 'ГАЛЕРЕЯ', labelEn: 'GALLERY' },
   { path: '/about', label: 'О НАС', labelEn: 'ABOUT' },
@@ -84,8 +85,8 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full left-0 mt-2 bg-ink-chrome/03 border border-stone-anthracite/50 
-                           backdrop-blur-sm min-w-[180px] z-50"
+                  className="absolute top-full left-0 mt-2 bg-ink-chrome/95 border border-stone-anthracite/50 
+                           backdrop-blur-md min-w-[180px] z-50 shadow-lg"
                 >
                   {menuItemsConfig.map((item) => (
                     <button

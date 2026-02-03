@@ -139,7 +139,7 @@ export default function SectionTransition({
   return (
     <motion.div
       key={`section-${transitionIndex}`}
-      initial="hidden"
+      initial={isActive ? "visible" : "hidden"}
       animate={isActive ? "visible" : "hidden"}
       variants={getVariants()}
       transition={getTransition()}
