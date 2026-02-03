@@ -483,7 +483,7 @@ export default function Home() {
       >
         <section
           ref={(el) => { sectionRefs.current[0] = el; }}
-          className="fixed inset-0 w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto"
+          className="w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto"
         >
         <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 pb-4 md:pt-24 md:pb-8 w-full md:col-span-1">
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
@@ -622,7 +622,7 @@ export default function Home() {
           <section
             ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
             data-scroll-id={`section-${section.id}`}
-            className={`fixed inset-0 w-full h-screen flex items-center justify-center overflow-y-auto ${
+            className={`w-full h-screen flex items-center justify-center overflow-y-auto ${
               section.id === 'cases' ? 'pt-16 md:pt-32' : ''
             }`}
           >

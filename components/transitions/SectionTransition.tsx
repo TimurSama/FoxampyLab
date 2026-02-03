@@ -137,40 +137,40 @@ export default function SectionTransition({
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {isActive && (
-        <motion.div
-          key={`section-${transitionIndex}`}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          variants={getVariants()}
-          transition={getTransition()}
-          className="w-full h-full"
-          style={{ willChange: 'opacity, transform, filter, clip-path' }}
-        >
-          {/* Blockchain эффект - пиксельные линии */}
-          {currentType === 'blockchain' && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.3 }}>
-                <defs>
-                  <pattern id="blockchain-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <circle cx="2" cy="2" r="1" fill="currentColor" className="text-engrave-fresco/20" />
-                    <line x1="0" y1="10" x2="20" y2="10" stroke="currentColor" strokeWidth="0.5" className="text-engrave-fresco/10" />
-                    <line x1="10" y1="0" x2="10" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-engrave-fresco/10" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#blockchain-grid)" />
-              </svg>
-            </div>
-          )}
-          
-          {/* Основной контент */}
-          <div className="relative w-full h-full">
-            {children}
-          </div>
-        </motion.div>
+    <motion.div
+      key={`section-${transitionIndex}`}
+      initial="hidden"
+      animate={isActive ? "visible" : "hidden"}
+      variants={getVariants()}
+      transition={getTransition()}
+      className={`w-full h-full ${isActive ? 'z-20' : 'z-0 pointer-events-none'}`}
+      style={{ 
+        willChange: 'opacity, transform, filter, clip-path',
+        position: 'fixed',
+        inset: 0,
+        visibility: isActive ? 'visible' : 'hidden'
+      }}
+    >
+      {/* Blockchain эффект - пиксельные линии */}
+      {currentType === 'blockchain' && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.3 }}>
+            <defs>
+              <pattern id={`blockchain-grid-${transitionIndex}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1" fill="currentColor" className="text-engrave-fresco/20" />
+                <line x1="0" y1="10" x2="20" y2="10" stroke="currentColor" strokeWidth="0.5" className="text-engrave-fresco/10" />
+                <line x1="10" y1="0" x2="10" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-engrave-fresco/10" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill={`url(#blockchain-grid-${transitionIndex})`} />
+          </svg>
+        </div>
       )}
-    </AnimatePresence>
+      
+      {/* Основной контент */}
+      <div className="relative w-full h-full">
+        {children}
+      </div>
+    </motion.div>
   );
 }
