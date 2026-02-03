@@ -336,29 +336,64 @@ export default function Home() {
 
   // Функция переключения секций
   const scrollToSection = useCallback((index: number, direction: 'up' | 'down' = 'down') => {
-    if (isTransitioning || index < 0 || index >= totalSections) {
+    console.log('scrollToSection called:', { index, direction, currentSectionIndex, totalSections, isTransitioning });
+    
+    // Проверяем границы
+    if (index < 0 || index >= totalSections) {
+      console.log('scrollToSection: index out of bounds');
       return;
     }
     
+    // Если уже переключаемся, игнорируем новый запрос
+    if (isTransitioning) {
+      console.log('scrollToSection: already transitioning');
+      return;
+    }
+    
+    // Если индекс не изменился, ничего не делаем
+    if (index === currentSectionIndex) {
+      console.log('scrollToSection: same index');
+      return;
+    }
+    
+    // Временно отключаем проверку внутреннего скролла для отладки
     // Проверка внутреннего скролла (только если секция действительно имеет переполнение)
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
       const { scrollTop, scrollHeight, clientHeight } = currentSection;
-      const isAtTop = scrollTop <= 5; // 5px tolerance
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
+      // Проверяем, есть ли реальное переполнение (больше чем 50px)
+      const hasRealScroll = scrollHeight > clientHeight + 50;
       
-      // Если скроллим вниз, но не достигли низа секции - скроллим внутри секции
-      if (direction === 'down' && !isAtBottom) {
-        currentSection.scrollTop = scrollHeight;
-        return;
-      }
-      // Если скроллим вверх, но не достигли верха секции - скроллим внутри секции
-      if (direction === 'up' && !isAtTop) {
-        currentSection.scrollTop = 0;
-        return;
+      console.log('scrollToSection: scroll check', { 
+        scrollHeight, 
+        clientHeight, 
+        hasRealScroll, 
+        scrollTop,
+        direction 
+      });
+      
+      if (hasRealScroll) {
+        const isAtTop = scrollTop <= 10; // 10px tolerance
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
+        
+        console.log('scrollToSection: scroll state', { isAtTop, isAtBottom });
+        
+        // Если скроллим вниз, но не достигли низа секции - скроллим внутри секции
+        if (direction === 'down' && !isAtBottom) {
+          console.log('scrollToSection: scrolling inside section DOWN');
+          currentSection.scrollTop = scrollHeight;
+          return;
+        }
+        // Если скроллим вверх, но не достигли верха секции - скроллим внутри секции
+        if (direction === 'up' && !isAtTop) {
+          console.log('scrollToSection: scrolling inside section UP');
+          currentSection.scrollTop = 0;
+          return;
+        }
       }
     }
 
+    console.log('scrollToSection: setting new index to', index);
     setIsTransitioning(true);
     setTransitionDirection(direction);
     setCurrentSectionIndex(index);
@@ -367,12 +402,13 @@ export default function Home() {
     if (index === 0) {
       window.history.replaceState(null, '', window.location.pathname);
     } else {
-      const sectionId = index === 1 ? 'hero' : sections[index - 1]?.id || '';
+      const sectionId = sections[index - 1]?.id || '';
       window.history.replaceState(null, '', `#${sectionId}`);
     }
 
     // Сброс состояния перехода после анимации
     setTimeout(() => {
+      console.log('scrollToSection: transition complete, resetting isTransitioning');
       setIsTransitioning(false);
     }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
   }, [isTransitioning, totalSections, currentSectionIndex, sections, sectionRefs]);
@@ -390,12 +426,24 @@ export default function Home() {
 
     const direction = e.deltaY > 0 ? 'down' : 'up';
     
+    // Отладка
+    console.log('handleWheel:', { 
+      direction, 
+      currentSectionIndex, 
+      totalSections, 
+      isTransitioning,
+      canGoDown: currentSectionIndex < totalSections - 1,
+      canGoUp: currentSectionIndex > 0
+    });
+    
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+      console.log('Calling scrollToSection DOWN to:', currentSectionIndex + 1);
       scrollToSection(currentSectionIndex + 1, 'down');
     } else if (direction === 'up' && currentSectionIndex > 0) {
+      console.log('Calling scrollToSection UP to:', currentSectionIndex - 1);
       scrollToSection(currentSectionIndex - 1, 'up');
     }
-  }, [currentSectionIndex, totalSections, scrollToSection]);
+  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning]);
 
   // Обработчик клавиатуры
   const handleKeyDown = useCallback((e: KeyboardEvent) => {

@@ -150,11 +150,12 @@ export default function SectionTransition({
       animate={isActive ? "visible" : "hidden"}
       variants={getVariants()}
       transition={isInitialActive ? { duration: 0 } : getTransition()}
-      className={`w-full h-full ${isActive ? 'z-20' : 'z-0'}`}
+      className={`w-full h-full`}
       style={{ 
         willChange: 'opacity, transform, filter, clip-path',
         position: 'fixed',
         inset: 0,
+        zIndex: isActive ? 20 : 0,
         pointerEvents: isActive ? 'auto' : 'none',
         visibility: isActive ? 'visible' : 'hidden'
       }}
