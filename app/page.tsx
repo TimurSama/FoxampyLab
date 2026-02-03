@@ -533,10 +533,16 @@ export default function Home() {
       >
         <section
           ref={(el) => { sectionRefs.current[0] = el; }}
-          className="w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto pt-20 md:pt-24"
-          style={{ minHeight: '100vh', maxHeight: '100vh' }}
+          className="w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto"
+          style={{ 
+            minHeight: '100vh', 
+            maxHeight: '100vh',
+            paddingTop: '100px',
+            paddingBottom: '40px',
+            boxSizing: 'border-box'
+          }}
         >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-4 md:pb-8 w-full md:col-span-1">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%' }}>
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, y: 0 }}
@@ -673,38 +679,43 @@ export default function Home() {
           <section
             ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
             data-scroll-id={`section-${section.id}`}
-            className={`w-full h-screen flex items-center justify-center overflow-y-auto ${
-              section.id === 'cases' ? 'pt-20 md:pt-32' : 'pt-20 md:pt-24'
-            }`}
+            className="w-full h-screen flex items-center justify-center overflow-y-auto"
+            style={{ 
+              minHeight: '100vh', 
+              maxHeight: '100vh',
+              paddingTop: '100px',
+              paddingBottom: '40px',
+              boxSizing: 'border-box'
+            }}
           >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center py-8 sm:py-12 md:py-16">
-            <motion.div 
-              className={`inline-block p-2 sm:p-4 md:p-6 ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
-              data-scroll-id={`section-${section.id}-content`}
-              initial={{ 
-                opacity: 0, 
-                scale: 0.95, 
-                filter: 'blur(15px)',
-                y: 0
-              }}
-              animate={isVisible ? { 
-                opacity: 1, 
-                scale: 1, 
-                filter: 'blur(0px)',
-                y: 0
-              } : { 
-                opacity: 0, 
-                scale: 0.95, 
-                filter: 'blur(15px)',
-                y: 0
-              }}
-              transition={{ 
-                duration: 1, 
-                ease: [0.16, 1, 0.3, 1],
-                filter: { duration: 0.8 }
-              }}
-              style={{ willChange: 'opacity, transform, filter' }}
-            >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%' }}>
+              <motion.div 
+                className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
+                data-scroll-id={`section-${section.id}-content`}
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                animate={isVisible ? { 
+                  opacity: 1, 
+                  scale: 1, 
+                  filter: 'blur(0px)',
+                  y: 0
+                } : { 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                transition={{ 
+                  duration: 1, 
+                  ease: [0.16, 1, 0.3, 1],
+                  filter: { duration: 0.8 }
+                }}
+                style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
+              >
               <motion.div 
                 className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6 relative"
                 initial={{ opacity: 0, scale: 0.95, y: 0 }}
@@ -805,7 +816,7 @@ export default function Home() {
             </motion.div>
 
             {(section.id === 'solutions' || section.id === 'services') && section.services && (
-              <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4">
+              <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   const cardVisible = visibleElements.has(`solution-card-${service.id}`);
                   return (
@@ -854,7 +865,7 @@ export default function Home() {
 
             {section.id === 'about' && (
               <motion.div 
-                className="mt-12 max-w-4xl mx-auto space-y-8 px-4"
+                className="mt-12 max-w-4xl mx-auto space-y-8 px-4 w-full"
                 data-scroll-id={`section-${section.id}-content`}
                 initial={{ 
                   opacity: 0, 
@@ -878,7 +889,7 @@ export default function Home() {
                   ease: [0.16, 1, 0.3, 1],
                   filter: { duration: 0.8 }
                 }}
-                style={{ willChange: 'opacity, transform, filter' }}
+                style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
               >
                 {/* Mission */}
                 {section.mission && (
@@ -923,7 +934,7 @@ export default function Home() {
 
             {section.id === 'cases' && (
               <motion.div 
-                className="mt-16"
+                className="mt-16 w-full"
                 data-scroll-id={`section-${section.id}-gallery`}
                 initial={{ 
                   opacity: 0, 
@@ -947,7 +958,7 @@ export default function Home() {
                   ease: [0.16, 1, 0.3, 1],
                   filter: { duration: 0.8 }
                 }}
-                style={{ willChange: 'opacity, transform, filter' }}
+                style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
               >
                 <GalleryCarousel />
               </motion.div>
