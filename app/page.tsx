@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useEffect, useState, useMemo } from 'react';
+import { Suspense, useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { isMobile } from '@/lib/device';
 import InteractiveSphere from '@/components/visuals/InteractiveSphere';
@@ -16,6 +16,7 @@ import FlippableServiceCard from '@/components/sections/FlippableServiceCard';
 import ErrorModal from '@/components/modals/ErrorModal';
 import { useI18n } from '@/lib/i18n/context';
 import { TelegramService } from '@/lib/telegram';
+import SectionTransition from '@/components/transitions/SectionTransition';
 
 export default function Home() {
   const { t, language } = useI18n();
@@ -41,6 +42,7 @@ export default function Home() {
   // Screen-based navigation states
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionDirection, setTransitionDirection] = useState<'up' | 'down'>('down');
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
@@ -308,7 +310,7 @@ export default function Home() {
   const totalSections = 1 + sections.length; // hero + solutions + cases + hub
 
   // Функция переключения секций
-  const scrollToSection = (index: number, direction: 'up' | 'down' = 'down') => {
+  const scrollToSection = useCallback((index: number, direction: 'up' | 'down' = 'down') => {
     if (isTransitioning || index < 0 || index >= totalSections) return;
     
     // Проверка внутреннего скролла
@@ -331,6 +333,7 @@ export default function Home() {
     }
 
     setIsTransitioning(true);
+    setTransitionDirection(direction);
     setCurrentSectionIndex(index);
     
     // Обновление URL hash
@@ -344,11 +347,14 @@ export default function Home() {
     // Сброс состояния перехода после анимации
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 1000); // Длительность анимации
-  };
+    }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
+  }, [isTransitioning, totalSections, currentSectionIndex, sections, sectionRefs]);
+
+  // Обработчик touch для мобильных
+  const touchStartYRef = useRef<number>(0);
 
   // Обработчик скролла колесом мыши
-  const handleWheel = (e: WheelEvent) => {
+  const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
     
     const now = Date.now();
@@ -362,10 +368,10 @@ export default function Home() {
     } else if (direction === 'up' && currentSectionIndex > 0) {
       scrollToSection(currentSectionIndex - 1, 'up');
     }
-  };
+  }, [currentSectionIndex, totalSections, scrollToSection]);
 
   // Обработчик клавиатуры
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isTransitioning) return;
     
     switch (e.key) {
@@ -392,15 +398,13 @@ export default function Home() {
         scrollToSection(totalSections - 1, 'down');
         break;
     }
-  };
+  }, [currentSectionIndex, isTransitioning, totalSections, scrollToSection]);
 
-  // Обработчик touch для мобильных
-  const touchStartYRef = useRef<number>(0);
-  const handleTouchStart = (e: TouchEvent) => {
+  const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartYRef.current = e.touches[0].clientY;
-  };
+  }, []);
   
-  const handleTouchEnd = (e: TouchEvent) => {
+  const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (!touchStartYRef.current) return;
     
     const touchEndY = e.changedTouches[0].clientY;
@@ -416,7 +420,48 @@ export default function Home() {
     }
     
     touchStartYRef.current = 0;
-  };
+  }, [currentSectionIndex, totalSections, scrollToSection]);
+
+  // Установка обработчиков для screen-based navigation (после определения всех функций)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Отключение стандартного скролла
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    // Обработчики событий
+    const wheelHandler = (e: WheelEvent) => handleWheel(e);
+    const keyHandler = (e: KeyboardEvent) => handleKeyDown(e);
+    const touchStartHandler = (e: TouchEvent) => handleTouchStart(e);
+    const touchEndHandler = (e: TouchEvent) => handleTouchEnd(e);
+    
+    window.addEventListener('wheel', wheelHandler, { passive: false });
+    window.addEventListener('keydown', keyHandler);
+    window.addEventListener('touchstart', touchStartHandler, { passive: true });
+    window.addEventListener('touchend', touchEndHandler, { passive: true });
+    
+    // Инициализация по hash из URL
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const sectionIndex = hash === 'hero' ? 0 : sections.findIndex(s => s.id === hash) + 1;
+      if (sectionIndex >= 0 && sectionIndex < totalSections) {
+        setCurrentSectionIndex(sectionIndex);
+      }
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      window.removeEventListener('wheel', wheelHandler);
+      window.removeEventListener('keydown', keyHandler);
+      window.removeEventListener('touchstart', touchStartHandler);
+      window.removeEventListener('touchend', touchEndHandler);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchEnd, sections, totalSections]);
 
   return (
     <div
@@ -431,20 +476,22 @@ export default function Home() {
       <Header />
 
       {/* Hero */}
-      <section
-        ref={(el) => { sectionRefs.current[0] = el; }}
-        className={`fixed inset-0 w-full h-screen grid md:grid-cols-2 items-center gap-8 overflow-y-auto transition-opacity duration-1000 ${
-          currentSectionIndex === 0 ? 'opacity-100 z-20' : 'opacity-0 z-10 pointer-events-none'
-        }`}
-        style={{ opacity: isBooting ? 0 : (currentSectionIndex === 0 ? 1 : 0) }}
+      <SectionTransition
+        isActive={currentSectionIndex === 0}
+        transitionType="auto"
+        direction={transitionDirection}
       >
-        <div className="max-w-6xl mx-auto px-6 pt-24 pb-8 md:py-28 w-full md:col-span-1">
-          <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-6">
+        <section
+          ref={(el) => { sectionRefs.current[0] = el; }}
+          className="fixed inset-0 w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto"
+        >
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 pb-4 md:pt-24 md:pb-8 w-full md:col-span-1">
+          <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, y: 0 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="text-3xl md:text-5xl lg:text-6xl font-mono text-[#E0E0E0] leading-tight relative"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-mono text-[#E0E0E0] leading-tight relative"
               style={{ 
                 textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
                 filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))'
@@ -467,7 +514,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95, y: 0 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="text-base md:text-lg lg:text-xl font-mono text-[#E0E0E0]/80 leading-relaxed max-w-3xl relative"
+              className="text-sm sm:text-base md:text-lg lg:text-xl font-mono text-[#E0E0E0]/80 leading-relaxed max-w-3xl relative"
               style={{ 
                 textShadow: '0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 0, 0, 0.85), 0 3px 10px rgba(0, 0, 0, 0.75)',
                 filter: 'drop-shadow(0 0 25px rgba(0, 0, 0, 0.85))',
@@ -553,30 +600,35 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.8, filter: 'blur(20px)', y: 0 }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative h-[400px] md:h-[600px] pointer-events-auto cursor-pointer md:col-span-1"
+          className="relative h-[250px] sm:h-[300px] md:h-[400px] lg:h-[600px] pointer-events-auto cursor-pointer md:col-span-1"
           style={{ willChange: 'opacity, transform, filter' }}
         >
           <InteractiveSphere mousePos={mousePos} />
         </motion.div>
       </section>
+      </SectionTransition>
 
       {/* Content Sections */}
       {sections.map((section, index) => {
         const sectionIndex = index + 1; // Hero = 0, solutions = 1, cases = 2, hub = 3
         const isVisible = visibleElements.has(`section-${section.id}`);
         return (
-        <section
+        <SectionTransition
           key={section.id}
-          ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
-          data-scroll-id={`section-${section.id}`}
-          className={`fixed inset-0 w-full h-screen flex items-center justify-center overflow-y-auto transition-opacity duration-1000 ${
-            currentSectionIndex === sectionIndex ? 'opacity-100 z-20' : 'opacity-0 z-10 pointer-events-none'
-          } ${section.id === 'cases' ? 'pt-32' : ''}`}
-          style={{ opacity: isBooting ? 0 : (currentSectionIndex === sectionIndex ? 1 : 0) }}
+          isActive={currentSectionIndex === sectionIndex}
+          transitionType="auto"
+          direction={transitionDirection}
         >
-          <div className="max-w-4xl mx-auto px-4 text-center">
+          <section
+            ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
+            data-scroll-id={`section-${section.id}`}
+            className={`fixed inset-0 w-full h-screen flex items-center justify-center overflow-y-auto ${
+              section.id === 'cases' ? 'pt-16 md:pt-32' : ''
+            }`}
+          >
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 text-center py-4 sm:py-8">
             <motion.div 
-              className={`inline-block p-4 md:p-6 ${section.id === 'cases' ? 'mb-12' : ''}`}
+              className={`inline-block p-2 sm:p-4 md:p-6 ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
               data-scroll-id={`section-${section.id}-content`}
               initial={{ 
                 opacity: 0, 
@@ -781,7 +833,8 @@ export default function Home() {
               </motion.div>
             )}
           </div>
-        </section>
+          </section>
+        </SectionTransition>
         );
       })}
 
