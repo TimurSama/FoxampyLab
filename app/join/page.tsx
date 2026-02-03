@@ -254,7 +254,7 @@ export default function JoinPage() {
 
                       <div className="pt-4 border-t border-stone-anthracite/30">
                         <a
-                          href="https://t.me/timursama"
+                          href="https://t.me/FoxampyLab_contact_bot"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block w-full py-3 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest

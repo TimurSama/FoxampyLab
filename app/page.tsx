@@ -534,6 +534,7 @@ export default function Home() {
         <section
           ref={(el) => { sectionRefs.current[0] = el; }}
           className="w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto pt-20 md:pt-24"
+          style={{ minHeight: '100vh', maxHeight: '100vh' }}
         >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-4 md:pb-8 w-full md:col-span-1">
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
@@ -1121,7 +1122,7 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
                     >
-                      <MessageSquare size={16} className="text-[#0088cc]" strokeWidth={1.5} />
+                      <MessageSquare size={16} className="text-white" strokeWidth={1.5} />
                     </a>
                   </div>
                 </form>

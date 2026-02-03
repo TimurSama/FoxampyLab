@@ -82,10 +82,10 @@ export default function ErrorModal({
                   <button
                     onClick={handleTelegramClick}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                             bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-sm
-                             transition-colors border border-[#006699]/50"
+                             bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 text-white font-mono text-sm
+                             transition-colors"
                   >
-                    <MessageCircle size={16} />
+                    <MessageCircle size={16} className="text-white" strokeWidth={1.5} />
                     <span>Написать в Telegram</span>
                   </button>
                 )}

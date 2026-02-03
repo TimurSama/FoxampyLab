@@ -326,13 +326,19 @@ export default function ResearchPage() {
                 {t('research.collaboration.description')}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
+                <a
+                  href="https://t.me/FoxampyLab_contact_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {t('research.collaboration.propose')}
-                </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 bg-engrave-fresco text-ink-deep font-mono text-sm tracking-widest"
+                  >
+                    {t('research.collaboration.propose')}
+                  </motion.button>
+                </a>
                 <Link href="/join">
                   <motion.button
                     whileHover={{ scale: 1.02 }}

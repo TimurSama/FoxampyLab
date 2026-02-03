@@ -149,6 +149,28 @@ export default function GalleryPage() {
           solution: t('cases.mailServices.solution'),
           visuals: t('cases.mailServices.visuals'),
           icon: <Cpu size={20} />
+        },
+        {
+          id: 'unicapinvest',
+          title: language === 'ru' ? 'UniCap Invest' : 'UniCap Invest',
+          category: language === 'ru' ? 'Брендинг и ESG проекты' : 'Branding & ESG Projects',
+          description: language === 'ru'
+            ? 'Работа над брендингом, альдентикой, проектным портфелем, инициализация и полная комплексная разработка ESG проектов и стартапов'
+            : 'Work on branding, identity, project portfolio, initialization and full comprehensive development of ESG projects and startups',
+          solution: '',
+          visuals: '',
+          icon: <Monitor size={20} />
+        },
+        {
+          id: 'done-co-il',
+          title: language === 'ru' ? 'Done.co.il' : 'Done.co.il',
+          category: language === 'ru' ? 'Брендинг и разработка' : 'Branding & Development',
+          description: language === 'ru'
+            ? 'Работа над брендингом, рекламными кампаниями, техническими видео, работа над разработкой приложения'
+            : 'Work on branding, advertising campaigns, technical videos, application development',
+          solution: '',
+          visuals: '',
+          icon: <Monitor size={20} />
         }
       ]
     },

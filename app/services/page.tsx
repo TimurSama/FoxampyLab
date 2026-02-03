@@ -526,10 +526,9 @@ export default function ServicesPage() {
                     href={TelegramService.getBotUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-3 bg-[#0088cc] hover:bg-[#006699] text-white font-mono text-sm tracking-widest transition-colors flex items-center justify-center gap-2"
+                    className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
                   >
-                    <MessageSquare size={16} />
-                    Telegram
+                    <MessageSquare size={16} className="text-white" strokeWidth={1.5} />
                   </a>
                 </div>
               </form>

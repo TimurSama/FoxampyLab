@@ -299,7 +299,7 @@ export default function ContactPage() {
                       rel="noopener noreferrer"
                       className="px-4 py-4 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
                     >
-                      <MessageCircle size={16} className="text-[#0088cc]" strokeWidth={1.5} />
+                      <MessageCircle size={16} className="text-white" strokeWidth={1.5} />
                     </a>
                   </div>
                 </form>
