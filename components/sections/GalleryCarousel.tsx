@@ -43,7 +43,7 @@ export default function GalleryCarousel() {
       category: t('cases.web3Bank.category'),
       description: t('cases.web3Bank.description'),
       solution: t('cases.web3Bank.solution'),
-      image: '/api/placeholder/800/400?text=Web3+Bank',
+      image: '/images/web3-bank-placeholder.jpg',
       technologies: ['Solidity', 'Web3.js', 'Everscale', 'Ethereum', 'Smart Contracts', 'Bridge Technology']
     },
     {
@@ -53,7 +53,7 @@ export default function GalleryCarousel() {
       category: t('cases.mailServices.category'),
       description: t('cases.mailServices.description'),
       solution: t('cases.mailServices.solution'),
-      image: '/api/placeholder/800/400?text=Mail+Services',
+      image: '/images/mail-services-placeholder.jpg',
       technologies: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'REST API']
     },
     {
@@ -65,7 +65,7 @@ export default function GalleryCarousel() {
         ? 'CGI 3D кино с динамичными эффектами, биоморфными формами и синтезом потоков'
         : 'CGI 3D cinema with dynamic effects, biomorphic forms and flow synthesis',
       videoSrc: '/media/need-for-speed-underground-2-remaster-2022.mp4',
-      previewImage: '/api/placeholder/800/400?text=CGI+3D+Cinema'
+      previewImage: '/images/cgi-cinema-placeholder.jpg'
     },
     {
       id: 'advertising-showreel',
@@ -76,7 +76,7 @@ export default function GalleryCarousel() {
         ? 'Рекламный шоурилс с биоморфным синтезом, динамичными переходами и современными эффектами'
         : 'Advertising showreel with biomorphic synthesis, dynamic transitions and modern effects',
       videoSrc: '/media/ryabov.mp4',
-      previewImage: '/api/placeholder/800/400?text=Advertising+Showreel'
+      previewImage: '/images/advertising-showreel-placeholder.jpg'
     }
   ], [t, language]);
 

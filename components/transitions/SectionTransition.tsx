@@ -18,6 +18,7 @@ export default function SectionTransition({
 }: SectionTransitionProps) {
   const [currentType, setCurrentType] = useState<'liquid' | 'mist' | 'blockchain'>('liquid');
   const [transitionIndex, setTransitionIndex] = useState(0);
+  const [hasBeenActive, setHasBeenActive] = useState(false);
 
   // Автоматическое переключение типов анимации
   useEffect(() => {
@@ -31,10 +32,13 @@ export default function SectionTransition({
 
   // Обновление индекса при смене секции
   useEffect(() => {
+    if (isActive && !hasBeenActive) {
+      setHasBeenActive(true);
+    }
     if (isActive) {
       setTransitionIndex(prev => prev + 1);
     }
-  }, [isActive]);
+  }, [isActive, hasBeenActive]);
 
   // Варианты анимации для разных типов
   const liquidVariants = {
@@ -136,18 +140,22 @@ export default function SectionTransition({
     }
   };
 
+  // Для первой загрузки активной секции используем мгновенное появление
+  const isInitialActive = !hasBeenActive && isActive;
+  
   return (
     <motion.div
       key={`section-${transitionIndex}`}
-      initial={isActive ? "visible" : "hidden"}
+      initial={isInitialActive ? "visible" : (isActive ? "visible" : "hidden")}
       animate={isActive ? "visible" : "hidden"}
       variants={getVariants()}
-      transition={getTransition()}
-      className={`w-full h-full ${isActive ? 'z-20' : 'z-0 pointer-events-none'}`}
+      transition={isInitialActive ? { duration: 0 } : getTransition()}
+      className={`w-full h-full ${isActive ? 'z-20' : 'z-0'}`}
       style={{ 
         willChange: 'opacity, transform, filter, clip-path',
         position: 'fixed',
         inset: 0,
+        pointerEvents: isActive ? 'auto' : 'none',
         visibility: isActive ? 'visible' : 'hidden'
       }}
     >

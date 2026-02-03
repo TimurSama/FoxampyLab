@@ -331,18 +331,20 @@ export default function Home() {
     },
   ], [t, language, servicesData, cases]);
 
-  // Общее количество секций (hero + sections)
-  const totalSections = 1 + sections.length; // hero + solutions + cases + hub
+  // Общее количество секций (hero + sections) - вычисляется после sections
+  const totalSections = useMemo(() => 1 + sections.length, [sections]); // hero + solutions + about + cases + hub
 
   // Функция переключения секций
   const scrollToSection = useCallback((index: number, direction: 'up' | 'down' = 'down') => {
-    if (isTransitioning || index < 0 || index >= totalSections) return;
+    if (isTransitioning || index < 0 || index >= totalSections) {
+      return;
+    }
     
-    // Проверка внутреннего скролла
+    // Проверка внутреннего скролла (только если секция действительно имеет переполнение)
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
       const { scrollTop, scrollHeight, clientHeight } = currentSection;
-      const isAtTop = scrollTop === 0;
+      const isAtTop = scrollTop <= 5; // 5px tolerance
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
       
       // Если скроллим вниз, но не достигли низа секции - скроллим внутри секции
