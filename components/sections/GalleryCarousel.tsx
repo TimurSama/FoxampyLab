@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useI18n } from '@/lib/i18n/context';
+import { useRouter } from 'next/navigation';
 
 export default function GalleryCarousel() {
   const { t, language } = useI18n();
+  const router = useRouter();
   
   // Реальные данные из галереи с фото и видео с переводами
   const carouselItems = useMemo(() => [
@@ -57,6 +59,28 @@ export default function GalleryCarousel() {
       technologies: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'REST API']
     },
     {
+      id: 'unicapinvest',
+      type: 'project',
+      title: language === 'ru' ? 'UniCap Invest' : 'UniCap Invest',
+      category: language === 'ru' ? 'Брендинг и ESG проекты' : 'Branding & ESG Projects',
+      description: language === 'ru'
+        ? 'Работа над брендингом, альдентикой, проектным портфелем, инициализация и полная комплексная разработка ESG проектов и стартапов'
+        : 'Work on branding, identity, project portfolio, initialization and full comprehensive development of ESG projects and startups',
+      image: '/images/unicapinvest-placeholder.jpg',
+      technologies: ['Branding', 'ESG', 'Startups', 'Portfolio Development']
+    },
+    {
+      id: 'done-co-il',
+      type: 'project',
+      title: language === 'ru' ? 'Done.co.il' : 'Done.co.il',
+      category: language === 'ru' ? 'Брендинг и разработка' : 'Branding & Development',
+      description: language === 'ru'
+        ? 'Работа над брендингом, рекламными кампаниями, техническими видео, работа над разработкой приложения'
+        : 'Work on branding, advertising campaigns, technical videos, application development',
+      image: '/images/done-co-il-placeholder.jpg',
+      technologies: ['Branding', 'Advertising', 'Video Production', 'App Development']
+    },
+    {
       id: 'cgi-cinema',
       type: 'video',
       title: language === 'ru' ? 'CGI 3D кино' : 'CGI 3D Cinema',
@@ -82,26 +106,45 @@ export default function GalleryCarousel() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
+    setPlayingVideo(null);
   }, [carouselItems.length]);
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % carouselItems.length);
+    setPlayingVideo(null);
   }, [carouselItems.length]);
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || playingVideo) return;
 
     const interval = setInterval(() => {
       goToNext();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [goToNext, isPaused]);
+  }, [goToNext, isPaused, playingVideo]);
 
   const currentItem = carouselItems[currentIndex];
+
+  const handleItemClick = useCallback(() => {
+    // Определяем тип элемента и открываем галерею
+    if (currentItem.type === 'photo' || currentItem.type === 'design') {
+      router.push(`/gallery#${currentItem.id}`);
+    } else if (currentItem.type === 'project') {
+      router.push(`/gallery#${currentItem.id}`);
+    } else if (currentItem.type === 'video') {
+      router.push(`/gallery#${currentItem.id}`);
+    }
+  }, [currentItem, router]);
+
+  const handleVideoPlay = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setPlayingVideo(currentItem.id);
+  }, [currentItem.id]);
 
   return (
     <motion.div
@@ -114,33 +157,19 @@ export default function GalleryCarousel() {
     >
       {/* Основная карусель */}
       <div className="relative group">
-        <div className="relative aspect-video md:aspect-[16/9] overflow-hidden rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm">
-
-          {/* Коллаж фото для Fashion */}
-          {currentItem.type === 'photo' && currentItem.images && (
+        {/* Фиксированный размер экрана предпоказа */}
+        <div 
+          className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm cursor-pointer"
+          onClick={handleItemClick}
+        >
+          {/* Коллаж фото для Fashion и Architecture */}
+          {(currentItem.type === 'photo' || currentItem.type === 'design') && currentItem.images && (
             <div className="grid grid-cols-2 gap-1 p-2 h-full">
               {currentItem.images.map((image, index) => (
                 <motion.img
                   key={index}
                   src={image}
-                  alt={`Fashion ${index + 1}`}
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="w-full h-full object-cover"
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Коллаж фото для Architecture */}
-          {currentItem.type === 'design' && currentItem.images && (
-            <div className="grid grid-cols-2 gap-1 p-2 h-full">
-              {currentItem.images.map((image, index) => (
-                <motion.img
-                  key={index}
-                  src={image}
-                  alt={`Architecture ${index + 1}`}
+                  alt={`${currentItem.title} ${index + 1}`}
                   initial={{ opacity: 0, scale: 1.1 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
@@ -160,96 +189,26 @@ export default function GalleryCarousel() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-between">
+              <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-between bg-black/40">
                 <div>
-                  <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-4 uppercase relative" style={{ 
-                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.15em 0.3em',
-                      margin: '-0.15em -0.3em',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '3px',
-                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
-                    }}>
-                      ─── {language === 'ru' ? 'Проект' : 'Project'} ───
-                    </span>
+                  <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-4 uppercase">
+                    ─── {language === 'ru' ? 'Проект' : 'Project'} ───
                   </div>
-                  <h3 className="font-mono text-xl md:text-3xl text-[#E0E0E0] mb-4 uppercase tracking-tighter relative" style={{ 
-                    textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
-                    filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.1em 0.2em',
-                      margin: '-0.1em -0.2em',
-                      background: 'rgba(0, 0, 0, 0.4)',
-                      backdropFilter: 'blur(20px)',
-                      borderRadius: '4px',
-                      boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
-                    }}>
-                      {currentItem.title}
-                    </span>
+                  <h3 className="font-mono text-xl md:text-3xl text-[#E0E0E0] mb-4 uppercase tracking-tighter">
+                    {currentItem.title}
                   </h3>
-                  <div className="font-mono text-xs text-[#E0E0E0]/60 mb-6 uppercase tracking-widest relative" style={{ 
-                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.1em 0.2em',
-                      margin: '-0.1em -0.2em',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '3px',
-                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
-                    }}>
-                      {currentItem.category}
-                    </span>
+                  <div className="font-mono text-xs text-[#E0E0E0]/60 mb-6 uppercase tracking-widest">
+                    {currentItem.category}
                   </div>
                 </div>
                 <div>
-                  <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/80 leading-relaxed mb-4 relative" style={{ 
-                    textShadow: '0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 0, 0, 0.85), 0 3px 10px rgba(0, 0, 0, 0.75)',
-                    filter: 'drop-shadow(0 0 25px rgba(0, 0, 0, 0.85))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.15em 0.25em',
-                      margin: '-0.15em -0.25em',
-                      background: 'rgba(0, 0, 0, 0.35)',
-                      backdropFilter: 'blur(15px)',
-                      borderRadius: '4px',
-                      boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.4)'
-                    }}>
-                      {currentItem.description}
-                    </span>
+                  <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/80 leading-relaxed mb-4">
+                    {currentItem.description}
                   </p>
                   {currentItem.solution && (
-                    <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-6 relative" style={{ 
-                      textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
-                      filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
-                    }}>
-                      <span style={{ 
-                        position: 'relative',
-                        display: 'inline-block',
-                        padding: '0.1em 0.2em',
-                        margin: '-0.1em -0.2em',
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        backdropFilter: 'blur(12px)',
-                        borderRadius: '3px',
-                        boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
-                      }}>
-                        <span className="font-semibold">{language === 'ru' ? 'Решение: ' : 'Solution: '}</span>
-                        {currentItem.solution}
-                      </span>
+                    <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-6">
+                      <span className="font-semibold">{language === 'ru' ? 'Решение: ' : 'Solution: '}</span>
+                      {currentItem.solution}
                     </p>
                   )}
                   {currentItem.technologies && (
@@ -258,7 +217,6 @@ export default function GalleryCarousel() {
                         <span
                           key={i}
                           className="font-mono text-[9px] text-[#E0E0E0]/60 border border-white/10 px-3 py-1.5 uppercase tracking-widest"
-                          style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.7)' }}
                         >
                           {tech}
                         </span>
@@ -270,125 +228,86 @@ export default function GalleryCarousel() {
             </div>
           )}
 
-          {/* Видео карточка */}
+          {/* Видео карточка с обложкой и кнопкой плей */}
           {currentItem.type === 'video' && (
             <div className="relative h-full">
-              <img
-                src={currentItem.previewImage}
-                alt={currentItem.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/20 flex items-center justify-center p-8">
-                <div className="text-center text-white max-w-2xl">
-                  <div className="font-mono text-[10px] tracking-[0.4em] mb-4 text-white/40 uppercase relative" style={{ 
-                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.15em 0.3em',
-                      margin: '-0.15em -0.3em',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '3px',
-                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
-                    }}>
+              {playingVideo === currentItem.id ? (
+                <video
+                  src={currentItem.videoSrc}
+                  autoPlay
+                  controls
+                  className="w-full h-full object-cover"
+                  onEnded={() => setPlayingVideo(null)}
+                />
+              ) : (
+                <>
+                  <img
+                    src={currentItem.previewImage}
+                    alt={currentItem.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <button
+                      onClick={handleVideoPlay}
+                      className="w-20 h-20 md:w-24 md:h-24 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-all hover:scale-110"
+                    >
+                      <Play size={32} className="text-white ml-1" fill="white" />
+                    </button>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/80 to-transparent">
+                    <div className="font-mono text-[10px] tracking-[0.4em] mb-2 text-white/40 uppercase">
                       ─── {language === 'ru' ? 'Видео' : 'Video'} ───
-                    </span>
-                  </div>
-                  <h3 className="font-mono text-2xl md:text-4xl mb-4 uppercase tracking-tighter relative" style={{ 
-                    textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
-                    filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.1em 0.2em',
-                      margin: '-0.1em -0.2em',
-                      background: 'rgba(0, 0, 0, 0.4)',
-                      backdropFilter: 'blur(20px)',
-                      borderRadius: '4px',
-                      boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
-                    }}>
+                    </div>
+                    <h3 className="font-mono text-xl md:text-3xl mb-2 uppercase tracking-tighter text-white">
                       {currentItem.title}
-                    </span>
-                  </h3>
-                  <div className="font-mono text-xs mb-6 text-white/60 uppercase tracking-widest relative" style={{ 
-                    textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.1em 0.2em',
-                      margin: '-0.1em -0.2em',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '3px',
-                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
-                    }}>
+                    </h3>
+                    <div className="font-mono text-xs mb-2 text-white/60 uppercase tracking-widest">
                       {currentItem.category}
-                    </span>
-                  </div>
-                  <p className="font-mono text-xs md:text-sm max-w-md mx-auto leading-relaxed text-white/80 relative" style={{ 
-                    textShadow: '0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 0, 0, 0.85), 0 3px 10px rgba(0, 0, 0, 0.75)',
-                    filter: 'drop-shadow(0 0 25px rgba(0, 0, 0, 0.85))'
-                  }}>
-                    <span style={{ 
-                      position: 'relative',
-                      display: 'inline-block',
-                      padding: '0.15em 0.25em',
-                      margin: '-0.15em -0.25em',
-                      background: 'rgba(0, 0, 0, 0.35)',
-                      backdropFilter: 'blur(15px)',
-                      borderRadius: '4px',
-                      boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.4)'
-                    }}>
+                    </div>
+                    <p className="font-mono text-xs md:text-sm max-w-md leading-relaxed text-white/80">
                       {currentItem.description}
-                    </span>
-                  </p>
-                </div>
-              </div>
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
-          {/* Кнопки навигации */}
+          {/* Кнопки навигации - всегда видимы, фиксированное положение */}
           <button
-            onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-4 bg-black/20 border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10 backdrop-blur-md rounded-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              goToPrevious();
+            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/60 border border-white/20 text-white hover:bg-white/20 transition-all backdrop-blur-md rounded-full z-10"
           >
             <ChevronLeft size={20} />
           </button>
           <button
-            onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-black/20 border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10 backdrop-blur-md rounded-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              goToNext();
+            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/60 border border-white/20 text-white hover:bg-white/20 transition-all backdrop-blur-md rounded-full z-10"
           >
             <ChevronRight size={20} />
           </button>
         </div>
 
         {/* Индикаторы */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {carouselItems.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrentIndex(i)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex(i);
+                setPlayingVideo(null);
+              }}
               className={`h-1 transition-all duration-300 ${i === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/20'}`}
             />
           ))}
         </div>
-      </div>
-
-      {/* Кнопка перехода в галерею */}
-      <div className="flex justify-center mt-12">
-        <a
-          href="/gallery"
-          className="inline-flex items-center gap-4 px-10 py-5 bg-[#E0E0E0] text-[#050505] font-mono text-sm tracking-[0.3em] uppercase hover:bg-white transition-all transform hover:scale-105 active:scale-95"
-        >
-          {t('home.gallery.cta')}
-          <ChevronRight size={18} />
-        </a>
       </div>
     </motion.div>
   );

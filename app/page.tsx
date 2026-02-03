@@ -313,6 +313,13 @@ export default function Home() {
       ],
     },
     {
+      id: 'services',
+      title: t('home.solutions.title'),
+      subtitle: t('home.solutions.subtitle'),
+      description: t('home.solutions.description'),
+      services: servicesData,
+    },
+    {
       id: 'cases',
       title: t('home.gallery.title'),
       subtitle: t('home.gallery.subtitle'),
@@ -336,27 +343,21 @@ export default function Home() {
 
   // Функция переключения секций
   const scrollToSection = useCallback((index: number, direction: 'up' | 'down' = 'down') => {
-    console.log('scrollToSection called:', { index, direction, currentSectionIndex, totalSections, isTransitioning });
-    
     // Проверяем границы
     if (index < 0 || index >= totalSections) {
-      console.log('scrollToSection: index out of bounds');
       return;
     }
     
     // Если уже переключаемся, игнорируем новый запрос
     if (isTransitioning) {
-      console.log('scrollToSection: already transitioning');
       return;
     }
     
     // Если индекс не изменился, ничего не делаем
     if (index === currentSectionIndex) {
-      console.log('scrollToSection: same index');
       return;
     }
     
-    // Временно отключаем проверку внутреннего скролла для отладки
     // Проверка внутреннего скролла (только если секция действительно имеет переполнение)
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
@@ -364,36 +365,23 @@ export default function Home() {
       // Проверяем, есть ли реальное переполнение (больше чем 50px)
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
-      console.log('scrollToSection: scroll check', { 
-        scrollHeight, 
-        clientHeight, 
-        hasRealScroll, 
-        scrollTop,
-        direction 
-      });
-      
       if (hasRealScroll) {
         const isAtTop = scrollTop <= 10; // 10px tolerance
         const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
         
-        console.log('scrollToSection: scroll state', { isAtTop, isAtBottom });
-        
         // Если скроллим вниз, но не достигли низа секции - скроллим внутри секции
         if (direction === 'down' && !isAtBottom) {
-          console.log('scrollToSection: scrolling inside section DOWN');
           currentSection.scrollTop = scrollHeight;
           return;
         }
         // Если скроллим вверх, но не достигли верха секции - скроллим внутри секции
         if (direction === 'up' && !isAtTop) {
-          console.log('scrollToSection: scrolling inside section UP');
           currentSection.scrollTop = 0;
           return;
         }
       }
     }
 
-    console.log('scrollToSection: setting new index to', index);
     setIsTransitioning(true);
     setTransitionDirection(direction);
     setCurrentSectionIndex(index);
@@ -408,7 +396,6 @@ export default function Home() {
 
     // Сброс состояния перехода после анимации
     setTimeout(() => {
-      console.log('scrollToSection: transition complete, resetting isTransitioning');
       setIsTransitioning(false);
     }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
   }, [isTransitioning, totalSections, currentSectionIndex, sections, sectionRefs]);
@@ -426,21 +413,9 @@ export default function Home() {
 
     const direction = e.deltaY > 0 ? 'down' : 'up';
     
-    // Отладка
-    console.log('handleWheel:', { 
-      direction, 
-      currentSectionIndex, 
-      totalSections, 
-      isTransitioning,
-      canGoDown: currentSectionIndex < totalSections - 1,
-      canGoUp: currentSectionIndex > 0
-    });
-    
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
-      console.log('Calling scrollToSection DOWN to:', currentSectionIndex + 1);
       scrollToSection(currentSectionIndex + 1, 'down');
     } else if (direction === 'up' && currentSectionIndex > 0) {
-      console.log('Calling scrollToSection UP to:', currentSectionIndex - 1);
       scrollToSection(currentSectionIndex - 1, 'up');
     }
   }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning]);
@@ -558,9 +533,9 @@ export default function Home() {
       >
         <section
           ref={(el) => { sectionRefs.current[0] = el; }}
-          className="w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto"
+          className="w-full h-screen grid md:grid-cols-2 items-center gap-4 md:gap-8 overflow-y-auto pt-20 md:pt-24"
         >
-        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-16 pb-4 md:pt-24 md:pb-8 w-full md:col-span-1">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-4 md:pb-8 w-full md:col-span-1">
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, y: 0 }}
@@ -698,10 +673,10 @@ export default function Home() {
             ref={(el) => { sectionRefs.current[sectionIndex] = el; }}
             data-scroll-id={`section-${section.id}`}
             className={`w-full h-screen flex items-center justify-center overflow-y-auto ${
-              section.id === 'cases' ? 'pt-16 md:pt-32' : ''
+              section.id === 'cases' ? 'pt-20 md:pt-32' : 'pt-20 md:pt-24'
             }`}
           >
-          <div className="max-w-4xl mx-auto px-3 sm:px-4 text-center py-4 sm:py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center py-8 sm:py-12 md:py-16">
             <motion.div 
               className={`inline-block p-2 sm:p-4 md:p-6 ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
               data-scroll-id={`section-${section.id}-content`}
@@ -828,8 +803,8 @@ export default function Home() {
               )}
             </motion.div>
 
-            {section.id === 'solutions' && section.services && (
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+            {(section.id === 'solutions' || section.id === 'services') && section.services && (
+              <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4">
                 {section.services.map((service, idx) => {
                   const cardVisible = visibleElements.has(`solution-card-${service.id}`);
                   return (
