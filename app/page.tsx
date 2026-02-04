@@ -48,6 +48,7 @@ export default function Home() {
   const lastScrollTime = useRef<number>(0);
   const SCROLL_THROTTLE = 800; // Защита от быстрого пролистывания
   const edgeArmedRef = useRef<{ sectionIndex: number; direction: 'up' | 'down'; ts: number } | null>(null);
+  const isScrollingInsideRef = useRef<boolean>(false);
 
   // Генерация доступных дат (следующие 30 дней)
   const availableDates = useMemo(() => {
@@ -421,13 +422,17 @@ export default function Home() {
 
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
-    // Проверяем внутренний скролл перед переключением секции
+    e.preventDefault();
+    const now = Date.now();
+    const direction = e.deltaY > 0 ? 'down' : 'up';
+    
+    // Проверяем, есть ли внутренний скролл в текущей секции
     const currentSection = sectionRefs.current[currentSectionIndex];
+    let scrollableContainer: HTMLElement | null = null;
+    
     if (currentSection) {
-      // Ищем контейнер с overflow внутри секции
-      let scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
+      scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
       if (!scrollableContainer) {
-        // Ищем div с overflowY в стиле
         const allDivs = currentSection.querySelectorAll('div');
         for (const div of Array.from(allDivs)) {
           const style = window.getComputedStyle(div);
@@ -437,59 +442,65 @@ export default function Home() {
           }
         }
       }
-      const containerToCheck = scrollableContainer || currentSection;
-      
+    }
+    
+    const containerToCheck = scrollableContainer || currentSection;
+    
+    // Если есть внутренний скролл, проверяем позицию
+    if (containerToCheck) {
       const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
       if (hasRealScroll) {
         const isAtTop = scrollTop <= 10;
         const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-        const direction = e.deltaY > 0 ? 'down' : 'up';
         
-        // Если есть внутренний скролл и мы не на границе - скроллим внутри (свободно)
-        if (direction === 'down' && !isAtBottom) {
-          e.preventDefault();
-          containerToCheck.scrollTop += e.deltaY;
+        // Если мы внутри секции (не на границе) - прокручиваем внутри
+        if (!isAtTop && !isAtBottom) {
+          isScrollingInsideRef.current = true;
           edgeArmedRef.current = null;
+          containerToCheck.scrollTop += e.deltaY;
           return;
         }
-        if (direction === 'up' && !isAtTop) {
-          e.preventDefault();
-          containerToCheck.scrollTop += e.deltaY;
-          edgeArmedRef.current = null;
-          return;
-        }
-
-        // Мы на границе: первый скролл "армирует" переход, следующий — переключает секцию
+        
+        // Если мы на границе секции
         if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
-          const now = Date.now();
           const armed = edgeArmedRef.current;
-          const isSame =
-            armed &&
+          const isArmed = armed &&
             armed.sectionIndex === currentSectionIndex &&
             armed.direction === direction &&
             now - armed.ts < 1200;
-
-          // Первый скролл на границе — просто стопаемся (без переключения)
-          if (!isSame) {
-            e.preventDefault();
+          
+          // Первый скролл на границе - только "вооружаем", не переключаем
+          if (!isArmed) {
             edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
+            isScrollingInsideRef.current = false;
             return;
           }
-          // Второй скролл — разрешаем переключение ниже
+          
+          // Второй скролл на границе - переключаем секцию
+          if (isArmed) {
+            if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+            lastScrollTime.current = now;
+            edgeArmedRef.current = null;
+            isScrollingInsideRef.current = false;
+            
+            if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+              scrollToSection(currentSectionIndex + 1, 'down');
+            } else if (direction === 'up' && currentSectionIndex > 0) {
+              scrollToSection(currentSectionIndex - 1, 'up');
+            }
+            return;
+          }
         }
       }
     }
-
-    // Если внутреннего скролла нет/на границе — переключаем секцию
-    const now = Date.now();
+    
+    // Если нет внутреннего скролла или мы не на границе - переключаем секцию
     if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
     lastScrollTime.current = now;
-
-    e.preventDefault();
-    const direction = e.deltaY > 0 ? 'down' : 'up';
     edgeArmedRef.current = null;
+    isScrollingInsideRef.current = false;
     
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
       scrollToSection(currentSectionIndex + 1, 'down');
