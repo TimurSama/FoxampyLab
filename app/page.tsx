@@ -428,25 +428,34 @@ export default function Home() {
     
     // Проверяем, есть ли внутренний скролл в текущей секции
     const currentSection = sectionRefs.current[currentSectionIndex];
-    let scrollableContainer: HTMLElement | null = null;
+    if (!currentSection) {
+      // Если секция не найдена, просто переключаем
+      if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+      lastScrollTime.current = now;
+      if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+        scrollToSection(currentSectionIndex + 1, 'down');
+      } else if (direction === 'up' && currentSectionIndex > 0) {
+        scrollToSection(currentSectionIndex - 1, 'up');
+      }
+      return;
+    }
     
-    if (currentSection) {
-      scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
-      if (!scrollableContainer) {
-        const allDivs = currentSection.querySelectorAll('div');
-        for (const div of Array.from(allDivs)) {
-          const style = window.getComputedStyle(div);
-          if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
-            scrollableContainer = div as HTMLElement;
-            break;
-          }
+    let scrollableContainer: HTMLElement | null = null;
+    scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
+    if (!scrollableContainer) {
+      const allDivs = currentSection.querySelectorAll('div');
+      for (const div of Array.from(allDivs)) {
+        const style = window.getComputedStyle(div);
+        if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+          scrollableContainer = div as HTMLElement;
+          break;
         }
       }
     }
     
     const containerToCheck = scrollableContainer || currentSection;
     
-    // Если есть внутренний скролл, проверяем позицию
+    // Проверяем, есть ли реальный внутренний скролл
     if (containerToCheck) {
       const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
       const hasRealScroll = scrollHeight > clientHeight + 50;
@@ -497,6 +506,12 @@ export default function Home() {
     }
     
     // Если нет внутреннего скролла или мы не на границе - переключаем секцию
+    // Сбрасываем armed состояние при смене направления или секции
+    const armed = edgeArmedRef.current;
+    if (armed && (armed.sectionIndex !== currentSectionIndex || armed.direction !== direction)) {
+      edgeArmedRef.current = null;
+    }
+    
     if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
     lastScrollTime.current = now;
     edgeArmedRef.current = null;
