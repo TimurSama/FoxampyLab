@@ -1027,7 +1027,7 @@ export default function Home() {
 
             {section.id === 'cases' && (
               <motion.div 
-                className="mt-16 w-full"
+                className="mt-8 w-full"
                 data-scroll-id={`section-${section.id}-gallery`}
                 initial={{ 
                   opacity: 0, 
