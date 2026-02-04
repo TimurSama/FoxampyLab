@@ -46,7 +46,7 @@ export default function Home() {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
-  const SCROLL_THROTTLE = 800; // Защита от быстрого пролистывания
+  const SCROLL_THROTTLE = 1000; // Защита от быстрого пролистывания
   const edgeArmedRef = useRef<{ sectionIndex: number; direction: 'up' | 'down'; ts: number } | null>(null);
   const isScrollingInsideRef = useRef<boolean>(false);
 
