@@ -360,8 +360,19 @@ export default function Home() {
     // Проверка внутреннего скролла контейнера секции
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
-      // Ищем контейнер с overflow внутри секции
-      const scrollableContainer = currentSection.querySelector('[style*="overflowY"]') as HTMLElement;
+      // Ищем контейнер с overflow внутри секции - ищем по data-атрибуту или по классу
+      let scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
+      if (!scrollableContainer) {
+        // Ищем div с overflowY в стиле
+        const allDivs = currentSection.querySelectorAll('div');
+        for (const div of Array.from(allDivs)) {
+          const style = window.getComputedStyle(div);
+          if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+            scrollableContainer = div as HTMLElement;
+            break;
+          }
+        }
+      }
       const containerToCheck = scrollableContainer || currentSection;
       
       const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
@@ -417,7 +428,19 @@ export default function Home() {
     // Проверяем внутренний скролл перед переключением секции
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
-      const scrollableContainer = currentSection.querySelector('[style*="overflowY"]') as HTMLElement;
+      // Ищем контейнер с overflow внутри секции
+      let scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
+      if (!scrollableContainer) {
+        // Ищем div с overflowY в стиле
+        const allDivs = currentSection.querySelectorAll('div');
+        for (const div of Array.from(allDivs)) {
+          const style = window.getComputedStyle(div);
+          if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+            scrollableContainer = div as HTMLElement;
+            break;
+          }
+        }
+      }
       const containerToCheck = scrollableContainer || currentSection;
       
       const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
@@ -722,6 +745,7 @@ export default function Home() {
             className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
               section.id === 'cases' ? 'max-w-4xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
             }`} 
+            data-scroll-container={section.id === 'about' ? 'true' : undefined}
             style={{ 
               maxHeight: 'calc(100vh - 140px)', 
               overflowY: section.id === 'about' ? 'auto' : 'auto', 
@@ -756,57 +780,86 @@ export default function Home() {
                 }}
                 style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
               >
-              <motion.div 
-                className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6 relative"
-                initial={{ opacity: 0, scale: 0.95, y: 0 }}
-                animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                style={{ 
-                  textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
-                  filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))',
-                  willChange: 'opacity, transform'
-                }}
-              >
-                <span style={{ 
-                  position: 'relative',
-                  display: 'inline-block',
-                  padding: '0.15em 0.3em',
-                  margin: '-0.15em -0.3em',
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  backdropFilter: 'blur(12px)',
-                  borderRadius: '3px',
-                  boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
-                }}>
-                  ─── {section.title} ───
-                </span>
-              </motion.div>
+              {section.id === 'cases' ? (
+                <motion.h1 
+                  className="text-4xl md:text-6xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-8 md:mb-12 relative"
+                  initial={{ opacity: 0, scale: 0.95, y: 0 }}
+                  animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ 
+                    textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
+                    filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))',
+                    willChange: 'opacity, transform'
+                  }}
+                >
+                  <span style={{ 
+                    position: 'relative',
+                    display: 'inline-block',
+                    padding: '0.1em 0.2em',
+                    margin: '-0.1em -0.2em',
+                    background: 'rgba(0, 0, 0, 0.4)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '4px',
+                    boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
+                  }}>
+                    {section.subtitle}
+                  </span>
+                </motion.h1>
+              ) : (
+                <>
+                  <motion.div 
+                    className="font-mono text-[10px] text-[#E0E0E0] tracking-[0.5em] mb-6 relative"
+                    initial={{ opacity: 0, scale: 0.95, y: 0 }}
+                    animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
+                    transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ 
+                      textShadow: '0 0 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.8)',
+                      filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.8))',
+                      willChange: 'opacity, transform'
+                    }}
+                  >
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.15em 0.3em',
+                      margin: '-0.15em -0.3em',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      borderRadius: '3px',
+                      boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
+                    }}>
+                      ─── {section.title} ───
+                    </span>
+                  </motion.div>
 
-              <motion.h1 
-                className="text-2xl md:text-4xl lg:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6 relative"
-                initial={{ opacity: 0, scale: 0.95, y: 0 }}
-                animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                style={{ 
-                  textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
-                  filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))',
-                  willChange: 'opacity, transform'
-                }}
-              >
-                <span style={{ 
-                  position: 'relative',
-                  display: 'inline-block',
-                  padding: '0.1em 0.2em',
-                  margin: '-0.1em -0.2em',
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '4px',
-                  boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
-                }}>
-                  {section.subtitle}
-                </span>
-              </motion.h1>
+                  <motion.h1 
+                    className="text-2xl md:text-4xl lg:text-6xl font-mono font-light tracking-tight text-[#E0E0E0] mb-4 md:mb-6 relative"
+                    initial={{ opacity: 0, scale: 0.95, y: 0 }}
+                    animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ 
+                      textShadow: '0 0 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
+                      filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.9))',
+                      willChange: 'opacity, transform'
+                    }}
+                  >
+                    <span style={{ 
+                      position: 'relative',
+                      display: 'inline-block',
+                      padding: '0.1em 0.2em',
+                      margin: '-0.1em -0.2em',
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '4px',
+                      boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
+                    }}>
+                      {section.subtitle}
+                    </span>
+                  </motion.h1>
+                </>
+              )}
 
-              {section.description && (
+              {section.description && section.id !== 'cases' && (
                 <motion.p 
                   className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed px-4 relative"
                   initial={{ opacity: 0, scale: 0.95, y: 0 }}

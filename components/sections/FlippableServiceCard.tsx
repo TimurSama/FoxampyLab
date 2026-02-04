@@ -57,20 +57,21 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                      transition-all duration-500 cursor-pointer p-6 md:p-8 flex flex-col justify-center rounded-sm"
                     style={{ 
                         backfaceVisibility: 'hidden',
-                        background: 'rgba(10, 10, 10, 0.6)',
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(224, 224, 224, 0.1)'
+                        background: 'rgba(5, 5, 5, 0.85)',
+                        backdropFilter: 'blur(16px)',
+                        WebkitBackdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(224, 224, 224, 0.3)',
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                     }}
                     onClick={() => setIsFlipped(true)}
                 >
                     <div className="space-y-6">
-                        <h3 className="font-mono text-2xl text-[#FFFFFF] tracking-tighter leading-tight uppercase group-hover:tracking-normal transition-all duration-500">
+                        <h3 className="font-mono text-2xl text-[#FFFFFF] tracking-tighter leading-tight uppercase group-hover:tracking-normal transition-all duration-500" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)' }}>
                             {service.title}
                         </h3>
 
                         <div className="space-y-4">
-                            <p className="font-mono text-[11px] text-[#E0E0E0]/80 uppercase tracking-[0.2em]">
+                            <p className="font-mono text-[11px] text-[#E0E0E0] uppercase tracking-[0.2em]" style={{ textShadow: '0 1px 5px rgba(0, 0, 0, 0.7)' }}>
                                 {service.subtitle}
                             </p>
 
@@ -81,10 +82,11 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                             />
 
                             <motion.p 
-                                className="font-mono text-xs text-[#E0E0E0]/90 leading-relaxed uppercase tracking-widest"
+                                className="font-mono text-xs text-[#E0E0E0] leading-relaxed uppercase tracking-widest"
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                                 transition={{ duration: 0.5, delay: 0.4 }}
+                                style={{ textShadow: '0 1px 5px rgba(0, 0, 0, 0.7)' }}
                             >
                                 {thesis}
                             </motion.p>
@@ -107,10 +109,11 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                     style={{
                         backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
-                        background: 'rgba(10, 10, 10, 0.6)',
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(224, 224, 224, 0.1)'
+                        background: 'rgba(5, 5, 5, 0.85)',
+                        backdropFilter: 'blur(16px)',
+                        WebkitBackdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(224, 224, 224, 0.3)',
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                     }}
                     onClick={() => setIsFlipped(false)}
                 >
