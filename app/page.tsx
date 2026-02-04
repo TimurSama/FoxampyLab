@@ -927,7 +927,7 @@ export default function Home() {
             </motion.div>
 
             {section.id === 'services-cards' && section.services && (
-              <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
+              <div className="mt-2 md:mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
                   const cardVisible = currentSectionIndex === sectionIndex;
