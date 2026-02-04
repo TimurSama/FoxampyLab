@@ -262,13 +262,32 @@ export default function ServicesPage() {
                 ─── УСЛУГИ ───
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-mono text-[#E0E0E0] tracking-tight mb-6">
+              <h1 className="text-4xl md:text-6xl font-mono text-[#E0E0E0] tracking-tight mb-6" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 4px 40px rgba(0,0,0,0.6)' }}>
                 Комплексные решения для вашего бизнеса
               </h1>
 
-              <p className="font-mono text-sm text-[#E0E0E0]/80 max-w-2xl mx-auto leading-relaxed">
+              <p className="font-mono text-sm text-[#E0E0E0]/80 max-w-2xl mx-auto leading-relaxed" style={{ textShadow: '0 1px 10px rgba(0,0,0,0.7)' }}>
                 От стратегии до реализации — создаем цифровые продукты, которые работают и приносят результат
               </p>
+
+              {/* Кнопка заказа */}
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a
+                  href="https://t.me/FoxampyLab_contact_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-white text-black font-mono text-sm tracking-widest uppercase hover:bg-[#E0E0E0] transition-all flex items-center gap-3"
+                >
+                  <Send size={18} />
+                  Заказать проект
+                </a>
+                <button
+                  onClick={() => document.getElementById('services-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="px-8 py-4 border border-white/30 text-white font-mono text-sm tracking-widest uppercase hover:bg-white/10 transition-all"
+                >
+                  Выбрать услуги
+                </button>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -284,7 +303,7 @@ export default function ServicesPage() {
               <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em] mb-4">
                 ─── ПРЕИМУЩЕСТВА ───
               </div>
-              <h2 className="text-2xl md:text-3xl font-mono text-[#E0E0E0] tracking-tight mb-4">
+              <h2 className="text-2xl md:text-3xl font-mono text-[#E0E0E0] tracking-tight mb-4" style={{ textShadow: '0 2px 15px rgba(0,0,0,0.7)' }}>
                 Почему выбирают нас
               </h2>
             </motion.div>
@@ -320,8 +339,11 @@ export default function ServicesPage() {
               </div>
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                  <h3 className="font-mono text-xl text-[#E0E0E0] mb-2">
-                    🎁 Скидка 15% при комплексном заказе
+                  <h3 className="font-mono text-xl text-[#E0E0E0] mb-2 flex items-center gap-3" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.6)' }}>
+                    <span className="inline-flex items-center justify-center w-8 h-8 border border-white/30">
+                      <Star size={18} className="text-white" />
+                    </span>
+                    Скидка 15% при комплексном заказе
                   </h3>
                   <p className="font-mono text-sm text-[#E0E0E0]/70">
                     Закажите 3+ услуги и получите скидку на весь проект + бесплатную консультацию
@@ -345,7 +367,7 @@ export default function ServicesPage() {
                 <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em] mb-4">
                   ─── ПРОЦЕСС РАБОТЫ ───
                 </div>
-                <h2 className="text-xl md:text-2xl font-mono text-[#E0E0E0] tracking-tight">
+                <h2 className="text-xl md:text-2xl font-mono text-[#E0E0E0] tracking-tight" style={{ textShadow: '0 2px 15px rgba(0,0,0,0.7)' }}>
                   От идеи до результата
                 </h2>
               </div>
@@ -390,7 +412,7 @@ export default function ServicesPage() {
               <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em] mb-4">
                 ─── ВЫБЕРИТЕ УСЛУГИ ───
               </div>
-              <h2 className="text-2xl md:text-3xl font-mono text-[#E0E0E0] tracking-tight mb-2">
+              <h2 className="text-2xl md:text-3xl font-mono text-[#E0E0E0] tracking-tight mb-2" style={{ textShadow: '0 2px 15px rgba(0,0,0,0.7)' }}>
                 Наши направления
               </h2>
               <p className="font-mono text-sm text-[#E0E0E0]/60">

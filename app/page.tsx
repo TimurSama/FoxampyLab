@@ -839,12 +839,13 @@ export default function Home() {
             className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
               section.id === 'cases' ? 'max-w-6xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
             }`} 
-            data-scroll-container={section.id === 'about' ? 'true' : undefined}
+            data-scroll-container={['about', 'services', 'hub'].includes(section.id) ? 'true' : undefined}
             style={{ 
-              maxHeight: section.id === 'cases' ? 'calc(100vh - 110px)' : 'calc(100vh - 130px)', 
-              overflowY: section.id === 'about' ? 'auto' : 'hidden',
+              maxHeight: section.id === 'cases' ? 'calc(100vh - 90px)' : 'calc(100vh - 100px)', 
+              overflowY: ['about', 'services', 'hub'].includes(section.id) ? 'auto' : 'hidden',
               boxSizing: 'border-box', 
-              width: '100%' 
+              width: '100%',
+              scrollBehavior: 'smooth'
             }}
           >
             <motion.div 
@@ -1004,7 +1005,7 @@ export default function Home() {
             </motion.div>
 
             {section.id === 'services-cards' && section.services && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto px-2 sm:px-4 w-full" style={{ boxSizing: 'border-box' }}>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-5xl mx-auto px-2 sm:px-4 w-full" style={{ boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
                   const cardVisible = currentSectionIndex === sectionIndex;

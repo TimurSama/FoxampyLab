@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, Code, Layers, Lightbulb, Globe, Zap, Sparkles, Database, Cloud, Shield, Smartphone, Monitor } from 'lucide-react';
 import { useI18n } from '@/lib/i18n/context';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 export default function GalleryCarousel() {
   const { t, language } = useI18n();
@@ -15,10 +14,10 @@ export default function GalleryCarousel() {
     {
       id: 'fashion-collage',
       type: 'photo',
-      title: language === 'ru' ? 'Digital Fashion Week' : 'Digital Fashion Week',
+      title: language === 'ru' ? 'Мода' : 'Fashion',
       description: language === 'ru' 
-        ? 'Цифровая показ коллекций в метавселенной с авангардными образами и интерактивными элементами'
-        : 'Digital fashion show in the metaverse with avant-garde looks and interactive elements',
+        ? 'Дизайнерский модельный ряд Средняя Азия 2023'
+        : 'Designer collection Central Asia 2023',
       images: [
         '/gallery/photo_2026-01-30_12-27-19.jpg',
         '/gallery/photo_2026-01-30_12-27-28.jpg',
@@ -30,10 +29,10 @@ export default function GalleryCarousel() {
     {
       id: 'architecture-collage',
       type: 'design',
-      title: language === 'ru' ? 'Future Architecture' : 'Future Architecture',
+      title: language === 'ru' ? 'Архитектура и среды' : 'Architecture',
       description: language === 'ru'
-        ? 'Архитектурные визуализации будущего города с параметрическим дизайном и инновационными решениями'
-        : 'Architectural visualizations of the future city with parametric design and innovative solutions',
+        ? 'Работы Берлинской команды архитекторов-дизайнеров'
+        : 'Facade morphology, algorithm-interiors, light scenarios.',
       images: [
         '/architecture/image_2024-08-21_21-32-32.png',
         '/architecture/image_2024-08-21_21-32-39.png',
@@ -47,28 +46,28 @@ export default function GalleryCarousel() {
       type: 'cards',
       title: language === 'ru' ? 'Приложения и Экосистемы' : 'Apps & Ecosystems',
       description: language === 'ru'
-        ? 'Комплексная разработка цифровых продуктов и экосистем'
-        : 'Comprehensive digital products and ecosystems development',
+        ? 'UI/UX-кинематография: живые прототипы, сложные дашборды, 3D-интеракции'
+        : 'UI/UX cinematography: live prototypes, complex dashboards, 3D interactions',
       cards: [
         {
           icon: 'smartphone',
-          title: language === 'ru' ? 'Мобильные приложения' : 'Mobile Apps',
-          desc: language === 'ru' ? 'iOS, Android, Cross-platform решения' : 'iOS, Android, Cross-platform solutions'
+          title: language === 'ru' ? 'Мобильные' : 'Mobile',
+          desc: language === 'ru' ? 'iOS, Android, Cross-platform' : 'iOS, Android, Cross-platform'
         },
         {
           icon: 'monitor',
-          title: language === 'ru' ? 'Веб-платформы' : 'Web Platforms',
-          desc: language === 'ru' ? 'SPA, PWA, Enterprise системы' : 'SPA, PWA, Enterprise systems'
+          title: language === 'ru' ? 'Веб' : 'Web',
+          desc: language === 'ru' ? 'SPA, PWA, Enterprise' : 'SPA, PWA, Enterprise'
         },
         {
           icon: 'cloud',
-          title: language === 'ru' ? 'Облачные сервисы' : 'Cloud Services',
-          desc: language === 'ru' ? 'Масштабируемая инфраструктура' : 'Scalable infrastructure'
+          title: language === 'ru' ? 'Облако' : 'Cloud',
+          desc: language === 'ru' ? 'Масштабируемость' : 'Scalable infra'
         },
         {
           icon: 'layers',
-          title: language === 'ru' ? 'Интеграции' : 'Integrations',
-          desc: language === 'ru' ? 'API, микросервисы, IoT' : 'API, microservices, IoT'
+          title: language === 'ru' ? 'API' : 'API',
+          desc: language === 'ru' ? 'Интеграции, IoT' : 'Integrations, IoT'
         }
       ]
     },
@@ -78,63 +77,63 @@ export default function GalleryCarousel() {
       type: 'cards-3',
       title: language === 'ru' ? 'Исследования и R&D' : 'Research & Development',
       description: language === 'ru'
-        ? 'Инновационные технологические исследования и разработки'
-        : 'Innovative technological research and development',
+        ? 'Инновационные технологические исследования'
+        : 'Innovative technological research',
       cards: [
         {
           icon: 'lightbulb',
-          title: language === 'ru' ? 'AI & ML' : 'AI & ML',
-          desc: language === 'ru' ? 'Машинное обучение, нейросети, автоматизация процессов' : 'Machine learning, neural networks, process automation'
+          title: 'AI & ML',
+          desc: language === 'ru' ? 'Нейросети, автоматизация' : 'Neural networks, automation'
         },
         {
           icon: 'shield',
-          title: language === 'ru' ? 'Blockchain' : 'Blockchain',
-          desc: language === 'ru' ? 'Web3, смарт-контракты, DeFi протоколы' : 'Web3, smart contracts, DeFi protocols'
+          title: 'Blockchain',
+          desc: language === 'ru' ? 'Web3, DeFi' : 'Web3, DeFi'
         },
         {
           icon: 'zap',
-          title: language === 'ru' ? 'Emerging Tech' : 'Emerging Tech',
-          desc: language === 'ru' ? 'AR/VR, IoT, квантовые вычисления' : 'AR/VR, IoT, quantum computing'
+          title: language === 'ru' ? 'Emerging' : 'Emerging',
+          desc: language === 'ru' ? 'AR/VR, IoT' : 'AR/VR, IoT'
         }
       ]
     },
-    // 5. UniCap Invest - проект с 2 изображениями
+    // 5. UniCap Invest - проект с 2 изображениями (фото сверху)
     {
       id: 'unicapinvest',
-      type: 'project-images',
-      title: language === 'ru' ? 'UniCap Invest' : 'UniCap Invest',
-      category: language === 'ru' ? 'Брендинг и ESG проекты' : 'Branding & ESG Projects',
+      type: 'project-vertical',
+      title: 'UniCap Invest',
+      category: language === 'ru' ? 'Брендинг и ESG' : 'Branding & ESG',
       description: language === 'ru'
-        ? 'Работа над брендингом, альдентикой, проектным портфелем, инициализация и полная комплексная разработка ESG проектов и стартапов'
-        : 'Work on branding, identity, project portfolio, initialization and full comprehensive development of ESG projects and startups',
+        ? 'Брендинг, айдентика, проектный портфель, разработка ESG проектов и стартапов'
+        : 'Branding, identity, portfolio, ESG projects and startups development',
       images: ['/images/unicap1.png', '/images/unicap2.png'],
-      technologies: ['Branding', 'ESG', 'Startups', 'Portfolio Development']
+      technologies: ['Branding', 'ESG', 'Startups']
     },
-    // 6. Done.co.il - проект с 2 изображениями
+    // 6. Done.co.il - проект с 2 изображениями (фото сверху)
     {
       id: 'done-co-il',
-      type: 'project-images',
-      title: language === 'ru' ? 'Done.co.il' : 'Done.co.il',
+      type: 'project-vertical',
+      title: 'Done.co.il',
       category: language === 'ru' ? 'Брендинг и разработка' : 'Branding & Development',
       description: language === 'ru'
-        ? 'Работа над брендингом, рекламными кампаниями, техническими видео, работа над разработкой приложения'
-        : 'Work on branding, advertising campaigns, technical videos, application development',
+        ? 'Брендинг, рекламные кампании, технические видео, разработка приложения'
+        : 'Branding, advertising campaigns, technical videos, app development',
       images: ['/images/done1.png', '/images/done2.png'],
-      technologies: ['Branding', 'Advertising', 'Video Production', 'App Development']
+      technologies: ['Branding', 'Video', 'App']
     },
-    // 7. Video Production - объединенный блок
+    // 7. Video Production
     {
       id: 'video-production',
       type: 'video',
       title: language === 'ru' ? 'Видеопродакшн' : 'Video Production',
       category: language === 'ru' ? 'CGI & Реклама' : 'CGI & Advertising',
       description: language === 'ru'
-        ? 'CGI 3D кино, рекламные ролики, шоурилсы с биоморфным синтезом и динамичными эффектами'
-        : 'CGI 3D cinema, advertising clips, showreels with biomorphic synthesis and dynamic effects',
+        ? 'CGI 3D кино, рекламные ролики, шоурилы'
+        : 'CGI 3D cinema, advertising clips, showreels',
       videoSrc: '/media/need-for-speed-underground-2-remaster-2022.mp4',
       previewImage: '/images/video.png'
     }
-  ], [t, language]);
+  ], [language]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -171,7 +170,7 @@ export default function GalleryCarousel() {
     setPlayingVideo(currentItem.id);
   }, [currentItem.id]);
 
-  const getIcon = (iconName: string, size: number = 24) => {
+  const getIcon = (iconName: string, size: number = 20) => {
     const iconProps = { size, className: "text-[#E0E0E0]" };
     switch (iconName) {
       case 'smartphone': return <Smartphone {...iconProps} />;
@@ -193,7 +192,7 @@ export default function GalleryCarousel() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="relative w-full max-w-5xl mx-auto mt-2"
+      className="relative w-full max-w-5xl mx-auto mt-1"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -201,33 +200,33 @@ export default function GalleryCarousel() {
       <div className="relative group">
         {/* Контейнер карусели */}
         <div 
-          className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[520px] overflow-hidden rounded-sm border border-white/10 bg-black/40 backdrop-blur-sm cursor-pointer"
+          className="relative w-full h-[360px] sm:h-[400px] md:h-[440px] lg:h-[480px] overflow-hidden rounded-sm border border-white/10 bg-black/40 backdrop-blur-sm cursor-pointer"
           onClick={handleItemClick}
         >
-          {/* Коллаж фото для Fashion и Architecture */}
+          {/* Коллаж фото для Fashion и Architecture - фото помещаются полностью */}
           {(currentItem.type === 'photo' || currentItem.type === 'design') && currentItem.images && (
-            <div className="grid grid-cols-2 gap-1 p-1 h-full">
+            <div className="grid grid-cols-2 gap-1 p-2 h-full">
               {currentItem.images.map((image, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, scale: 1.05 }}
+                  initial={{ opacity: 0, scale: 1.02 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative overflow-hidden"
+                  transition={{ delay: index * 0.08 }}
+                  className="relative overflow-hidden bg-black/20"
                 >
                   <img
                     src={image}
                     alt={`${currentItem.title} ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain hover:scale-102 transition-transform duration-500"
                   />
                 </motion.div>
               ))}
               {/* Overlay с названием */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                <h3 className="font-mono text-lg md:text-xl text-white uppercase tracking-tight">
+              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-black/90 to-transparent">
+                <h3 className="font-mono text-sm sm:text-base md:text-lg text-white uppercase tracking-tight">
                   {currentItem.title}
                 </h3>
-                <p className="font-mono text-xs text-white/70 mt-1">
+                <p className="font-mono text-[10px] sm:text-xs text-white/70 mt-0.5 line-clamp-2">
                   {currentItem.description}
                 </p>
               </div>
@@ -236,32 +235,32 @@ export default function GalleryCarousel() {
 
           {/* 4 карточки для Apps & Ecosystems */}
           {currentItem.type === 'cards' && currentItem.cards && (
-            <div className="h-full flex flex-col p-4 md:p-6">
-              <div className="mb-4">
-                <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-2 uppercase">
+            <div className="h-full flex flex-col p-3 sm:p-4 md:p-5">
+              <div className="mb-3">
+                <div className="font-mono text-[9px] sm:text-[10px] text-[#E0E0E0]/40 tracking-[0.3em] mb-1 uppercase">
                   ─── {language === 'ru' ? 'Направление' : 'Direction'} ───
                 </div>
-                <h3 className="font-mono text-xl md:text-2xl text-[#E0E0E0] uppercase tracking-tight">
+                <h3 className="font-mono text-base sm:text-lg md:text-xl text-[#E0E0E0] uppercase tracking-tight">
                   {currentItem.title}
                 </h3>
-                <p className="font-mono text-xs text-[#E0E0E0]/60 mt-1">
+                <p className="font-mono text-[10px] sm:text-xs text-[#E0E0E0]/60 mt-0.5 line-clamp-1">
                   {currentItem.description}
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-3 flex-1">
+              <div className="grid grid-cols-2 gap-2 flex-1">
                 {currentItem.cards.map((card, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-white/5 border border-white/10 p-4 flex flex-col justify-center hover:bg-white/10 transition-all"
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-white/5 border border-white/10 p-3 flex flex-col justify-center hover:bg-white/10 transition-all"
                   >
-                    <div className="mb-3">{getIcon(card.icon, 28)}</div>
-                    <h4 className="font-mono text-sm text-[#E0E0E0] uppercase tracking-tight mb-1">
+                    <div className="mb-2">{getIcon(card.icon, 22)}</div>
+                    <h4 className="font-mono text-xs sm:text-sm text-[#E0E0E0] uppercase tracking-tight mb-0.5">
                       {card.title}
                     </h4>
-                    <p className="font-mono text-[10px] text-[#E0E0E0]/60 leading-relaxed">
+                    <p className="font-mono text-[9px] sm:text-[10px] text-[#E0E0E0]/60 line-clamp-2">
                       {card.desc}
                     </p>
                   </motion.div>
@@ -272,32 +271,32 @@ export default function GalleryCarousel() {
 
           {/* 3 карточки для R&D */}
           {currentItem.type === 'cards-3' && currentItem.cards && (
-            <div className="h-full flex flex-col p-4 md:p-6">
-              <div className="mb-4">
-                <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-2 uppercase">
+            <div className="h-full flex flex-col p-3 sm:p-4 md:p-5">
+              <div className="mb-3">
+                <div className="font-mono text-[9px] sm:text-[10px] text-[#E0E0E0]/40 tracking-[0.3em] mb-1 uppercase">
                   ─── {language === 'ru' ? 'Исследования' : 'Research'} ───
                 </div>
-                <h3 className="font-mono text-xl md:text-2xl text-[#E0E0E0] uppercase tracking-tight">
+                <h3 className="font-mono text-base sm:text-lg md:text-xl text-[#E0E0E0] uppercase tracking-tight">
                   {currentItem.title}
                 </h3>
-                <p className="font-mono text-xs text-[#E0E0E0]/60 mt-1">
+                <p className="font-mono text-[10px] sm:text-xs text-[#E0E0E0]/60 mt-0.5">
                   {currentItem.description}
                 </p>
               </div>
-              <div className="grid grid-cols-3 gap-3 flex-1">
+              <div className="grid grid-cols-3 gap-2 flex-1">
                 {currentItem.cards.map((card, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-white/5 border border-white/10 p-4 flex flex-col justify-center hover:bg-white/10 transition-all"
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-white/5 border border-white/10 p-3 flex flex-col justify-center hover:bg-white/10 transition-all"
                   >
-                    <div className="mb-3">{getIcon(card.icon, 32)}</div>
-                    <h4 className="font-mono text-sm text-[#E0E0E0] uppercase tracking-tight mb-2">
+                    <div className="mb-2">{getIcon(card.icon, 24)}</div>
+                    <h4 className="font-mono text-xs sm:text-sm text-[#E0E0E0] uppercase tracking-tight mb-1">
                       {card.title}
                     </h4>
-                    <p className="font-mono text-[10px] text-[#E0E0E0]/60 leading-relaxed">
+                    <p className="font-mono text-[9px] sm:text-[10px] text-[#E0E0E0]/60 line-clamp-2">
                       {card.desc}
                     </p>
                   </motion.div>
@@ -306,47 +305,47 @@ export default function GalleryCarousel() {
             </div>
           )}
 
-          {/* Проект с 2 изображениями */}
-          {currentItem.type === 'project-images' && currentItem.images && (
-            <div className="flex flex-col md:flex-row h-full">
-              {/* Изображения слева */}
-              <div className="w-full md:w-1/2 h-1/2 md:h-full grid grid-cols-2 gap-1 p-1">
+          {/* Проект с вертикальной компоновкой (фото сверху, текст снизу) */}
+          {currentItem.type === 'project-vertical' && currentItem.images && (
+            <div className="flex flex-col h-full">
+              {/* Изображения сверху */}
+              <div className="h-[60%] grid grid-cols-2 gap-1 p-1">
                 {currentItem.images.map((img, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, scale: 1.05 }}
+                    initial={{ opacity: 0, scale: 1.02 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.15 }}
-                    className="relative overflow-hidden"
+                    transition={{ delay: i * 0.1 }}
+                    className="relative overflow-hidden bg-black/20"
                   >
                     <img
                       src={img}
                       alt={`${currentItem.title} ${i + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-contain hover:scale-102 transition-transform duration-500"
                     />
                   </motion.div>
                 ))}
               </div>
-              {/* Описание справа */}
-              <div className="w-full md:w-1/2 p-6 flex flex-col justify-center bg-black/40">
-                <div className="font-mono text-[10px] text-[#E0E0E0]/40 tracking-[0.4em] mb-3 uppercase">
+              {/* Описание снизу */}
+              <div className="h-[40%] p-4 sm:p-5 flex flex-col justify-center bg-black/50">
+                <div className="font-mono text-[9px] sm:text-[10px] text-[#E0E0E0]/40 tracking-[0.3em] mb-2 uppercase">
                   ─── {language === 'ru' ? 'Проект' : 'Project'} ───
                 </div>
-                <h3 className="font-mono text-xl md:text-2xl text-[#E0E0E0] mb-2 uppercase tracking-tight">
+                <h3 className="font-mono text-lg sm:text-xl md:text-2xl text-[#E0E0E0] mb-1 uppercase tracking-tight">
                   {currentItem.title}
                 </h3>
-                <div className="font-mono text-xs text-[#E0E0E0]/60 mb-4 uppercase tracking-widest">
+                <div className="font-mono text-[10px] sm:text-xs text-[#E0E0E0]/60 mb-2 uppercase tracking-wider">
                   {currentItem.category}
                 </div>
-                <p className="font-mono text-xs text-[#E0E0E0]/80 leading-relaxed mb-4">
+                <p className="font-mono text-[10px] sm:text-xs text-[#E0E0E0]/80 leading-relaxed mb-3 line-clamp-2">
                   {currentItem.description}
                 </p>
                 {currentItem.technologies && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {currentItem.technologies.map((tech, i) => (
                       <span
                         key={i}
-                        className="font-mono text-[9px] text-[#E0E0E0]/60 border border-white/10 px-2 py-1 uppercase tracking-widest"
+                        className="font-mono text-[8px] sm:text-[9px] text-[#E0E0E0]/60 border border-white/10 px-1.5 py-0.5 uppercase tracking-wider"
                       >
                         {tech}
                       </span>
@@ -378,22 +377,22 @@ export default function GalleryCarousel() {
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <button
                       onClick={handleVideoPlay}
-                      className="w-20 h-20 md:w-24 md:h-24 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-all hover:scale-110"
+                      className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-all hover:scale-110"
                     >
-                      <Play size={32} className="text-white ml-1" fill="white" />
+                      <Play size={28} className="text-white ml-1" fill="white" />
                     </button>
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-                    <div className="font-mono text-[10px] tracking-[0.4em] mb-2 text-white/40 uppercase">
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 bg-gradient-to-t from-black/90 to-transparent">
+                    <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.3em] mb-1 text-white/40 uppercase">
                       ─── {language === 'ru' ? 'Видео' : 'Video'} ───
                     </div>
-                    <h3 className="font-mono text-xl md:text-2xl mb-2 uppercase tracking-tight text-white">
+                    <h3 className="font-mono text-base sm:text-lg md:text-xl mb-1 uppercase tracking-tight text-white">
                       {currentItem.title}
                     </h3>
-                    <div className="font-mono text-xs mb-2 text-white/60 uppercase tracking-widest">
+                    <div className="font-mono text-[10px] sm:text-xs mb-1 text-white/60 uppercase tracking-wider">
                       {currentItem.category}
                     </div>
-                    <p className="font-mono text-xs max-w-md leading-relaxed text-white/80">
+                    <p className="font-mono text-[10px] sm:text-xs max-w-md leading-relaxed text-white/80 line-clamp-2">
                       {currentItem.description}
                     </p>
                   </div>
@@ -408,23 +407,23 @@ export default function GalleryCarousel() {
               e.stopPropagation();
               goToPrevious();
             }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-3 bg-black/60 border border-white/20 text-white hover:bg-white/20 transition-all backdrop-blur-md rounded-full z-10"
+            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/60 border border-white/20 text-white hover:bg-white/20 transition-all backdrop-blur-md rounded-full z-10"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               goToNext();
             }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-3 bg-black/60 border border-white/20 text-white hover:bg-white/20 transition-all backdrop-blur-md rounded-full z-10"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/60 border border-white/20 text-white hover:bg-white/20 transition-all backdrop-blur-md rounded-full z-10"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
         </div>
 
         {/* Индикаторы */}
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {carouselItems.map((_, i) => (
             <button
               key={i}
@@ -433,7 +432,7 @@ export default function GalleryCarousel() {
                 setCurrentIndex(i);
                 setPlayingVideo(null);
               }}
-              className={`h-1 transition-all duration-300 ${i === currentIndex ? 'w-6 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+              className={`h-1 transition-all duration-300 ${i === currentIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/50'}`}
             />
           ))}
         </div>

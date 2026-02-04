@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, X } from 'lucide-react';
 
@@ -13,11 +13,11 @@ interface FlippableServiceCardProps {
         features?: string[];
         icon?: string;
     };
-    t: (key: string) => string; // Translation function
+    t: (key: string) => string;
 }
 
 export default function FlippableServiceCard({ service, t }: FlippableServiceCardProps) {
-    const [isFlipped, setIsFlipped] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -32,153 +32,193 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                     }
                 });
             },
-            { threshold: 0.3 }
+            { threshold: 0.2 }
         );
 
         observer.observe(cardRef.current);
         return () => observer.disconnect();
     }, []);
 
-    // Extract the first sentence or first 120 chars for the thesis
+    // Закрытие по Escape
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isExpanded) {
+                setIsExpanded(false);
+            }
+        };
+        
+        if (isExpanded) {
+            document.addEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = '';
+        };
+    }, [isExpanded]);
+
     const thesis = service.description.split('.')[0] + '.';
 
+    const handleExpand = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsExpanded(true);
+    }, []);
+
+    const handleClose = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsExpanded(false);
+    }, []);
+
     return (
-        <div ref={cardRef} className="relative h-[180px] sm:h-[200px] md:h-[220px] lg:h-[240px] w-full perspective-1000 group">
-            <motion.div
-                className="w-full h-full relative preserve-3d transition-all duration-700"
-                animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-                style={{ transformStyle: "preserve-3d" }}
+        <>
+            {/* Компактная карточка */}
+            <div 
+                ref={cardRef} 
+                className="relative h-[100px] sm:h-[110px] md:h-[120px] w-full group cursor-pointer"
+                onClick={handleExpand}
             >
-                {/* FRONT SIDE */}
-                <div
-                    className="absolute inset-0 backface-hidden border border-white/5 bg-glass-matte
-                     hover:border-white/20 hover:bg-black/03 hover:backdrop-blur-2xl 
-                     transition-all duration-500 cursor-pointer p-4 sm:p-5 md:p-6 flex flex-col justify-center rounded-sm"
+                <motion.div
+                    className="w-full h-full border border-white/10 bg-black/80 backdrop-blur-md
+                             hover:border-white/30 hover:bg-black/90 transition-all duration-300
+                             p-3 sm:p-4 flex flex-col justify-center rounded-sm"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                     style={{ 
-                        backfaceVisibility: 'hidden',
-                        background: 'rgba(5, 5, 5, 0.85)',
-                        backdropFilter: 'blur(16px)',
-                        WebkitBackdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(224, 224, 224, 0.3)',
-                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
                     }}
-                    onClick={() => setIsFlipped(true)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                 >
-                    <div className="space-y-6">
-                        <h3 className="font-mono text-2xl text-[#FFFFFF] tracking-tighter leading-tight uppercase group-hover:tracking-normal transition-all duration-500" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)' }}>
-                            {service.title}
-                        </h3>
+                    <h3 className="font-mono text-[10px] sm:text-[11px] md:text-xs text-white tracking-tight leading-tight uppercase mb-1" 
+                        style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)' }}>
+                        {service.title}
+                    </h3>
+                    <p className="font-mono text-[8px] sm:text-[9px] text-white/50 uppercase tracking-widest line-clamp-2">
+                        {service.subtitle}
+                    </p>
+                    <div className="absolute bottom-2 right-2 opacity-30 group-hover:opacity-60 transition-opacity">
+                        <ArrowRight size={12} className="text-white" />
+                    </div>
+                </motion.div>
+            </div>
 
-                        <div className="space-y-4">
-                            <p className="font-mono text-[11px] text-[#E0E0E0] uppercase tracking-[0.2em]" style={{ textShadow: '0 1px 5px rgba(0, 0, 0, 0.7)' }}>
-                                {service.subtitle}
-                            </p>
-
-                            <motion.div 
-                                className="w-12 h-[1px] bg-[#E0E0E0]/40 transition-all duration-500"
-                                animate={isVisible ? { width: '5rem', backgroundColor: 'rgba(224, 224, 224, 0.6)' } : { width: '3rem', backgroundColor: 'rgba(224, 224, 224, 0.4)' }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                            />
-
-                            <motion.p 
-                                className="font-mono text-xs text-[#E0E0E0] leading-relaxed uppercase tracking-widest"
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-                                transition={{ duration: 0.5, delay: 0.4 }}
-                                style={{ textShadow: '0 1px 5px rgba(0, 0, 0, 0.7)' }}
+            {/* Развернутая карточка (overlay) */}
+            <AnimatePresence>
+                {isExpanded && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+                            onClick={handleClose}
+                        />
+                        
+                        {/* Развернутая карточка */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8, rotateY: -90 }}
+                            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                            exit={{ opacity: 0, scale: 0.8, rotateY: 90 }}
+                            transition={{ 
+                                duration: 0.5, 
+                                ease: [0.23, 1, 0.32, 1],
+                                rotateY: { duration: 0.6 }
+                            }}
+                            className="fixed inset-4 sm:inset-8 md:inset-12 lg:inset-16 z-[101] 
+                                     bg-black/95 backdrop-blur-xl border border-white/20 rounded-sm
+                                     overflow-y-auto"
+                            style={{
+                                boxShadow: '0 25px 100px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                                transformStyle: 'preserve-3d',
+                                perspective: '1000px'
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Кнопка закрытия */}
+                            <button 
+                                onClick={handleClose}
+                                className="absolute top-4 right-4 z-10 p-2 border border-white/20 
+                                         hover:bg-white/10 transition-colors"
                             >
-                                {thesis}
-                            </motion.p>
-                        </div>
-                    </div>
+                                <X size={20} className="text-white" />
+                            </button>
 
-                    <motion.div 
-                        className="absolute bottom-10 right-10"
-                        initial={{ opacity: 0 }}
-                        animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
-                        transition={{ duration: 0.5, delay: 0.5 }}
-                    >
-                        <ArrowRight size={18} className="text-[#E0E0E0]/40" />
-                    </motion.div>
-                </div>
-
-                {/* BACK SIDE */}
-                <div
-                    className="absolute inset-0 backface-hidden bg-glass-matte border border-white/10 p-4 sm:p-5 md:p-6 rounded-sm overflow-hidden"
-                    style={{
-                        backfaceVisibility: 'hidden',
-                        transform: 'rotateY(180deg)',
-                        background: 'rgba(5, 5, 5, 0.85)',
-                        backdropFilter: 'blur(16px)',
-                        WebkitBackdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(224, 224, 224, 0.3)',
-                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                    }}
-                    onClick={() => setIsFlipped(false)}
-                >
-                    <div className="flex justify-between items-start mb-8 pb-4 border-b border-[#E0E0E0]/10">
-                        <div className="max-w-[85%]">
-                            <h3 className="font-mono text-xs font-bold text-[#FFFFFF] uppercase tracking-[0.2em] mb-1">
-                                {service.title}
-                            </h3>
-                            <p className="font-mono text-[9px] text-[#E0E0E0]/80 uppercase tracking-[0.1em]">
-                                {service.subtitle}
-                            </p>
-                        </div>
-                        <button className="text-[#E0E0E0]/40 hover:text-white transition-colors pt-1">
-                            <X size={16} />
-                        </button>
-                    </div>
-
-                    <div className="flex-grow space-y-10">
-                        <section>
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="w-1 h-[10px] bg-[#E0E0E0]"></div>
-                                <h4 className="font-mono text-[10px] text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
-                    // Approach Analysis
-                                </h4>
-                            </div>
-                            <p className="font-mono text-[11px] text-[#E0E0E0] leading-relaxed italic">
-                                "{service.description}"
-                            </p>
-                        </section>
-
-                        {service.features && service.features.length > 0 && (
-                            <section>
-                                <div className="flex items-center gap-2 mb-6">
-                                    <div className="w-1 h-[10px] bg-[#E0E0E0]/40"></div>
-                                    <h4 className="font-mono text-[10px] text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
-                                        Capabilities Matrix
-                                    </h4>
+                            <div className="p-6 sm:p-8 md:p-10 lg:p-12 h-full flex flex-col">
+                                {/* Header */}
+                                <div className="mb-6 pb-4 border-b border-white/10">
+                                    <h2 className="font-mono text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-tight mb-2"
+                                        style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)' }}>
+                                        {service.title}
+                                    </h2>
+                                    <p className="font-mono text-xs sm:text-sm text-white/60 uppercase tracking-widest">
+                                        {service.subtitle}
+                                    </p>
                                 </div>
-                                <div className="grid grid-cols-1 gap-px bg-[#E0E0E0]/10 border border-[#E0E0E0]/10">
-                                    {service.features.map((feature, i) => (
-                                        <div key={i} className="bg-[#050505]/03 p-4 flex items-start gap-4 hover:bg-[#E0E0E0]/5 transition-colors">
-                                            <span className="font-mono text-[9px] text-[#E0E0E0]/20 mt-0.5">
-                                                {(i + 1).toString().padStart(2, '0')}
-                                            </span>
-                                            <span className="font-mono text-[10px] text-[#E0E0E0]/80 leading-snug uppercase tracking-widest">
-                                                {feature}
-                                            </span>
+
+                                {/* Content */}
+                                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Description */}
+                                    <div className="space-y-6">
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <div className="w-1 h-3 bg-white"></div>
+                                                <h4 className="font-mono text-[10px] text-white/60 uppercase tracking-[0.3em]">
+                                                    Approach
+                                                </h4>
+                                            </div>
+                                            <p className="font-mono text-sm text-white/80 leading-relaxed">
+                                                {service.description}
+                                            </p>
                                         </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
-                    </div>
+                                    </div>
 
-                    <div className="mt-12 pt-6 border-t border-[#E0E0E0]/10 flex justify-between items-end opacity-20 hover:opacity-100 transition-opacity duration-500">
-                        <div className="space-y-1">
-                            <div className="font-mono text-[8px] text-[#E0E0E0] uppercase tracking-[0.5em]">FOXAMPY CORE SYSTEM</div>
-                            <div className="font-mono text-[7px] text-[#E0E0E0]/60 uppercase tracking-[0.2em]">DECENTRALIZED ARCHITECTURE // R&D NODE</div>
-                        </div>
-                        <div className="w-6 h-6 border border-[#E0E0E0]/30 rotate-45 flex items-center justify-center">
-                            <div className="w-1 h-1 bg-[#E0E0E0] animate-pulse"></div>
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
-        </div>
+                                    {/* Features */}
+                                    {service.features && service.features.length > 0 && (
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-4">
+                                                <div className="w-1 h-3 bg-white/40"></div>
+                                                <h4 className="font-mono text-[10px] text-white/60 uppercase tracking-[0.3em]">
+                                                    Capabilities
+                                                </h4>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-px bg-white/10 border border-white/10">
+                                                {service.features.map((feature, i) => (
+                                                    <div 
+                                                        key={i} 
+                                                        className="bg-black/80 p-3 flex items-start gap-3 hover:bg-white/5 transition-colors"
+                                                    >
+                                                        <span className="font-mono text-[9px] text-white/20 mt-0.5">
+                                                            {(i + 1).toString().padStart(2, '0')}
+                                                        </span>
+                                                        <span className="font-mono text-[11px] text-white/70 leading-snug uppercase tracking-wide">
+                                                            {feature}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Footer */}
+                                <div className="mt-6 pt-4 border-t border-white/10 flex justify-between items-end opacity-30">
+                                    <div className="space-y-0.5">
+                                        <div className="font-mono text-[8px] text-white uppercase tracking-[0.5em]">FOXAMPY LAB</div>
+                                        <div className="font-mono text-[7px] text-white/60 uppercase tracking-[0.2em]">DECENTRALIZED // R&D</div>
+                                    </div>
+                                    <div className="w-5 h-5 border border-white/30 rotate-45 flex items-center justify-center">
+                                        <div className="w-1 h-1 bg-white animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+        </>
     );
 }
