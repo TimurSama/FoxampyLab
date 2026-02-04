@@ -541,47 +541,6 @@ export default function Home() {
     touchStartYRef.current = 0;
   }, [currentSectionIndex, totalSections, scrollToSection]);
 
-  // Установка обработчиков для screen-based navigation (после определения всех функций)
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    // Отключение стандартного скролла
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    
-    // Обработчики событий
-    const wheelHandler = (e: WheelEvent) => handleWheel(e);
-    const keyHandler = (e: KeyboardEvent) => handleKeyDown(e);
-    const touchStartHandler = (e: TouchEvent) => handleTouchStart(e);
-    const touchMoveHandler = (e: TouchEvent) => handleTouchMove(e);
-    const touchEndHandler = (e: TouchEvent) => handleTouchEnd(e);
-    window.addEventListener('wheel', wheelHandler, { passive: false });
-    window.addEventListener('keydown', keyHandler);
-    window.addEventListener('touchstart', touchStartHandler, { passive: true });
-    window.addEventListener('touchmove', touchMoveHandler, { passive: false });
-    window.addEventListener('touchend', touchEndHandler, { passive: true });
-    // Инициализация по hash из URL
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-      const sectionIndex = hash === 'hero' ? 0 : sections.findIndex(s => s.id === hash) + 1;
-      if (sectionIndex >= 0 && sectionIndex < totalSections) {
-        setCurrentSectionIndex(sectionIndex);
-      }
-    }
-    
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-      window.removeEventListener('wheel', wheelHandler);
-      window.removeEventListener('keydown', keyHandler);
-      window.removeEventListener('touchstart', touchStartHandler);
-      window.removeEventListener('touchmove', touchMoveHandler);
-      window.removeEventListener('touchend', touchEndHandler);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchMove, handleTouchEnd, sections, totalSections]);
   return (
     <div
       ref={containerRef}
