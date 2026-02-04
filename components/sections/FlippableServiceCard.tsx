@@ -57,9 +57,10 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                      transition-all duration-500 cursor-pointer p-6 md:p-8 flex flex-col justify-center rounded-sm"
                     style={{ 
                         backfaceVisibility: 'hidden',
-                        background: 'rgba(5, 5, 5, 0.25)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)'
+                        background: 'rgba(10, 10, 10, 0.6)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(224, 224, 224, 0.1)'
                     }}
                     onClick={() => setIsFlipped(true)}
                 >
@@ -69,18 +70,18 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                         </h3>
 
                         <div className="space-y-4">
-                            <p className="font-mono text-[11px] text-[#E0E0E0]/40 uppercase tracking-[0.2em]">
+                            <p className="font-mono text-[11px] text-[#E0E0E0]/80 uppercase tracking-[0.2em]">
                                 {service.subtitle}
                             </p>
 
                             <motion.div 
-                                className="w-12 h-[1px] bg-[#E0E0E0]/20 transition-all duration-500"
-                                animate={isVisible ? { width: '5rem', backgroundColor: 'rgba(224, 224, 224, 0.4)' } : { width: '3rem', backgroundColor: 'rgba(224, 224, 224, 0.2)' }}
+                                className="w-12 h-[1px] bg-[#E0E0E0]/40 transition-all duration-500"
+                                animate={isVisible ? { width: '5rem', backgroundColor: 'rgba(224, 224, 224, 0.6)' } : { width: '3rem', backgroundColor: 'rgba(224, 224, 224, 0.4)' }}
                                 transition={{ duration: 0.5, delay: 0.3 }}
                             />
 
                             <motion.p 
-                                className="font-mono text-xs text-[#E0E0E0]/60 leading-relaxed uppercase tracking-widest"
+                                className="font-mono text-xs text-[#E0E0E0]/90 leading-relaxed uppercase tracking-widest"
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                                 transition={{ duration: 0.5, delay: 0.4 }}
@@ -106,9 +107,10 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                     style={{
                         backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
-                        background: 'rgba(5, 5, 5, 0.25)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)'
+                        background: 'rgba(10, 10, 10, 0.6)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(224, 224, 224, 0.1)'
                     }}
                     onClick={() => setIsFlipped(false)}
                 >
@@ -117,7 +119,7 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                             <h3 className="font-mono text-xs font-bold text-[#FFFFFF] uppercase tracking-[0.2em] mb-1">
                                 {service.title}
                             </h3>
-                            <p className="font-mono text-[9px] text-[#E0E0E0]/40 uppercase tracking-[0.1em]">
+                            <p className="font-mono text-[9px] text-[#E0E0E0]/80 uppercase tracking-[0.1em]">
                                 {service.subtitle}
                             </p>
                         </div>
@@ -130,11 +132,11 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                         <section>
                             <div className="flex items-center gap-2 mb-4">
                                 <div className="w-1 h-[10px] bg-[#E0E0E0]"></div>
-                                <h4 className="font-mono text-[10px] text-[#E0E0E0]/40 uppercase tracking-[0.3em]">
+                                <h4 className="font-mono text-[10px] text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
                     // Approach Analysis
                                 </h4>
                             </div>
-                            <p className="font-mono text-[11px] text-[#E0E0E0]/90 leading-relaxed italic">
+                            <p className="font-mono text-[11px] text-[#E0E0E0] leading-relaxed italic">
                                 "{service.description}"
                             </p>
                         </section>
@@ -143,7 +145,7 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                             <section>
                                 <div className="flex items-center gap-2 mb-6">
                                     <div className="w-1 h-[10px] bg-[#E0E0E0]/40"></div>
-                                    <h4 className="font-mono text-[10px] text-[#E0E0E0]/40 uppercase tracking-[0.3em]">
+                                    <h4 className="font-mono text-[10px] text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
                                         Capabilities Matrix
                                     </h4>
                                 </div>

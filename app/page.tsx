@@ -310,6 +310,12 @@ export default function Home() {
       title: t('home.solutions.title'),
       subtitle: t('home.solutions.subtitle'),
       description: t('home.solutions.description'),
+    },
+    {
+      id: 'services-cards',
+      title: t('home.solutions.title'),
+      subtitle: t('home.solutions.subtitle'),
+      description: t('home.solutions.description'),
       services: servicesData,
     },
     {
@@ -351,10 +357,14 @@ export default function Home() {
       return;
     }
     
-    // Проверка внутреннего скролла (только если секция действительно имеет переполнение)
+    // Проверка внутреннего скролла контейнера секции
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
-      const { scrollTop, scrollHeight, clientHeight } = currentSection;
+      // Ищем контейнер с overflow внутри секции
+      const scrollableContainer = currentSection.querySelector('[style*="overflowY"]') as HTMLElement;
+      const containerToCheck = scrollableContainer || currentSection;
+      
+      const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
       // Проверяем, есть ли реальное переполнение (больше чем 50px)
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
@@ -362,14 +372,14 @@ export default function Home() {
         const isAtTop = scrollTop <= 10; // 10px tolerance
         const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
         
-        // Если скроллим вниз, но не достигли низа секции - скроллим внутри секции
+        // Если скроллим вниз, но не достигли низа контейнера - скроллим внутри контейнера
         if (direction === 'down' && !isAtBottom) {
-          currentSection.scrollTop = scrollHeight;
+          containerToCheck.scrollTo({ top: scrollHeight, behavior: 'smooth' });
           return;
         }
-        // Если скроллим вверх, но не достигли верха секции - скроллим внутри секции
+        // Если скроллим вверх, но не достигли верха контейнера - скроллим внутри контейнера
         if (direction === 'up' && !isAtTop) {
-          currentSection.scrollTop = 0;
+          containerToCheck.scrollTo({ top: 0, behavior: 'smooth' });
           return;
         }
       }
@@ -404,6 +414,32 @@ export default function Home() {
     if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
     lastScrollTime.current = now;
 
+    // Проверяем внутренний скролл перед переключением секции
+    const currentSection = sectionRefs.current[currentSectionIndex];
+    if (currentSection) {
+      const scrollableContainer = currentSection.querySelector('[style*="overflowY"]') as HTMLElement;
+      const containerToCheck = scrollableContainer || currentSection;
+      
+      const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
+      const hasRealScroll = scrollHeight > clientHeight + 50;
+      
+      if (hasRealScroll) {
+        const isAtTop = scrollTop <= 10;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+        const direction = e.deltaY > 0 ? 'down' : 'up';
+        
+        // Если есть внутренний скролл и мы не на границе - скроллим внутри
+        if (direction === 'down' && !isAtBottom) {
+          containerToCheck.scrollBy({ top: 100, behavior: 'smooth' });
+          return;
+        }
+        if (direction === 'up' && !isAtTop) {
+          containerToCheck.scrollBy({ top: -100, behavior: 'smooth' });
+          return;
+        }
+      }
+    }
+
     const direction = e.deltaY > 0 ? 'down' : 'up';
     
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
@@ -411,7 +447,7 @@ export default function Home() {
     } else if (direction === 'up' && currentSectionIndex > 0) {
       scrollToSection(currentSectionIndex - 1, 'up');
     }
-  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning]);
+  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs]);
 
   // Обработчик клавиатуры
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -819,7 +855,7 @@ export default function Home() {
               )}
             </motion.div>
 
-            {section.id === 'services' && section.services && (
+            {section.id === 'services-cards' && section.services && (
               <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   const cardVisible = visibleElements.has(`solution-card-${service.id}`);
