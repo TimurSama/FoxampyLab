@@ -580,9 +580,9 @@ export default function Home() {
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
-      }
     };
   }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchMove, handleTouchEnd, sections, totalSections]);
+  return (
     <div
       ref={containerRef}
       className="relative w-full h-screen bg-transparent overflow-hidden"
