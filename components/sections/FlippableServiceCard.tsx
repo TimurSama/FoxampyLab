@@ -43,7 +43,7 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
     const thesis = service.description.split('.')[0] + '.';
 
     return (
-        <div ref={cardRef} className="relative h-\[180px\] sm:h-\[200px\] md:h-\[220px\] lg:h-\[240px\] w-full perspective-1000 group">
+        <div ref={cardRef} className="relative h-[180px] sm:h-[200px] md:h-[220px] lg:h-[240px] w-full perspective-1000 group">
             <motion.div
                 className="w-full h-full relative preserve-3d transition-all duration-700"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}

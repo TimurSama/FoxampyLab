@@ -39,38 +39,38 @@ export default function ServicesPage() {
 
   const services = [
     {
-      id: 'ecosystems',
+      id: 'business',
       icon: <Layers size={32} />,
       title: 'Бизнес стратегирование',
-      description: 'Разработка комплексных продуктов и проектов с полной поддержкой от идеи до реализации',
+      description: 'Проектирование фундаментов бизнеса от Vision & Mission до детальных White Papers и инвестиционных меморандумов',
       features: [
-        'Разработка продуктов под ключ',
-        'Интеграция сервисов и платформ',
-        'API и микросервисная архитектура',
-        'Управление данными',
-        'Масштабируемость и надежность',
-        'Техническая документация'
+        'Vision & Mission разработка',
+        'White Papers и Litepapers',
+        'Инвестиционные меморандумы',
+        'Токеномика и экономические модели',
+        'Бизнес-планирование',
+        'Стратегическое консультирование'
       ],
     },
     {
-      id: 'web-app',
+      id: 'it',
       icon: <Code size={32} />,
       title: 'Разработка экосистем',
-      description: 'Создание современных веб-приложений и нативных мобильных решений с использованием передовых технологий',
+      description: 'Создание технологического ДНК продукта: масштабируемые платформы, AI-интеграции и блокчейн-решения',
       features: [
-        'Разработка веб-приложений',
-        'Мобильные приложения (iOS, Android)',
-        'Progressive Web Apps (PWA)',
-        'Backend разработка',
-        'База данных и API',
-        'Оптимизация производительности'
+        'Архитектура экосистем',
+        'Блокчейн разработка',
+        'AI/ML интеграции',
+        'Масштабируемые платформы',
+        'Микросервисная архитектура',
+        'API и интеграции'
       ],
     },
     {
       id: 'blockchain',
       icon: <Rocket size={32} />,
       title: 'Блокчейн и Web3 решения',
-      description: 'Разработка децентрализованных приложений и интеграция с блокчейн технологиями',
+      description: 'Разработка децентрализованных приложений с аудитом безопасности и токеномикой',
       features: [
         'Smart-контракты',
         'DeFi приложения',
@@ -81,76 +81,73 @@ export default function ServicesPage() {
       ],
     },
     {
-      id: 'design',
+      id: 'branding',
       icon: <Palette size={32} />,
-      title: 'Дизайн и брендинг',
-      description: 'Создание визуальных концепций от интерфейсов до 3D миров и комплексных брендинговых стратегий',
+      title: 'Брендинг и айдентика',
+      description: 'Создаем бренды как живые организмы с уникальным кодом айдентики и маркетинговых стратегий',
       features: [
-        'UI/UX дизайн',
-        'Брендинг и айдентика',
-        'Дизайн-система',
+        'Бренд-стратегия',
+        'Визуальная идентичность',
+        'Дизайн-системы',
+        'Маркетинговые стратегии',
+        'Контент-стратегия',
+        'Digital маркетинг'
+      ],
+    },
+    {
+      id: 'spatial',
+      icon: <Zap size={32} />,
+      title: 'Цифровой дизайн и фэшн',
+      description: 'Параметрический дизайн, архитектурные визуализации и Fashion Tech решения',
+      features: [
+        'Параметрический дизайн',
+        'Архитектурное проектирование',
+        'Fashion дизайн',
+        '3D прототипирование',
+        'Цифровые двойники',
+        'Концептуальные решения'
+      ],
+    },
+    {
+      id: 'cinema',
+      icon: <Film size={32} />,
+      title: 'Видеопродакшн и CGI',
+      description: 'Продакшн будущего: от концептуального сторителлинга до сложного CGI и видео-арта',
+      features: [
+        'Видео продакшн',
+        'CGI и визуальные эффекты',
+        'Motion design',
+        'Концептуальный сторителлинг',
+        '3D анимация',
+        'Постпродакшн'
+      ],
+    },
+    {
+      id: 'rd',
+      icon: <FileText size={32} />,
+      title: 'Исследования и R&D',
+      description: 'Лаборатория фундаментальных инноваций: патентоспособные технологии и инженерные решения',
+      features: [
+        'Научные исследования',
+        'Инженерные разработки',
         'Прототипирование',
-        'Адаптивный дизайн',
-        '3D визуализация'
+        'Патентование технологий',
+        'Прикладная физика',
+        'Материаловедение'
       ],
     },
     {
       id: 'marketing',
       icon: <TrendingUp size={32} />,
-      title: 'Digital маркетинг',
-      description: 'Комплексное продвижение цифровых продуктов и брендов в онлайн-пространстве',
+      title: 'Digital маркетинг и рост',
+      description: 'Комплексное продвижение цифровых продуктов с настройкой воронок и автоматизацией',
       features: [
         'Маркетинговая стратегия',
         'SMM и контент-маркетинг',
         'SEO оптимизация',
         'Таргетированная реклама',
-        'Аналитика и отчетность',
-        'Привлечение трафика',
-        'Настройка воронок продаж',
-        'Автоматизация систем и процессов',
-        'CRM внедрение и настройка'
-      ],
-    },
-    {
-      id: 'documents',
-      icon: <FileText size={32} />,
-      title: 'Техническая документация',
-      description: 'Разработка профессиональной документации для проектов и инвестиций',
-      features: [
-        'Техническая документация',
-        'Whitepaper',
-        'Питч-деки',
-        'Бизнес-планы',
-        'Юридические документы',
-        'API документация'
-      ],
-    },
-    {
-      id: 'video',
-      icon: <Film size={32} />,
-      title: 'Видео и анимация',
-      description: 'Создание промо-контента, анимаций и визуальных материалов для брендов',
-      features: [
-        'Промо-видео',
-        'Explainer видео',
-        'Анимация и моушн-дизайн',
-        'Видео для соцсетей',
-        '3D анимация',
-        'Монтаж и постпродакшн'
-      ],
-    },
-    {
-      id: 'fashion',
-      icon: <Zap size={32} />,
-      title: 'Фэшн и архитектура',
-      description: 'Создание цифровых моделей одежды, архитектурных визуализаций и Fashion Tech решений',
-      features: [
-        '3D моделирование одежды',
-        'Digital Fashion',
-        'Архитектурная визуализация',
-        'Виртуальные примерочные',
-        'Fashion Tech решения',
-        'AR/VR для моды'
+        'Воронки продаж',
+        'CRM интеграция'
       ],
     },
     {
@@ -159,7 +156,7 @@ export default function ServicesPage() {
       title: 'Геймдев и геймификация',
       description: 'Разработка игр и игровых механик для вовлечения пользователей и обучения',
       features: [
-        'Разработка мобильных и веб игр',
+        'Мобильные и веб игры',
         'Геймификация бизнес-процессов',
         'Обучающие симуляторы',
         'Игровые механики в приложениях',
@@ -276,9 +273,130 @@ export default function ServicesPage() {
           </div>
         </section>
 
+        {/* Benefits Section */}
+        <section className="px-4 mb-16">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-12"
+            >
+              <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em] mb-4">
+                ─── ПРЕИМУЩЕСТВА ───
+              </div>
+              <h2 className="text-2xl md:text-3xl font-mono text-[#E0E0E0] tracking-tight mb-4">
+                Почему выбирают нас
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {[
+                { title: 'Мультидисциплинарный подход', desc: 'Комплексные решения на стыке IT, дизайна, маркетинга и науки' },
+                { title: 'Фиксированные сроки', desc: 'Четкие дедлайны с гарантией выполнения в срок' },
+                { title: 'Прозрачное ценообразование', desc: 'Детальная смета без скрытых платежей' },
+                { title: 'Поддержка 24/7', desc: 'Постоянная связь с командой на всех этапах проекта' },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-6 bg-glass-matte border border-white/10 hover:border-white/20 transition-all"
+                >
+                  <h3 className="font-mono text-sm text-[#E0E0E0] mb-2">{item.title}</h3>
+                  <p className="font-mono text-[10px] text-[#E0E0E0]/60">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Special Offer */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="relative p-8 bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-sm mb-12"
+            >
+              <div className="absolute top-0 right-0 bg-white text-black font-mono text-[10px] px-3 py-1 tracking-widest">
+                СПЕЦПРЕДЛОЖЕНИЕ
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h3 className="font-mono text-xl text-[#E0E0E0] mb-2">
+                    🎁 Скидка 15% при комплексном заказе
+                  </h3>
+                  <p className="font-mono text-sm text-[#E0E0E0]/70">
+                    Закажите 3+ услуги и получите скидку на весь проект + бесплатную консультацию
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="font-mono text-[10px] text-[#E0E0E0]/50 mb-1">БЕСПЛАТНО</div>
+                  <div className="font-mono text-lg text-[#E0E0E0]">Первичная консультация</div>
+                  <div className="font-mono text-[10px] text-[#E0E0E0]/50">30-60 минут</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Funnel / Process */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-12"
+            >
+              <div className="text-center mb-8">
+                <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em] mb-4">
+                  ─── ПРОЦЕСС РАБОТЫ ───
+                </div>
+                <h2 className="text-xl md:text-2xl font-mono text-[#E0E0E0] tracking-tight">
+                  От идеи до результата
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                {[
+                  { step: '01', title: 'Консультация', desc: 'Бесплатная встреча, анализ задачи' },
+                  { step: '02', title: 'Коммерческое предложение', desc: 'Детальная смета и сроки' },
+                  { step: '03', title: 'Разработка', desc: 'Итеративная работа с обратной связью' },
+                  { step: '04', title: 'Тестирование', desc: 'Проверка качества и доработки' },
+                  { step: '05', title: 'Запуск и поддержка', desc: 'Сдача проекта и сопровождение' },
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.15 }}
+                    className="relative p-4 bg-glass-matte border border-white/10"
+                  >
+                    <div className="font-mono text-2xl text-[#E0E0E0]/20 mb-2">{item.step}</div>
+                    <h4 className="font-mono text-xs text-[#E0E0E0] mb-1">{item.title}</h4>
+                    <p className="font-mono text-[9px] text-[#E0E0E0]/50">{item.desc}</p>
+                    {i < 4 && (
+                      <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10">
+                        <ArrowRight size={16} className="text-[#E0E0E0]/30" />
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Services Grid */}
         <section className="px-4 mb-16">
           <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-12"
+            >
+              <div className="font-mono text-[10px] text-[#E0E0E0]/60 tracking-[0.5em] mb-4">
+                ─── ВЫБЕРИТЕ УСЛУГИ ───
+              </div>
+              <h2 className="text-2xl md:text-3xl font-mono text-[#E0E0E0] tracking-tight mb-2">
+                Наши направления
+              </h2>
+              <p className="font-mono text-sm text-[#E0E0E0]/60">
+                Кликните для подробностей, выберите несколько для комплексного заказа
+              </p>
+            </motion.div>
             <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((service, i) => {
                 const isSelected = selectedServices.includes(service.id);
@@ -523,10 +641,11 @@ export default function ServicesPage() {
                     )}
                   </button>
                   <a
-                    href={TelegramService.getBotUrl()}
+                    href="https://t.me/FoxampyLab_contact_bot"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
+                    className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center gap-2"
+                    title="Написать в Telegram"
                   >
                     <MessageSquare size={16} className="text-white" strokeWidth={1.5} />
                   </a>

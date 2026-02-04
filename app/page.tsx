@@ -829,26 +829,26 @@ export default function Home() {
             style={{ 
               minHeight: '100vh', 
               maxHeight: '100vh',
-              paddingTop: '100px',
-              paddingBottom: '40px',
+              paddingTop: section.id === 'cases' ? '80px' : '100px',
+              paddingBottom: '30px',
               boxSizing: 'border-box',
-              overflow: section.id === 'about' ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
+              overflow: 'hidden'
             }}
           >
           <div 
             className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
-              section.id === 'cases' ? 'max-w-4xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
+              section.id === 'cases' ? 'max-w-6xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
             }`} 
             data-scroll-container={section.id === 'about' ? 'true' : undefined}
             style={{ 
-              maxHeight: 'calc(100vh - 140px)', 
-              overflowY: section.id === 'about' ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
+              maxHeight: section.id === 'cases' ? 'calc(100vh - 110px)' : 'calc(100vh - 130px)', 
+              overflowY: section.id === 'about' ? 'auto' : 'hidden',
               boxSizing: 'border-box', 
               width: '100%' 
             }}
           >
             <motion.div 
-                className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-4 sm:mb-6' : ''}`}
+                className={`inline-block p-2 sm:p-3 md:p-4 w-full ${section.id === 'cases' ? 'mb-1 sm:mb-2' : ''}`}
                 data-scroll-id={`section-${section.id}-content`}
                 initial={{ 
                   opacity: 0, 
@@ -877,7 +877,7 @@ export default function Home() {
               {/* Cards-only экран: убираем весь текстовый блок, оставляем только карточки ниже */}
               {section.id === 'services-cards' ? null : section.id === 'cases' ? (
                 <motion.h1 
-                  className="text-4xl md:text-6xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-8 md:mb-12 relative"
+                  className="text-3xl md:text-4xl lg:text-5xl font-mono font-light tracking-tight text-[#E0E0E0] mb-2 md:mb-4 relative"
                   initial={{ opacity: 0, scale: 0.95, y: 0 }}
                   animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -1004,7 +1004,7 @@ export default function Home() {
             </motion.div>
 
             {section.id === 'services-cards' && section.services && (
-              <div className="mt-2 md:mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto px-2 sm:px-4 w-full" style={{ boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
                   const cardVisible = currentSectionIndex === sectionIndex;
@@ -1123,7 +1123,7 @@ export default function Home() {
 
             {section.id === 'cases' && (
               <motion.div 
-                className="mt-2 w-full"
+                className="mt-0 w-full"
                 data-scroll-id={`section-${section.id}-gallery`}
                 initial={{ 
                   opacity: 0, 
