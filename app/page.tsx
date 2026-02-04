@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Suspense, useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
@@ -25,7 +25,7 @@ export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Состояния для формы консультации
+  // РЎРѕСЃС‚РѕСЏРЅРёСЏ РґР»СЏ С„РѕСЂРјС‹ РєРѕРЅСЃСѓР»СЊС‚Р°С†РёРё
   const [isExpanded, setIsExpanded] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [name, setName] = useState('');
@@ -46,18 +46,18 @@ export default function Home() {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
-  const SCROLL_THROTTLE = 1000; // Защита от быстрого пролистывания
+  const SCROLL_THROTTLE = 1000; // Р—Р°С‰РёС‚Р° РѕС‚ Р±С‹СЃС‚СЂРѕРіРѕ РїСЂРѕР»РёСЃС‚С‹РІР°РЅРёСЏ
   const edgeArmedRef = useRef<{ sectionIndex: number; direction: 'up' | 'down'; ts: number } | null>(null);
   const isScrollingInsideRef = useRef<boolean>(false);
 
-  // Генерация доступных дат (следующие 30 дней)
+  // Р“РµРЅРµСЂР°С†РёСЏ РґРѕСЃС‚СѓРїРЅС‹С… РґР°С‚ (СЃР»РµРґСѓСЋС‰РёРµ 30 РґРЅРµР№)
   const availableDates = useMemo(() => {
     const dates: Date[] = [];
     const today = new Date();
     for (let i = 1; i <= 30; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-      // Исключаем выходные для примера
+      // РСЃРєР»СЋС‡Р°РµРј РІС‹С…РѕРґРЅС‹Рµ РґР»СЏ РїСЂРёРјРµСЂР°
       if (date.getDay() !== 0 && date.getDay() !== 6) {
         dates.push(date);
       }
@@ -65,12 +65,12 @@ export default function Home() {
     return dates;
   }, []);
 
-  // Временные слоты
+  // Р’СЂРµРјРµРЅРЅС‹Рµ СЃР»РѕС‚С‹
   const timeSlots = useMemo(() => [
     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
   ], []);
 
-  // Форматирование даты для отображения
+  // Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РґР°С‚С‹ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
   const formatDateForDisplay = (date: Date): string => {
     return date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'en-US', {
       day: 'numeric',
@@ -79,7 +79,7 @@ export default function Home() {
     });
   };
 
-  // Обработка изменения телефона
+  // РћР±СЂР°Р±РѕС‚РєР° РёР·РјРµРЅРµРЅРёСЏ С‚РµР»РµС„РѕРЅР°
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 11) {
@@ -87,7 +87,7 @@ export default function Home() {
     }
   };
 
-  // Обработка выбора даты
+  // РћР±СЂР°Р±РѕС‚РєР° РІС‹Р±РѕСЂР° РґР°С‚С‹
   const handleDateSelect = (date: Date | null) => {
     if (date) {
       setSelectedDate(date);
@@ -95,7 +95,7 @@ export default function Home() {
     }
   };
 
-  // Обработка отправки формы
+  // РћР±СЂР°Р±РѕС‚РєР° РѕС‚РїСЂР°РІРєРё С„РѕСЂРјС‹
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDate || !selectedTime) return;
@@ -110,7 +110,7 @@ export default function Home() {
         time: selectedTime,
       });
       
-      // Сброс формы
+      // РЎР±СЂРѕСЃ С„РѕСЂРјС‹
       setName('');
       setEmail('');
       setPhone('');
@@ -118,11 +118,11 @@ export default function Home() {
       setSelectedTime('');
       setIsExpanded(false);
       
-      // Показываем успешное сообщение
-      alert(t('contact.consultation.confirm') || 'Заявка отправлена!');
+      // РџРѕРєР°Р·С‹РІР°РµРј СѓСЃРїРµС€РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
+      alert(t('contact.consultation.confirm') || 'Р—Р°СЏРІРєР° РѕС‚РїСЂР°РІР»РµРЅР°!');
     } catch (error) {
-      console.error('Ошибка отправки заявки:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Ошибка отправки заявки. Попробуйте позже.';
+      console.error('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё Р·Р°СЏРІРєРё:', error);
+      const errorMessage = error instanceof Error ? error.message : 'РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё Р·Р°СЏРІРєРё. РџРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ.';
       const telegramMessage = TelegramService.formatConsultationMessage({
         name,
         email,
@@ -144,22 +144,22 @@ export default function Home() {
     }
   };
 
-  // Состояние для отслеживания видимых элементов
+  // РЎРѕСЃС‚РѕСЏРЅРёРµ РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РІРёРґРёРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ
   const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
   
-  // Проверка prefers-reduced-motion для доступности
+  // РџСЂРѕРІРµСЂРєР° prefers-reduced-motion РґР»СЏ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
-  // Определение мобильного устройства
+  // РћРїСЂРµРґРµР»РµРЅРёРµ РјРѕР±РёР»СЊРЅРѕРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°
   const mobileDevice = useMemo(() => {
     if (typeof window === 'undefined') return false;
     return isMobile();
   }, []);
 
-  // Упрощенные анимации для мобильных устройств (лучшая производительность)
+  // РЈРїСЂРѕС‰РµРЅРЅС‹Рµ Р°РЅРёРјР°С†РёРё РґР»СЏ РјРѕР±РёР»СЊРЅС‹С… СѓСЃС‚СЂРѕР№СЃС‚РІ (Р»СѓС‡С€Р°СЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ)
   const animationConfig = useMemo(() => {
     if (prefersReducedMotion) {
       return {
@@ -172,9 +172,9 @@ export default function Home() {
     if (mobileDevice) {
       return {
         duration: 0.5,
-        blur: false, // Отключаем blur на мобильных для производительности
+        blur: false, // РћС‚РєР»СЋС‡Р°РµРј blur РЅР° РјРѕР±РёР»СЊРЅС‹С… РґР»СЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё
         scale: true,
-        rotate: false, // Отключаем rotate на мобильных
+        rotate: false, // РћС‚РєР»СЋС‡Р°РµРј rotate РЅР° РјРѕР±РёР»СЊРЅС‹С…
       };
     }
     return {
@@ -205,11 +205,11 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // IntersectionObserver для анимаций при скролле (оптимизировано для мобильных)
+  // IntersectionObserver РґР»СЏ Р°РЅРёРјР°С†РёР№ РїСЂРё СЃРєСЂРѕР»Р»Рµ (РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРѕ РґР»СЏ РјРѕР±РёР»СЊРЅС‹С…)
   useEffect(() => {
     if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
     
-    // Если пользователь предпочитает уменьшенную анимацию, сразу показываем все элементы
+    // Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїСЂРµРґРїРѕС‡РёС‚Р°РµС‚ СѓРјРµРЅСЊС€РµРЅРЅСѓСЋ Р°РЅРёРјР°С†РёСЋ, СЃСЂР°Р·Сѓ РїРѕРєР°Р·С‹РІР°РµРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹
     if (prefersReducedMotion) {
       const elements = document.querySelectorAll('[data-scroll-id]');
       const allIds = Array.from(elements).map(el => el.getAttribute('data-scroll-id')).filter(Boolean) as string[];
@@ -219,8 +219,8 @@ export default function Home() {
 
     const observerOptions = {
       root: null,
-      rootMargin: mobileDevice ? '-20% 0px -20% 0px' : '-30% 0px -30% 0px', // Элементы появляются только когда в центральной области экрана
-      threshold: [0, 0.2, 0.3, 0.5, 0.7, 1], // Несколько порогов для плавного появления
+      rootMargin: mobileDevice ? '-20% 0px -20% 0px' : '-30% 0px -30% 0px', // Р­Р»РµРјРµРЅС‚С‹ РїРѕСЏРІР»СЏСЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РєРѕРіРґР° РІ С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ РѕР±Р»Р°СЃС‚Рё СЌРєСЂР°РЅР°
+      threshold: [0, 0.2, 0.3, 0.5, 0.7, 1], // РќРµСЃРєРѕР»СЊРєРѕ РїРѕСЂРѕРіРѕРІ РґР»СЏ РїР»Р°РІРЅРѕРіРѕ РїРѕСЏРІР»РµРЅРёСЏ
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -228,11 +228,11 @@ export default function Home() {
         const elementId = entry.target.getAttribute('data-scroll-id');
         if (!elementId) return;
         
-        // Элемент виден в центральной области экрана (intersectionRatio > 0.3)
+        // Р­Р»РµРјРµРЅС‚ РІРёРґРµРЅ РІ С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ РѕР±Р»Р°СЃС‚Рё СЌРєСЂР°РЅР° (intersectionRatio > 0.3)
         if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
           setVisibleElements((prev) => new Set(prev).add(elementId));
         } else if (!entry.isIntersecting || entry.intersectionRatio < 0.2) {
-          // Элемент вышел из видимости - скрываем его
+          // Р­Р»РµРјРµРЅС‚ РІС‹С€РµР» РёР· РІРёРґРёРјРѕСЃС‚Рё - СЃРєСЂС‹РІР°РµРј РµРіРѕ
           setVisibleElements((prev) => {
             const next = new Set(prev);
             next.delete(elementId);
@@ -242,7 +242,7 @@ export default function Home() {
       });
     }, observerOptions);
 
-    // Находим все элементы с data-scroll-id
+    // РќР°С…РѕРґРёРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ СЃ data-scroll-id
     const elements = document.querySelectorAll('[data-scroll-id]');
     elements.forEach((el) => observer.observe(el));
 
@@ -315,7 +315,7 @@ export default function Home() {
     },
     {
       id: 'services-cards',
-      // Cards-only экран: не дублируем текстовый блок
+      // Cards-only СЌРєСЂР°РЅ: РЅРµ РґСѓР±Р»РёСЂСѓРµРј С‚РµРєСЃС‚РѕРІС‹Р№ Р±Р»РѕРє
       title: '',
       subtitle: '',
       description: '',
@@ -340,27 +340,27 @@ export default function Home() {
     },
   ], [t, language, servicesData, cases]);
 
-  // Общее количество секций (hero + sections) - вычисляется после sections
+  // РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРµРєС†РёР№ (hero + sections) - РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РїРѕСЃР»Рµ sections
   const totalSections = useMemo(() => 1 + sections.length, [sections]); // hero + solutions + about + cases + hub
 
-  // Функция переключения секций
+  // Р¤СѓРЅРєС†РёСЏ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ СЃРµРєС†РёР№
   const scrollToSection = useCallback((index: number, direction: 'up' | 'down' = 'down') => {
-    // Проверяем границы
+    // РџСЂРѕРІРµСЂСЏРµРј РіСЂР°РЅРёС†С‹
     if (index < 0 || index >= totalSections) {
       return;
     }
     
-    // Если уже переключаемся, игнорируем новый запрос
+    // Р•СЃР»Рё СѓР¶Рµ РїРµСЂРµРєР»СЋС‡Р°РµРјСЃСЏ, РёРіРЅРѕСЂРёСЂСѓРµРј РЅРѕРІС‹Р№ Р·Р°РїСЂРѕСЃ
     if (isTransitioning) {
       return;
     }
     
-    // Если индекс не изменился, ничего не делаем
+    // Р•СЃР»Рё РёРЅРґРµРєСЃ РЅРµ РёР·РјРµРЅРёР»СЃСЏ, РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
     if (index === currentSectionIndex) {
       return;
     }
 
-    // Сбрасываем состояние внутреннего скролла и armed при переключении
+    // РЎР±СЂР°СЃС‹РІР°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ СЃРєСЂРѕР»Р»Р° Рё armed РїСЂРё РїРµСЂРµРєР»СЋС‡РµРЅРёРё
     edgeArmedRef.current = null;
     isScrollingInsideRef.current = false;
 
@@ -368,7 +368,7 @@ export default function Home() {
     setTransitionDirection(direction);
     setCurrentSectionIndex(index);
     
-    // Обновление URL hash
+    // РћР±РЅРѕРІР»РµРЅРёРµ URL hash
     if (index === 0) {
       window.history.replaceState(null, '', window.location.pathname);
     } else {
@@ -376,25 +376,25 @@ export default function Home() {
       window.history.replaceState(null, '', `#${sectionId}`);
     }
 
-    // Сброс состояния перехода после анимации
+    // РЎР±СЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїРµСЂРµС…РѕРґР° РїРѕСЃР»Рµ Р°РЅРёРјР°С†РёРё
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
+    }, 1200); // Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ Р°РЅРёРјР°С†РёРё (С‡СѓС‚СЊ Р±РѕР»СЊС€Рµ С‡РµРј РІ SectionTransition)
   }, [isTransitioning, totalSections, currentSectionIndex, sections]);
 
-  // Обработчик touch для мобильных
+  // РћР±СЂР°Р±РѕС‚С‡РёРє touch РґР»СЏ РјРѕР±РёР»СЊРЅС‹С…
   const touchStartYRef = useRef<number>(0);
 
-  // Обработчик скролла колесом мыши
+  // РћР±СЂР°Р±РѕС‚С‡РёРє СЃРєСЂРѕР»Р»Р° РєРѕР»РµСЃРѕРј РјС‹С€Рё
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
     const now = Date.now();
     const direction = e.deltaY > 0 ? 'down' : 'up';
     
-    // Проверяем, есть ли внутренний скролл в текущей секции
+    // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё РІРЅСѓС‚СЂРµРЅРЅРёР№ СЃРєСЂРѕР»Р» РІ С‚РµРєСѓС‰РµР№ СЃРµРєС†РёРё
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (!currentSection) {
-      // Если секция не найдена, просто переключаем
+      // Р•СЃР»Рё СЃРµРєС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°, РїСЂРѕСЃС‚Рѕ РїРµСЂРµРєР»СЋС‡Р°РµРј
       if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
       lastScrollTime.current = now;
       if (direction === 'down' && currentSectionIndex < totalSections - 1) {
@@ -420,7 +420,7 @@ export default function Home() {
     
     const containerToCheck = scrollableContainer || currentSection;
     
-    // Проверяем, есть ли реальный внутренний скролл
+    // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СЂРµР°Р»СЊРЅС‹Р№ РІРЅСѓС‚СЂРµРЅРЅРёР№ СЃРєСЂРѕР»Р»
     if (containerToCheck) {
       const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
       const hasRealScroll = scrollHeight > clientHeight + 50;
@@ -429,7 +429,7 @@ export default function Home() {
         const isAtTop = scrollTop <= 10;
         const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
         
-        // Если мы внутри секции (не на границе) - прокручиваем внутри
+        // Р•СЃР»Рё РјС‹ РІРЅСѓС‚СЂРё СЃРµРєС†РёРё (РЅРµ РЅР° РіСЂР°РЅРёС†Рµ) - РїСЂРѕРєСЂСѓС‡РёРІР°РµРј РІРЅСѓС‚СЂРё
         if (!isAtTop && !isAtBottom) {
           isScrollingInsideRef.current = true;
           edgeArmedRef.current = null;
@@ -437,7 +437,7 @@ export default function Home() {
           return;
         }
         
-        // Если мы на границе секции
+        // Р•СЃР»Рё РјС‹ РЅР° РіСЂР°РЅРёС†Рµ СЃРµРєС†РёРё
         if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
           const armed = edgeArmedRef.current;
           const isArmed = armed &&
@@ -445,14 +445,14 @@ export default function Home() {
             armed.direction === direction &&
             now - armed.ts < 1200;
           
-          // Первый скролл на границе - только "вооружаем", не переключаем
+          // РџРµСЂРІС‹Р№ СЃРєСЂРѕР»Р» РЅР° РіСЂР°РЅРёС†Рµ - С‚РѕР»СЊРєРѕ "РІРѕРѕСЂСѓР¶Р°РµРј", РЅРµ РїРµСЂРµРєР»СЋС‡Р°РµРј
           if (!isArmed) {
             edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
             isScrollingInsideRef.current = false;
             return;
           }
           
-          // Второй скролл на границе - переключаем секцию
+          // Р’С‚РѕСЂРѕР№ СЃРєСЂРѕР»Р» РЅР° РіСЂР°РЅРёС†Рµ - РїРµСЂРµРєР»СЋС‡Р°РµРј СЃРµРєС†РёСЋ
           if (isArmed) {
             if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
             lastScrollTime.current = now;
@@ -470,8 +470,8 @@ export default function Home() {
       }
     }
     
-    // Если нет внутреннего скролла или мы не на границе - переключаем секцию
-    // Сбрасываем armed состояние при смене направления или секции
+    // Р•СЃР»Рё РЅРµС‚ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ СЃРєСЂРѕР»Р»Р° РёР»Рё РјС‹ РЅРµ РЅР° РіСЂР°РЅРёС†Рµ - РїРµСЂРµРєР»СЋС‡Р°РµРј СЃРµРєС†РёСЋ
+    // РЎР±СЂР°СЃС‹РІР°РµРј armed СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРё СЃРјРµРЅРµ РЅР°РїСЂР°РІР»РµРЅРёСЏ РёР»Рё СЃРµРєС†РёРё
     const armed = edgeArmedRef.current;
     if (armed && (armed.sectionIndex !== currentSectionIndex || armed.direction !== direction)) {
       edgeArmedRef.current = null;
@@ -489,7 +489,7 @@ export default function Home() {
     }
   }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs]);
 
-  // Обработчик клавиатуры
+  // РћР±СЂР°Р±РѕС‚С‡РёРє РєР»Р°РІРёР°С‚СѓСЂС‹
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isTransitioning) return;
     
@@ -528,7 +528,7 @@ export default function Home() {
     
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartYRef.current - touchEndY;
-    const threshold = 50; // Минимальное расстояние для переключения
+    const threshold = 50; // РњРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґР»СЏ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ
     
     if (Math.abs(diff) > threshold) {
       if (diff > 0 && currentSectionIndex < totalSections - 1) {
@@ -541,26 +541,26 @@ export default function Home() {
     touchStartYRef.current = 0;
   }, [currentSectionIndex, totalSections, scrollToSection]);
 
-  // Установка обработчиков для screen-based navigation (после определения всех функций)
+  // РЈСЃС‚Р°РЅРѕРІРєР° РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РґР»СЏ screen-based navigation (РїРѕСЃР»Рµ РѕРїСЂРµРґРµР»РµРЅРёСЏ РІСЃРµС… С„СѓРЅРєС†РёР№)
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    // Отключение стандартного скролла
+    // РћС‚РєР»СЋС‡РµРЅРёРµ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ СЃРєСЂРѕР»Р»Р°
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
     
-    // Обработчики событий
+    // РћР±СЂР°Р±РѕС‚С‡РёРєРё СЃРѕР±С‹С‚РёР№
     const wheelHandler = (e: WheelEvent) => handleWheel(e);
     const keyHandler = (e: KeyboardEvent) => handleKeyDown(e);
     const touchStartHandler = (e: TouchEvent) => handleTouchStart(e);
+    const touchMoveHandler = (e: TouchEvent) => handleTouchMove(e);
     const touchEndHandler = (e: TouchEvent) => handleTouchEnd(e);
-    
     window.addEventListener('wheel', wheelHandler, { passive: false });
     window.addEventListener('keydown', keyHandler);
     window.addEventListener('touchstart', touchStartHandler, { passive: true });
+    window.addEventListener('touchmove', touchMoveHandler, { passive: false });
     window.addEventListener('touchend', touchEndHandler, { passive: true });
-    
-    // Инициализация по hash из URL
+    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРѕ hash РёР· URL
     const hash = window.location.hash.slice(1);
     if (hash) {
       const sectionIndex = hash === 'hero' ? 0 : sections.findIndex(s => s.id === hash) + 1;
@@ -575,14 +575,14 @@ export default function Home() {
       window.removeEventListener('wheel', wheelHandler);
       window.removeEventListener('keydown', keyHandler);
       window.removeEventListener('touchstart', touchStartHandler);
+      window.removeEventListener('touchmove', touchMoveHandler);
       window.removeEventListener('touchend', touchEndHandler);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
+      }
     };
-  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchEnd, sections, totalSections]);
-
-  return (
+  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchMove, handleTouchEnd, sections, totalSections]);
     <div
       ref={containerRef}
       className="relative w-full h-screen bg-transparent overflow-hidden"
@@ -797,7 +797,7 @@ export default function Home() {
                 }}
                 style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
               >
-              {/* Cards-only экран: убираем весь текстовый блок, оставляем только карточки ниже */}
+              {/* Cards-only СЌРєСЂР°РЅ: СѓР±РёСЂР°РµРј РІРµСЃСЊ С‚РµРєСЃС‚РѕРІС‹Р№ Р±Р»РѕРє, РѕСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РєР°СЂС‚РѕС‡РєРё РЅРёР¶Рµ */}
               {section.id === 'services-cards' ? null : section.id === 'cases' ? (
                 <motion.h1 
                   className="text-4xl md:text-6xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-8 md:mb-12 relative"
@@ -846,7 +846,7 @@ export default function Home() {
                       borderRadius: '3px',
                       boxShadow: 'inset 0 0 12px rgba(0, 0, 0, 0.4)'
                     }}>
-                      ─── {section.title} ───
+                      в”Ђв”Ђв”Ђ {section.title} в”Ђв”Ђв”Ђ
                     </span>
                   </motion.div>
 
@@ -929,7 +929,7 @@ export default function Home() {
             {section.id === 'services-cards' && section.services && (
               <div className="mt-2 md:mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
-                  // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
+                  // IntersectionObserver РЅР° fixed/hidden СЃРµРєС†РёСЏС… РјРѕР¶РµС‚ РЅРµ СЃСЂР°Р±Р°С‚С‹РІР°С‚СЊ вЂ” РїРѕРєР°Р·С‹РІР°РµРј РєР°СЂС‚РѕС‡РєРё, РєРѕРіРґР° СЃРµРєС†РёСЏ Р°РєС‚РёРІРЅР°
                   const cardVisible = currentSectionIndex === sectionIndex;
                   return (
                   <motion.div
@@ -1142,7 +1142,7 @@ export default function Home() {
                 <div className="bg-[#0A0A0A] border border-white/20 overflow-hidden rounded-sm shadow-2xl">
                   <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#050505]">
                     <h2 className="font-mono text-sm uppercase tracking-widest text-[#E0E0E0]">
-                      {t('contact.consultation.title') || 'Связаться с нами'}
+                      {t('contact.consultation.title') || 'РЎРІСЏР·Р°С‚СЊСЃСЏ СЃ РЅР°РјРё'}
                     </h2>
                     <button onClick={() => setIsExpanded(false)} className="p-2 hover:bg-white/10 transition-colors rounded-full">
                       <X size={18} className="text-[#E0E0E0]/80" />
@@ -1233,10 +1233,10 @@ export default function Home() {
                       {isSubmitting ? (
                         <>
                           <div className="w-4 h-4 border-2 border-[#050505]/30 border-t-[#050505] rounded-full animate-spin" />
-                          {t('common.sending') || 'Отправка...'}
+                          {t('common.sending') || 'РћС‚РїСЂР°РІРєР°...'}
                         </>
                       ) : (
-                        t('contact.consultation.confirm') || 'Отправить заявку'
+                        t('contact.consultation.confirm') || 'РћС‚РїСЂР°РІРёС‚СЊ Р·Р°СЏРІРєСѓ'
                       )}
                     </button>
                     <a
