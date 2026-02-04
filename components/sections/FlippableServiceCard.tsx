@@ -43,7 +43,7 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
     const thesis = service.description.split('.')[0] + '.';
 
     return (
-        <div ref={cardRef} className="relative h-[400px] w-full perspective-1000 group">
+        <div ref={cardRef} className="relative h-[260px] sm:h-[300px] md:h-[320px] lg:h-[340px] w-full perspective-1000 group">
             <motion.div
                 className="w-full h-full relative preserve-3d transition-all duration-700"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -54,7 +54,7 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                 <div
                     className="absolute inset-0 backface-hidden border border-white/5 bg-glass-matte
                      hover:border-white/20 hover:bg-black/03 hover:backdrop-blur-2xl 
-                     transition-all duration-500 cursor-pointer p-6 md:p-8 flex flex-col justify-center rounded-sm"
+                     transition-all duration-500 cursor-pointer p-4 sm:p-5 md:p-6 flex flex-col justify-center rounded-sm"
                     style={{ 
                         backfaceVisibility: 'hidden',
                         background: 'rgba(5, 5, 5, 0.85)',
@@ -105,7 +105,7 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
 
                 {/* BACK SIDE */}
                 <div
-                    className="absolute inset-0 backface-hidden bg-glass-matte border border-white/10 p-6 md:p-8 rounded-sm overflow-hidden"
+                    className="absolute inset-0 backface-hidden bg-glass-matte border border-white/10 p-4 sm:p-5 md:p-6 rounded-sm overflow-hidden"
                     style={{
                         backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',

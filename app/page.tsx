@@ -47,6 +47,7 @@ export default function Home() {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
   const SCROLL_THROTTLE = 800; // Защита от быстрого пролистывания
+  const edgeArmedRef = useRef<{ sectionIndex: number; direction: 'up' | 'down'; ts: number } | null>(null);
 
   // Генерация доступных дат (следующие 30 дней)
   const availableDates = useMemo(() => {
@@ -420,10 +421,6 @@ export default function Home() {
 
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
-    const now = Date.now();
-    if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
-    lastScrollTime.current = now;
-
     // Проверяем внутренний скролл перед переключением секции
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (currentSection) {
@@ -454,19 +451,45 @@ export default function Home() {
         if (direction === 'down' && !isAtBottom) {
           e.preventDefault();
           containerToCheck.scrollTop += e.deltaY;
+          edgeArmedRef.current = null;
           return;
         }
         if (direction === 'up' && !isAtTop) {
           e.preventDefault();
           containerToCheck.scrollTop += e.deltaY;
+          edgeArmedRef.current = null;
           return;
+        }
+
+        // Мы на границе: первый скролл "армирует" переход, следующий — переключает секцию
+        if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
+          const now = Date.now();
+          const armed = edgeArmedRef.current;
+          const isSame =
+            armed &&
+            armed.sectionIndex === currentSectionIndex &&
+            armed.direction === direction &&
+            now - armed.ts < 1200;
+
+          // Первый скролл на границе — просто стопаемся (без переключения)
+          if (!isSame) {
+            e.preventDefault();
+            edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
+            return;
+          }
+          // Второй скролл — разрешаем переключение ниже
         }
       }
     }
 
     // Если внутреннего скролла нет/на границе — переключаем секцию
+    const now = Date.now();
+    if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+    lastScrollTime.current = now;
+
     e.preventDefault();
     const direction = e.deltaY > 0 ? 'down' : 'up';
+    edgeArmedRef.current = null;
     
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
       scrollToSection(currentSectionIndex + 1, 'down');
@@ -1032,7 +1055,7 @@ export default function Home() {
 
             {section.id === 'cases' && (
               <motion.div 
-                className="mt-8 w-full"
+                className="mt-4 w-full"
                 data-scroll-id={`section-${section.id}-gallery`}
                 initial={{ 
                   opacity: 0, 

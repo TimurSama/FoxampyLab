@@ -760,7 +760,7 @@ const enHomeTranslations = {
   },
   gallery: {
     title: 'Gallery',
-    subtitle: 'Showcase',
+    subtitle: 'Gallery',
     description: '',
     cta: 'Open Gallery',
   },
@@ -1711,7 +1711,7 @@ export const translations: Record<Language, Translations> = {
     gallery: {
       tagline: 'GALLERY',
       title: 'Gallery',
-      subtitle: 'Showcase',
+      subtitle: 'Gallery',
       description: '',
       cta: 'Open Gallery',
       ctaButton: '',
