@@ -384,6 +384,8 @@ export default function Home() {
 
   // Обработчик touch для мобильных
   const touchStartYRef = useRef<number>(0);
+  const touchStartElementRef = useRef<HTMLElement | null>(null);
+  const touchScrolledInsideRef = useRef<boolean>(false);
 
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
@@ -521,16 +523,86 @@ export default function Home() {
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartYRef.current = e.touches[0].clientY;
+    touchScrolledInsideRef.current = false;
+    // Сохраняем элемент, на котором начался touch
+    const target = e.target as HTMLElement;
+    touchStartElementRef.current = target;
   }, []);
+  
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (!touchStartYRef.current) return;
+    
+    const currentY = e.touches[0].clientY;
+    const diff = touchStartYRef.current - currentY;
+    
+    // Проверяем, есть ли внутренний скролл в текущей секции
+    const currentSection = sectionRefs.current[currentSectionIndex];
+    if (!currentSection) return;
+    
+    // Ищем scrollable контейнер
+    let scrollableContainer: HTMLElement | null = null;
+    scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
+    if (!scrollableContainer) {
+      const allDivs = currentSection.querySelectorAll('div');
+      for (const div of Array.from(allDivs)) {
+        const style = window.getComputedStyle(div);
+        if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+          scrollableContainer = div as HTMLElement;
+          break;
+        }
+      }
+    }
+    
+    const containerToCheck = scrollableContainer || currentSection;
+    
+    // Проверяем, есть ли реальный внутренний скролл
+    if (containerToCheck) {
+      const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
+      const hasRealScroll = scrollHeight > clientHeight + 50;
+      
+      if (hasRealScroll) {
+        const isAtTop = scrollTop <= 10;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+        
+        // Если мы НЕ на границе - позволяем нативному скроллу работать
+        if (!isAtTop && !isAtBottom) {
+          touchScrolledInsideRef.current = true;
+          return; // Не предотвращаем стандартное поведение
+        }
+        
+        // Если на границе и пытаемся скроллить дальше - предотвращаем
+        if ((diff > 0 && isAtBottom) || (diff < 0 && isAtTop)) {
+          e.preventDefault();
+        }
+      }
+    }
+  }, [currentSectionIndex, sectionRefs]);
   
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (!touchStartYRef.current) return;
+    
+    // Если был скролл внутри - не переключаем секцию
+    if (touchScrolledInsideRef.current) {
+      touchStartYRef.current = 0;
+      touchScrolledInsideRef.current = false;
+      touchStartElementRef.current = null;
+      return;
+    }
     
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartYRef.current - touchEndY;
     const threshold = 50; // Минимальное расстояние для переключения
     
     if (Math.abs(diff) > threshold) {
+      const now = Date.now();
+      // Проверяем троттл для переключения секций
+      if (now - lastScrollTime.current < SCROLL_THROTTLE) {
+        touchStartYRef.current = 0;
+        touchStartElementRef.current = null;
+        return;
+      }
+      lastScrollTime.current = now;
+      
       if (diff > 0 && currentSectionIndex < totalSections - 1) {
         scrollToSection(currentSectionIndex + 1, 'down');
       } else if (diff < 0 && currentSectionIndex > 0) {
@@ -539,7 +611,53 @@ export default function Home() {
     }
     
     touchStartYRef.current = 0;
+    touchStartElementRef.current = null;
+    touchScrolledInsideRef.current = false;
   }, [currentSectionIndex, totalSections, scrollToSection]);
+
+  // Установка обработчиков для screen-based navigation (после определения всех функций)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Отключение стандартного скролла
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    // Обработчики событий
+    const wheelHandler = (e: WheelEvent) => handleWheel(e);
+    const keyHandler = (e: KeyboardEvent) => handleKeyDown(e);
+    const touchStartHandler = (e: TouchEvent) => handleTouchStart(e);
+    const touchMoveHandler = (e: TouchEvent) => handleTouchMove(e);
+    const touchEndHandler = (e: TouchEvent) => handleTouchEnd(e);
+    
+    window.addEventListener('wheel', wheelHandler, { passive: false });
+    window.addEventListener('keydown', keyHandler);
+    window.addEventListener('touchstart', touchStartHandler, { passive: true });
+    window.addEventListener('touchmove', touchMoveHandler, { passive: false });
+    window.addEventListener('touchend', touchEndHandler, { passive: true });
+    
+    // Инициализация по hash из URL
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const sectionIndex = hash === 'hero' ? 0 : sections.findIndex(s => s.id === hash) + 1;
+      if (sectionIndex >= 0 && sectionIndex < totalSections) {
+        setCurrentSectionIndex(sectionIndex);
+      }
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      window.removeEventListener('wheel', wheelHandler);
+      window.removeEventListener('keydown', keyHandler);
+      window.removeEventListener('touchstart', touchStartHandler);
+      window.removeEventListener('touchmove', touchMoveHandler);
+      window.removeEventListener('touchend', touchEndHandler);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchMove, handleTouchEnd, sections, totalSections]);
 
   return (
     <div
@@ -570,7 +688,7 @@ export default function Home() {
             boxSizing: 'border-box'
           }}
         >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' \}}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, y: 0 }}
