@@ -359,45 +359,10 @@ export default function Home() {
     if (index === currentSectionIndex) {
       return;
     }
-    
-    // Проверка внутреннего скролла контейнера секции
-    const currentSection = sectionRefs.current[currentSectionIndex];
-    if (currentSection) {
-      // Ищем контейнер с overflow внутри секции - ищем по data-атрибуту или по классу
-      let scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
-      if (!scrollableContainer) {
-        // Ищем div с overflowY в стиле
-        const allDivs = currentSection.querySelectorAll('div');
-        for (const div of Array.from(allDivs)) {
-          const style = window.getComputedStyle(div);
-          if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
-            scrollableContainer = div as HTMLElement;
-            break;
-          }
-        }
-      }
-      const containerToCheck = scrollableContainer || currentSection;
-      
-      const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
-      // Проверяем, есть ли реальное переполнение (больше чем 50px)
-      const hasRealScroll = scrollHeight > clientHeight + 50;
-      
-      if (hasRealScroll) {
-        const isAtTop = scrollTop <= 10; // 10px tolerance
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
-        
-        // Если скроллим вниз, но не достигли низа контейнера - скроллим внутри контейнера
-        if (direction === 'down' && !isAtBottom) {
-          // Нужна "свободная" прокрутка — не прыгаем на конец
-          // (само переключение секций произойдет следующим скроллом у границы)
-          return;
-        }
-        // Если скроллим вверх, но не достигли верха контейнера - скроллим внутри контейнера
-        if (direction === 'up' && !isAtTop) {
-          return;
-        }
-      }
-    }
+
+    // Сбрасываем состояние внутреннего скролла и armed при переключении
+    edgeArmedRef.current = null;
+    isScrollingInsideRef.current = false;
 
     setIsTransitioning(true);
     setTransitionDirection(direction);
@@ -415,7 +380,7 @@ export default function Home() {
     setTimeout(() => {
       setIsTransitioning(false);
     }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
-  }, [isTransitioning, totalSections, currentSectionIndex, sections, sectionRefs]);
+  }, [isTransitioning, totalSections, currentSectionIndex, sections]);
 
   // Обработчик touch для мобильных
   const touchStartYRef = useRef<number>(0);
