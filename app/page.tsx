@@ -611,7 +611,7 @@ export default function Home() {
             boxSizing: 'border-box'
           }}
         >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' \}}>
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, y: 0 }}

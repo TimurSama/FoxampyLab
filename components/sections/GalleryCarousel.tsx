@@ -151,7 +151,7 @@ export default function GalleryCarousel() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="relative w-full max-w-6xl mx-auto"
+      className="relative w-full max-w-7xl mx-auto"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -159,7 +159,7 @@ export default function GalleryCarousel() {
       <div className="relative group">
         {/* Фиксированный размер экрана предпоказа */}
         <div 
-          className="relative w-full h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px] overflow-hidden rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm cursor-pointer"
+          className="relative w-full h-\[320px\] sm:h-\[380px\] md:h-\[480px\] lg:h-\[560px\] xl:h-\[640px\] overflow-auto rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm cursor-pointer"
           onClick={handleItemClick}
         >
           {/* Коллаж фото для Fashion и Architecture */}
