@@ -313,9 +313,10 @@ export default function Home() {
     },
     {
       id: 'services-cards',
-      title: t('home.solutions.title'),
-      subtitle: t('home.solutions.subtitle'),
-      description: t('home.solutions.description'),
+      // Cards-only экран: не дублируем текстовый блок
+      title: '',
+      subtitle: '',
+      description: '',
       services: servicesData,
     },
     {
@@ -385,12 +386,12 @@ export default function Home() {
         
         // Если скроллим вниз, но не достигли низа контейнера - скроллим внутри контейнера
         if (direction === 'down' && !isAtBottom) {
-          containerToCheck.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+          // Нужна "свободная" прокрутка — не прыгаем на конец
+          // (само переключение секций произойдет следующим скроллом у границы)
           return;
         }
         // Если скроллим вверх, но не достигли верха контейнера - скроллим внутри контейнера
         if (direction === 'up' && !isAtTop) {
-          containerToCheck.scrollTo({ top: 0, behavior: 'smooth' });
           return;
         }
       }
@@ -419,8 +420,6 @@ export default function Home() {
 
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
-    e.preventDefault();
-    
     const now = Date.now();
     if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
     lastScrollTime.current = now;
@@ -451,18 +450,22 @@ export default function Home() {
         const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
         const direction = e.deltaY > 0 ? 'down' : 'up';
         
-        // Если есть внутренний скролл и мы не на границе - скроллим внутри
+        // Если есть внутренний скролл и мы не на границе - скроллим внутри (свободно)
         if (direction === 'down' && !isAtBottom) {
-          containerToCheck.scrollBy({ top: 100, behavior: 'smooth' });
+          e.preventDefault();
+          containerToCheck.scrollTop += e.deltaY;
           return;
         }
         if (direction === 'up' && !isAtTop) {
-          containerToCheck.scrollBy({ top: -100, behavior: 'smooth' });
+          e.preventDefault();
+          containerToCheck.scrollTop += e.deltaY;
           return;
         }
       }
     }
 
+    // Если внутреннего скролла нет/на границе — переключаем секцию
+    e.preventDefault();
     const direction = e.deltaY > 0 ? 'down' : 'up';
     
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
@@ -753,7 +756,7 @@ export default function Home() {
               width: '100%' 
             }}
           >
-              <motion.div 
+            <motion.div 
                 className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
                 data-scroll-id={`section-${section.id}-content`}
                 initial={{ 
@@ -780,7 +783,8 @@ export default function Home() {
                 }}
                 style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
               >
-              {section.id === 'cases' ? (
+              {/* Cards-only экран: убираем весь текстовый блок, оставляем только карточки ниже */}
+              {section.id === 'services-cards' ? null : section.id === 'cases' ? (
                 <motion.h1 
                   className="text-4xl md:text-6xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-8 md:mb-12 relative"
                   initial={{ opacity: 0, scale: 0.95, y: 0 }}
@@ -859,7 +863,7 @@ export default function Home() {
                 </>
               )}
 
-              {section.description && section.id !== 'cases' && (
+              {section.description && section.id !== 'cases' && section.id !== 'services-cards' && (
                 <motion.p 
                   className="font-mono text-sm md:text-base lg:text-lg text-[#E0E0E0]/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed px-4 relative"
                   initial={{ opacity: 0, scale: 0.95, y: 0 }}
@@ -886,7 +890,7 @@ export default function Home() {
                 </motion.p>
               )}
 
-              {section.cta && section.id !== 'cases' && (
+              {section.cta && section.id !== 'cases' && section.id !== 'services-cards' && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 0 }}
                   animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
@@ -911,7 +915,8 @@ export default function Home() {
             {section.id === 'services-cards' && section.services && (
               <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
-                  const cardVisible = visibleElements.has(`solution-card-${service.id}`);
+                  // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
+                  const cardVisible = currentSectionIndex === sectionIndex;
                   return (
                   <motion.div
                     key={service.id}
