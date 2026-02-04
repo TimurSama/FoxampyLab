@@ -775,7 +775,7 @@ export default function Home() {
               paddingTop: '100px',
               paddingBottom: '40px',
               boxSizing: 'border-box',
-              overflow: section.id === 'about' ? 'hidden' : 'auto'
+              overflow: section.id === 'about' ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
             }}
           >
           <div 
@@ -785,13 +785,13 @@ export default function Home() {
             data-scroll-container={section.id === 'about' ? 'true' : undefined}
             style={{ 
               maxHeight: 'calc(100vh - 140px)', 
-              overflowY: section.id === 'about' ? 'auto' : 'auto', 
+              overflowY: section.id === 'about' ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
               boxSizing: 'border-box', 
               width: '100%' 
             }}
           >
             <motion.div 
-                className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-6 sm:mb-12' : ''}`}
+                className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-4 sm:mb-6' : ''}`}
                 data-scroll-id={`section-${section.id}-content`}
                 initial={{ 
                   opacity: 0, 
@@ -947,7 +947,7 @@ export default function Home() {
             </motion.div>
 
             {section.id === 'services-cards' && section.services && (
-              <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
+              <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
                   const cardVisible = currentSectionIndex === sectionIndex;
@@ -1066,7 +1066,7 @@ export default function Home() {
 
             {section.id === 'cases' && (
               <motion.div 
-                className="mt-4 w-full"
+                className="mt-2 w-full"
                 data-scroll-id={`section-${section.id}-gallery`}
                 initial={{ 
                   opacity: 0, 

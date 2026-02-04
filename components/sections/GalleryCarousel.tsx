@@ -159,7 +159,7 @@ export default function GalleryCarousel() {
       <div className="relative group">
         {/* Фиксированный размер экрана предпоказа */}
         <div 
-          className="relative w-full h-[400px] md:h-[450px] overflow-hidden rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm cursor-pointer"
+          className="relative w-full h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px] overflow-hidden rounded-sm border border-white/10 bg-black/20 backdrop-blur-sm cursor-pointer"
           onClick={handleItemClick}
         >
           {/* Коллаж фото для Fashion и Architecture */}

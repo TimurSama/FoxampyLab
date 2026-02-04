@@ -2047,7 +2047,7 @@ export const translations: Record<Language, Translations> = {
       },
       gallery: {
         title: 'Галерея',
-        subtitle: 'Витрина',
+        subtitle: 'Галерея',
         description: '',
         cta: 'Открыть галерею',
       },
@@ -2762,7 +2762,7 @@ export const translations: Record<Language, Translations> = {
     gallery: {
       tagline: 'ГАЛЕРЕЯ',
       title: 'Галерея',
-      subtitle: 'Витрина',
+      subtitle: 'Галерея',
       description: '',
       cta: 'Открыть галерею',
       ctaButton: '',
