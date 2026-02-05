@@ -298,14 +298,22 @@ export default function Home() {
 
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
-    e.preventDefault();
+    const preventScroll = () => {
+      if (e.cancelable) e.preventDefault();
+    };
     const now = Date.now();
     const direction = e.deltaY > 0 ? 'down' : 'up';
+    
+    if (isTransitioning) {
+      preventScroll();
+      return;
+    }
     
     // Проверяем, есть ли внутренний скролл в текущей секции
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (!currentSection) {
       // Если секция не найдена, просто переключаем
+      preventScroll();
       if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
       lastScrollTime.current = now;
       if (direction === 'down' && currentSectionIndex < totalSections - 1) {
@@ -336,12 +344,13 @@ export default function Home() {
         if ((direction === 'down' && canScrollDown) || (direction === 'up' && canScrollUp)) {
           isScrollingInsideRef.current = true;
           edgeArmedRef.current = null;
-          containerToCheck.scrollTop += e.deltaY;
+          // Нативный скролл должен быть плавным, не блокируем его
           return;
         }
         
         // Если мы на границе секции
         if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
+          preventScroll();
           const armed = edgeArmedRef.current;
           const isArmed = armed &&
             armed.sectionIndex === currentSectionIndex &&
@@ -377,6 +386,7 @@ export default function Home() {
     
     // Если нет внутреннего скролла или мы не на границе - переключаем секцию
     // Сбрасываем armed состояние при смене направления или секции
+    preventScroll();
     const armed = edgeArmedRef.current;
     if (armed && (armed.sectionIndex !== currentSectionIndex || armed.direction !== direction)) {
       edgeArmedRef.current = null;
@@ -392,7 +402,7 @@ export default function Home() {
     } else if (direction === 'up' && currentSectionIndex > 0) {
       scrollToSection(currentSectionIndex - 1, 'up');
     }
-  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs]);
+  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs, findScrollableContainer]);
 
   // Обработчик клавиатуры
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
