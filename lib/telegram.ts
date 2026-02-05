@@ -12,9 +12,39 @@ export interface TelegramResponse {
   description?: string;
 }
 
+type ConsultationPayload = {
+  name: string;
+  email: string;
+  phone: string;
+  date: string;
+  time: string;
+  message?: string;
+};
+
+type ServicesPayload = {
+  services: string[];
+  email: string;
+  phone: string;
+  messenger?: string;
+};
+
+type ContactPayload = {
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+};
+
+export type LeadPayload =
+  | { type: 'consultation'; data: ConsultationPayload }
+  | { type: 'services'; data: ServicesPayload }
+  | { type: 'contact'; data: ContactPayload };
+
 // Получаем конфигурацию из environment variables
-const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-const TELEGRAM_ADMIN_ID = process.env.NEXT_PUBLIC_TELEGRAM_ADMIN_ID;
+const TELEGRAM_BOT_TOKEN =
+  process.env.TELEGRAM_BOT_TOKEN || process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+const TELEGRAM_ADMIN_ID =
+  process.env.TELEGRAM_ADMIN_ID || process.env.NEXT_PUBLIC_TELEGRAM_ADMIN_ID;
 
 export class TelegramService {
   static async sendMessage(message: string): Promise<TelegramResponse> {
@@ -172,6 +202,40 @@ ${message}
   }): Promise<TelegramResponse> {
     const formattedMessage = this.formatContactMessage(data);
     return this.sendMessage(formattedMessage);
+  }
+
+  // Унифицированная отправка заявки
+  static async sendLead(payload: LeadPayload): Promise<{ ok: boolean; usedFallback: boolean }> {
+    try {
+      const response = await fetch('/api/telegram/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Telegram send failed');
+      }
+
+      return { ok: true, usedFallback: false };
+    } catch (error) {
+      // Fallback: открываем бота с префилом, если клиент
+      let message = '';
+      if (payload.type === 'consultation') {
+        message = this.formatConsultationMessage(payload.data);
+      } else if (payload.type === 'services') {
+        message = this.formatServiceRequestMessage(payload.data);
+      } else {
+        message = this.formatContactMessage(payload.data);
+      }
+
+      const telegramUrl = this.getBotUrlWithMessage(message);
+      if (typeof window !== 'undefined') {
+        window.open(telegramUrl, '_blank');
+      }
+
+      return { ok: false, usedFallback: true };
+    }
   }
 
   // Проверка конфигурации

@@ -50,9 +50,19 @@ export default function AdminPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [password, setPassword] = useState('');
 
-  const handlePasswordCheck = () => {
-    if (password === 'foxampy_admin_2024') {
+  useEffect(() => {
+    const cached = typeof window !== 'undefined' ? window.sessionStorage.getItem('adminAuth') : null;
+    if (cached === 'true') {
       setIsAuthorized(true);
+    }
+  }, []);
+
+  const handlePasswordCheck = () => {
+    if (password === '5511055') {
+      setIsAuthorized(true);
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.setItem('adminAuth', 'true');
+      }
     } else {
       alert('Неверный пароль доступа');
     }
@@ -63,7 +73,7 @@ export default function AdminPage() {
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
         <div className="bg-[#1a1a1a] p-8 rounded-lg border border-[#E0E0E0]/20 max-w-md w-full">
           <h1 className="text-2xl font-mono text-[#E0E0E0] mb-4">Admin Panel</h1>
-          <p className="text-[#E0E0E0]/80 mb-6">Введите пароль для доступа к админ-панели</p>
+          <p className="text-[#E0E0E0]/80 mb-6">Секретный вход: введите пароль доступа</p>
           <input
             type="password"
             value={password}

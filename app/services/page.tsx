@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { TelegramService } from '@/lib/telegram';
+import { submitLead } from '@/lib/forms/submitLead';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Layers,
@@ -191,31 +192,21 @@ export default function ServicesPage() {
         .map(id => services.find(s => s.id === id)?.title)
         .filter((title): title is string => Boolean(title));
 
-      if (TelegramService.isConfigured()) {
-        await TelegramService.sendServiceRequest({
+      await submitLead({
+        type: 'services',
+        data: {
           services: selectedServicesList,
           email,
           phone,
           messenger: messenger || undefined,
-        });
+        },
+      });
 
-        alert('✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
-        setSelectedServices([]);
-        setEmail('');
-        setPhone('+');
-        setMessenger('');
-      } else {
-        // Fallback - открываем Telegram бота
-        const message = TelegramService.formatServiceRequestMessage({
-          services: selectedServicesList,
-          email,
-          phone,
-          messenger: messenger || undefined,
-        });
-        const telegramUrl = TelegramService.getBotUrlWithMessage(message);
-        window.open(telegramUrl, '_blank');
-        alert('📱 Перенаправляем в Telegram для завершения заявки...');
-      }
+      alert('✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
+      setSelectedServices([]);
+      setEmail('');
+      setPhone('+');
+      setMessenger('');
     } catch (error) {
       console.error('Failed to submit form:', error);
       const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.';

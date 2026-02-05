@@ -9,13 +9,10 @@ import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
 import Link from 'next/link';
-import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, MessageSquare, X, Send } from 'lucide-react';
-import CalendarPicker from '@/components/forms/CalendarPicker';
+import { ArrowRight, Sparkle, PlayCircle } from 'lucide-react';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
 import FlippableServiceCard from '@/components/sections/FlippableServiceCard';
-import ErrorModal from '@/components/modals/ErrorModal';
 import { useI18n } from '@/lib/i18n/context';
-import { TelegramService } from '@/lib/telegram';
 import SectionTransition from '@/components/transitions/SectionTransition';
 
 export default function Home() {
@@ -24,20 +21,6 @@ export default function Home() {
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Состояния для формы консультации
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState('');
-  const [errorModal, setErrorModal] = useState<{ isOpen: boolean; error: string; telegramMessage?: string }>({
-    isOpen: false,
-    error: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Screen-based navigation states
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
@@ -50,99 +33,6 @@ export default function Home() {
   const edgeArmedRef = useRef<{ sectionIndex: number; direction: 'up' | 'down'; ts: number } | null>(null);
   const isScrollingInsideRef = useRef<boolean>(false);
 
-  // Генерация доступных дат (следующие 30 дней)
-  const availableDates = useMemo(() => {
-    const dates: Date[] = [];
-    const today = new Date();
-    for (let i = 1; i <= 30; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      // Исключаем выходные для примера
-      if (date.getDay() !== 0 && date.getDay() !== 6) {
-        dates.push(date);
-      }
-    }
-    return dates;
-  }, []);
-
-  // Временные слоты
-  const timeSlots = useMemo(() => [
-    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
-  ], []);
-
-  // Форматирование даты для отображения
-  const formatDateForDisplay = (date: Date): string => {
-    return date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
-
-  // Обработка изменения телефона
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 11) {
-      setPhone(value);
-    }
-  };
-
-  // Обработка выбора даты
-  const handleDateSelect = (date: Date | null) => {
-    if (date) {
-      setSelectedDate(date);
-      setShowCalendar(false);
-    }
-  };
-
-  // Обработка отправки формы
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedDate || !selectedTime) return;
-
-    setIsSubmitting(true);
-    try {
-      await TelegramService.sendConsultationRequest({
-        name,
-        email,
-        phone,
-        date: selectedDate.toISOString(),
-        time: selectedTime,
-      });
-      
-      // Сброс формы
-      setName('');
-      setEmail('');
-      setPhone('');
-      setSelectedDate(null);
-      setSelectedTime('');
-      setIsExpanded(false);
-      
-      // Показываем успешное сообщение
-      alert(t('contact.consultation.confirm') || 'Заявка отправлена!');
-    } catch (error) {
-      console.error('Ошибка отправки заявки:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Ошибка отправки заявки. Попробуйте позже.';
-      const telegramMessage = TelegramService.formatConsultationMessage({
-        name,
-        email,
-        phone,
-        date: selectedDate.toLocaleDateString('ru-RU', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        }),
-        time: selectedTime,
-      });
-      setErrorModal({
-        isOpen: true,
-        error: errorMessage,
-        telegramMessage,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   // Состояние для отслеживания видимых элементов
   const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
@@ -386,6 +276,25 @@ export default function Home() {
   const touchStartYRef = useRef<number>(0);
   const touchStartElementRef = useRef<HTMLElement | null>(null);
   const touchScrolledInsideRef = useRef<boolean>(false);
+  const touchScrollContainerRef = useRef<HTMLElement | null>(null);
+  const touchLastScrollTopRef = useRef<number>(0);
+  const touchHasScrolledRef = useRef<boolean>(false);
+
+  const findScrollableContainer = useCallback((section: HTMLElement | null) => {
+    if (!section) return null;
+    let scrollableContainer = section.querySelector('[data-scroll-container="true"]') as HTMLElement | null;
+    if (!scrollableContainer) {
+      const allDivs = section.querySelectorAll('div');
+      for (const div of Array.from(allDivs)) {
+        const style = window.getComputedStyle(div);
+        if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+          scrollableContainer = div as HTMLElement;
+          break;
+        }
+      }
+    }
+    return scrollableContainer;
+  }, []);
 
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
@@ -407,18 +316,7 @@ export default function Home() {
       return;
     }
     
-    let scrollableContainer: HTMLElement | null = null;
-    scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
-    if (!scrollableContainer) {
-      const allDivs = currentSection.querySelectorAll('div');
-      for (const div of Array.from(allDivs)) {
-        const style = window.getComputedStyle(div);
-        if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
-          scrollableContainer = div as HTMLElement;
-          break;
-        }
-      }
-    }
+    const scrollableContainer = findScrollableContainer(currentSection);
     
     const containerToCheck = scrollableContainer || currentSection;
     
@@ -428,11 +326,14 @@ export default function Home() {
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
       if (hasRealScroll) {
-        const isAtTop = scrollTop <= 10;
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-        
-        // Если мы внутри секции (не на границе) - прокручиваем внутри
-        if (!isAtTop && !isAtBottom) {
+        const maxScroll = scrollHeight - clientHeight;
+        const canScrollDown = scrollTop < maxScroll - 1;
+        const canScrollUp = scrollTop > 1;
+        const isAtTop = scrollTop <= 1;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+        // Если можем скроллить внутрь в нужном направлении — делаем это
+        if ((direction === 'down' && canScrollDown) || (direction === 'up' && canScrollUp)) {
           isScrollingInsideRef.current = true;
           edgeArmedRef.current = null;
           containerToCheck.scrollTop += e.deltaY;
@@ -469,6 +370,8 @@ export default function Home() {
             return;
           }
         }
+
+        return;
       }
     }
     
@@ -524,10 +427,20 @@ export default function Home() {
   const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartYRef.current = e.touches[0].clientY;
     touchScrolledInsideRef.current = false;
+    touchHasScrolledRef.current = false;
     // Сохраняем элемент, на котором начался touch
     const target = e.target as HTMLElement;
     touchStartElementRef.current = target;
-  }, []);
+
+    const currentSection = sectionRefs.current[currentSectionIndex];
+    const scrollableContainer = findScrollableContainer(currentSection);
+    touchScrollContainerRef.current = scrollableContainer;
+    if (scrollableContainer) {
+      touchLastScrollTopRef.current = scrollableContainer.scrollTop;
+    } else {
+      touchLastScrollTopRef.current = 0;
+    }
+  }, [currentSectionIndex, findScrollableContainer, sectionRefs]);
   
   const handleTouchMove = useCallback((e: TouchEvent) => {
     if (!touchStartYRef.current) return;
@@ -540,18 +453,8 @@ export default function Home() {
     if (!currentSection) return;
     
     // Ищем scrollable контейнер
-    let scrollableContainer: HTMLElement | null = null;
-    scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
-    if (!scrollableContainer) {
-      const allDivs = currentSection.querySelectorAll('div');
-      for (const div of Array.from(allDivs)) {
-        const style = window.getComputedStyle(div);
-        if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
-          scrollableContainer = div as HTMLElement;
-          break;
-        }
-      }
-    }
+    const scrollableContainer = touchScrollContainerRef.current || findScrollableContainer(currentSection);
+    touchScrollContainerRef.current = scrollableContainer;
     
     const containerToCheck = scrollableContainer || currentSection;
     
@@ -561,40 +464,106 @@ export default function Home() {
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
       if (hasRealScroll) {
-        const isAtTop = scrollTop <= 10;
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-        
-        // Если мы НЕ на границе - позволяем нативному скроллу работать
-        if (!isAtTop && !isAtBottom) {
+        const maxScroll = scrollHeight - clientHeight;
+        const canScrollDown = scrollTop < maxScroll - 1;
+        const canScrollUp = scrollTop > 1;
+        const isAtTop = scrollTop <= 1;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+        const direction = diff > 0 ? 'down' : 'up';
+
+        // Если можем скроллить внутрь — разрешаем нативный скролл
+        if ((direction === 'down' && canScrollDown) || (direction === 'up' && canScrollUp)) {
+          if (scrollTop !== touchLastScrollTopRef.current) {
+            touchHasScrolledRef.current = true;
+            touchLastScrollTopRef.current = scrollTop;
+          }
           touchScrolledInsideRef.current = true;
-          return; // Не предотвращаем стандартное поведение
+          return;
         }
         
         // Если на границе и пытаемся скроллить дальше - предотвращаем
-        if ((diff > 0 && isAtBottom) || (diff < 0 && isAtTop)) {
+        if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
           e.preventDefault();
         }
       }
     }
-  }, [currentSectionIndex, sectionRefs]);
+  }, [currentSectionIndex, findScrollableContainer, sectionRefs]);
   
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (!touchStartYRef.current) return;
     
-    // Если был скролл внутри - не переключаем секцию
-    if (touchScrolledInsideRef.current) {
-      touchStartYRef.current = 0;
-      touchScrolledInsideRef.current = false;
-      touchStartElementRef.current = null;
-      return;
-    }
-    
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartYRef.current - touchEndY;
+    const now = Date.now();
+    const direction = diff > 0 ? 'down' : 'up';
+    const currentSection = sectionRefs.current[currentSectionIndex];
+    const scrollableContainer = touchScrollContainerRef.current || findScrollableContainer(currentSection);
+    const containerToCheck = scrollableContainer || currentSection;
+    const hasRealScroll = containerToCheck
+      ? containerToCheck.scrollHeight > containerToCheck.clientHeight + 50
+      : false;
+
+    if (hasRealScroll && containerToCheck) {
+      const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
+      const isAtTop = scrollTop <= 1;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+      const atEdge = (direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop);
+
+      // Если был скролл внутри — не переключаем, только вооружаем границу
+      if (touchHasScrolledRef.current || touchScrolledInsideRef.current) {
+        if (atEdge) {
+          edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
+        }
+        touchStartYRef.current = 0;
+        touchScrolledInsideRef.current = false;
+        touchHasScrolledRef.current = false;
+        touchStartElementRef.current = null;
+        return;
+      }
+
+      if (atEdge) {
+        const armed = edgeArmedRef.current;
+        const isArmed = armed &&
+          armed.sectionIndex === currentSectionIndex &&
+          armed.direction === direction &&
+          now - armed.ts < 1200;
+
+        if (!isArmed) {
+          edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
+          touchStartYRef.current = 0;
+          touchScrolledInsideRef.current = false;
+          touchHasScrolledRef.current = false;
+          touchStartElementRef.current = null;
+          return;
+        }
+
+        if (now - lastScrollTime.current < SCROLL_THROTTLE) {
+          touchStartYRef.current = 0;
+          touchStartElementRef.current = null;
+          touchScrolledInsideRef.current = false;
+          touchHasScrolledRef.current = false;
+          return;
+        }
+
+        lastScrollTime.current = now;
+        edgeArmedRef.current = null;
+        if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+          scrollToSection(currentSectionIndex + 1, 'down');
+        } else if (direction === 'up' && currentSectionIndex > 0) {
+          scrollToSection(currentSectionIndex - 1, 'up');
+        }
+
+        touchStartYRef.current = 0;
+        touchStartElementRef.current = null;
+        touchScrolledInsideRef.current = false;
+        touchHasScrolledRef.current = false;
+        return;
+      }
+    }
+    
     const threshold = 50; // Минимальное расстояние для переключения
     
     if (Math.abs(diff) > threshold) {
-      const now = Date.now();
       // Проверяем троттл для переключения секций
       if (now - lastScrollTime.current < SCROLL_THROTTLE) {
         touchStartYRef.current = 0;
@@ -603,9 +572,9 @@ export default function Home() {
       }
       lastScrollTime.current = now;
       
-      if (diff > 0 && currentSectionIndex < totalSections - 1) {
+      if (direction === 'down' && currentSectionIndex < totalSections - 1) {
         scrollToSection(currentSectionIndex + 1, 'down');
-      } else if (diff < 0 && currentSectionIndex > 0) {
+      } else if (direction === 'up' && currentSectionIndex > 0) {
         scrollToSection(currentSectionIndex - 1, 'up');
       }
     }
@@ -613,6 +582,7 @@ export default function Home() {
     touchStartYRef.current = 0;
     touchStartElementRef.current = null;
     touchScrolledInsideRef.current = false;
+    touchHasScrolledRef.current = false;
   }, [currentSectionIndex, totalSections, scrollToSection]);
 
   // Установка обработчиков для screen-based navigation (после определения всех функций)
@@ -1185,170 +1155,6 @@ export default function Home() {
         transition={{ delay: 1.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      {/* Consultation Form Button */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsExpanded(true)}
-        className="fixed bottom-6 left-6 z-50 w-14 h-14 bg-[#E0E0E0] text-[#050505] rounded-full flex items-center justify-center shadow-lg hover:bg-[#FFFFFF] transition-colors"
-        aria-label={t('contact.consultation.title') || 'Contact us'}
-      >
-        <MessageSquare size={24} />
-      </motion.button>
-
-      <AnimatePresence>
-        {isExpanded && (
-          <>
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsExpanded(false)}
-              className="fixed inset-0 z-[59] bg-black/80 backdrop-blur-sm"
-            />
-            <div className="fixed inset-0 z-[60] pointer-events-none overflow-hidden">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute bottom-24 left-6 z-[60] w-[calc(100vw-3rem)] md:w-[450px] pointer-events-auto"
-              >
-                <div className="bg-[#0A0A0A] border border-white/20 overflow-hidden rounded-sm shadow-2xl">
-                  <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#050505]">
-                    <h2 className="font-mono text-sm uppercase tracking-widest text-[#E0E0E0]">
-                      {t('contact.consultation.title') || 'Связаться с нами'}
-                    </h2>
-                    <button onClick={() => setIsExpanded(false)} className="p-2 hover:bg-white/10 transition-colors rounded-full">
-                      <X size={18} className="text-[#E0E0E0]/80" />
-                    </button>
-                  </div>
-
-                <form onSubmit={handleSubmit} className="p-5 space-y-4 bg-[#0A0A0A]">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
-                        <User size={12} /> {t('contact.consultation.nameLabel') || 'Name'}
-                      </label>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        placeholder={t('contact.consultation.nameLabel') || 'Your name'}
-                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors placeholder:text-white/20"
-                      />
-                    </div>
-                    <div>
-                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
-                        <Mail size={12} /> {t('contact.consultation.emailLabel') || 'Email'}
-                      </label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        placeholder="mail@example.com"
-                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors placeholder:text-white/20"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
-                      <Phone size={12} /> {t('contact.phoneLabel') || 'Phone'}
-                    </label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={handlePhoneChange}
-                      required
-                      className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
-                        <Calendar size={12} /> {t('contact.consultation.selectDate') || 'Date'}
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => setShowCalendar(true)}
-                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs text-left flex justify-between items-center hover:bg-white/10 transition-all"
-                      >
-                        {selectedDate ? formatDateForDisplay(selectedDate) : (t('contact.consultation.selectDate') || 'Select...')}
-                        <ArrowRight size={10} className="opacity-40" />
-                      </button>
-                    </div>
-                    <div>
-                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
-                        <Clock size={12} /> {t('contact.consultation.selectTime') || 'Time'}
-                      </label>
-                      <select
-                        value={selectedTime}
-                        onChange={(e) => setSelectedTime(e.target.value)}
-                        required
-                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors appearance-none cursor-pointer"
-                      >
-                        <option value="" className="bg-[#050505]">{t('contact.consultation.selectTime') || 'Select...'}</option>
-                        {timeSlots.map((time) => (
-                          <option key={time} value={time} className="bg-[#050505]">{time}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <button
-                      type="submit"
-                      disabled={!selectedDate || !selectedTime || isSubmitting}
-                      className="flex-1 py-3 bg-[#E0E0E0] text-[#050505] font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center hover:bg-[#FFFFFF] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-[#050505]/30 border-t-[#050505] rounded-full animate-spin" />
-                          {t('common.sending') || 'Отправка...'}
-                        </>
-                      ) : (
-                        t('contact.consultation.confirm') || 'Отправить заявку'
-                      )}
-                    </button>
-                    <a
-                      href="https://t.me/FoxampyLab_contact_bot"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
-                    >
-                      <MessageSquare size={16} className="text-white" strokeWidth={1.5} />
-                    </a>
-                  </div>
-                </form>
-              </div>
-            </motion.div>
-          </div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {showCalendar && (
-        <CalendarPicker
-          selectedDate={selectedDate}
-          onDateSelect={handleDateSelect}
-          availableDates={availableDates}
-          onClose={() => setShowCalendar(false)}
-        />
-      )}
-
-      <ErrorModal
-        isOpen={errorModal.isOpen}
-        onClose={() => setErrorModal({ isOpen: false, error: '' })}
-        error={errorModal.error}
-        telegramMessage={errorModal.telegramMessage}
-      />
     </div>
   );
 }

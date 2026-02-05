@@ -3,6 +3,7 @@ import GlobalBackground from '@/components/backgrounds/GlobalBackground'
 import './globals.css'
 import '../styles/temp-animations.css'
 import { I18nProvider } from '@/lib/i18n/context'
+import FloatingContactButton from '@/components/layout/FloatingContactButton'
 import { defaultMetadata } from '@/lib/seo/metadata'
 import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo/structured-data'
 
@@ -48,6 +49,7 @@ export default function RootLayout({
           <GlobalBackground />
 
           {children}
+          <FloatingContactButton />
         </I18nProvider>
       </body>
     </html>

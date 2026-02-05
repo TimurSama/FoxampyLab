@@ -13,6 +13,7 @@ import {
 import Header from '@/components/layout/Header';
 import { useI18n } from '@/lib/i18n/context';
 import { TelegramService } from '@/lib/telegram';
+import { submitLead } from '@/lib/forms/submitLead';
 import ErrorModal from '@/components/modals/ErrorModal';
 
 export default function ContactPage() {
@@ -43,23 +44,18 @@ export default function ContactPage() {
         message: formState.message
       };
 
-      if (TelegramService.isConfigured()) {
-        await TelegramService.sendContactMessage(contactData);
-        setSubmitted(true);
-        setFormState({
-          name: '',
-          email: '',
-          project: '',
-          budget: '',
-          message: ''
-        });
-      } else {
-        // Fallback - открываем Telegram бота
-        const telegramMessage = TelegramService.formatContactMessage(contactData);
-        const telegramUrl = TelegramService.getBotUrlWithMessage(telegramMessage);
-        window.open(telegramUrl, '_blank');
-        setSubmitted(true);
-      }
+      await submitLead({
+        type: 'contact',
+        data: contactData,
+      });
+      setSubmitted(true);
+      setFormState({
+        name: '',
+        email: '',
+        project: '',
+        budget: '',
+        message: ''
+      });
     } catch (error) {
       console.error('Contact form error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
@@ -135,9 +131,9 @@ export default function ContactPage() {
               >
                 <MessageCircle size={24} className="text-engrave-line mb-4" />
                 <h3 className="font-mono text-sm text-engrave-fresco mb-2">{t('contact.telegram')}</h3>
-                <a href="https://t.me/fractalix_lab" 
+                <a href="https://t.me/FoxampyLab_contact_bot" 
                    className="font-mono text-sm text-stone-slate hover:text-engrave-line transition-colors">
-                  @fractalix_lab
+                  @FoxampyLab_contact_bot
                 </a>
               </motion.div>
 
