@@ -9,18 +9,43 @@ import BootSequence from '@/components/boot/BootSequence';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
 import Link from 'next/link';
-import { ArrowRight, Sparkle, PlayCircle } from 'lucide-react';
+import { ArrowRight, Sparkle, PlayCircle, Calendar, Clock, User, Mail, Phone, MessageSquare, X, Send } from 'lucide-react';
+import CalendarPicker from '@/components/forms/CalendarPicker';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
 import FlippableServiceCard from '@/components/sections/FlippableServiceCard';
+import ServicePackages from '@/components/sections/ServicePackages';
+import ErrorModal from '@/components/modals/ErrorModal';
 import { useI18n } from '@/lib/i18n/context';
+import { usePerformance } from '@/lib/context/PerformanceContext';
+import { TelegramService } from '@/lib/telegram';
 import SectionTransition from '@/components/transitions/SectionTransition';
 
 export default function Home() {
   const { t, language } = useI18n();
+  const {
+    shouldDisableAnimations,
+    shouldReduceQuality,
+    level,
+    targetFPS,
+  } = usePerformance();
   const [isBooting, setIsBooting] = useState(true);
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Состояния для формы консультации
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState('');
+  const [errorModal, setErrorModal] = useState<{ isOpen: boolean; error: string; telegramMessage?: string }>({
+    isOpen: false,
+    error: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Screen-based navigation states
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
@@ -29,10 +54,102 @@ export default function Home() {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
-  const SCROLL_THROTTLE = 1000; // Защита от быстрого пролистывания
-  const edgeArmedRef = useRef<{ sectionIndex: number; direction: 'up' | 'down'; ts: number } | null>(null);
-  const isScrollingInsideRef = useRef<boolean>(false);
+  const isProcessingScrollRef = useRef<boolean>(false);
+  const SCROLL_THROTTLE = 1200; // Защита от быстрого пролистывания - увеличен для предотвращения множественных переключений
 
+  // Генерация доступных дат (следующие 30 дней)
+  const availableDates = useMemo(() => {
+    const dates: Date[] = [];
+    const today = new Date();
+    for (let i = 1; i <= 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      // Исключаем выходные для примера
+      if (date.getDay() !== 0 && date.getDay() !== 6) {
+        dates.push(date);
+      }
+    }
+    return dates;
+  }, []);
+
+  // Временные слоты
+  const timeSlots = useMemo(() => [
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
+  ], []);
+
+  // Форматирование даты для отображения
+  const formatDateForDisplay = (date: Date): string => {
+    return date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
+  // Обработка изменения телефона
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    if (value.length <= 11) {
+      setPhone(value);
+    }
+  };
+
+  // Обработка выбора даты
+  const handleDateSelect = (date: Date | null) => {
+    if (date) {
+      setSelectedDate(date);
+      setShowCalendar(false);
+    }
+  };
+
+  // Обработка отправки формы
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedDate || !selectedTime) return;
+
+    setIsSubmitting(true);
+    try {
+      await TelegramService.sendConsultationRequest({
+        name,
+        email,
+        phone,
+        date: selectedDate.toISOString(),
+        time: selectedTime,
+      });
+      
+      // Сброс формы
+      setName('');
+      setEmail('');
+      setPhone('');
+      setSelectedDate(null);
+      setSelectedTime('');
+      setIsExpanded(false);
+      
+      // Показываем успешное сообщение
+      alert(t('contact.consultation.confirm') || 'Заявка отправлена!');
+    } catch (error) {
+      console.error('Ошибка отправки заявки:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Ошибка отправки заявки. Попробуйте позже.';
+      const telegramMessage = TelegramService.formatConsultationMessage({
+        name,
+        email,
+        phone,
+        date: selectedDate.toLocaleDateString('ru-RU', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }),
+        time: selectedTime,
+      });
+      setErrorModal({
+        isOpen: true,
+        error: errorMessage,
+        telegramMessage,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Состояние для отслеживания видимых элементов
   const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
@@ -49,9 +166,17 @@ export default function Home() {
     return isMobile();
   }, []);
 
-  // Упрощенные анимации для мобильных устройств (лучшая производительность)
+  // Упрощенные анимации на основе производительности устройства
   const animationConfig = useMemo(() => {
-    if (prefersReducedMotion) {
+    if (shouldDisableAnimations || prefersReducedMotion) {
+      return {
+        duration: 0.1,
+        blur: false,
+        scale: false,
+        rotate: false,
+      };
+    }
+    if (level === 'very-low' || level === 'low') {
       return {
         duration: 0.3,
         blur: false,
@@ -59,12 +184,12 @@ export default function Home() {
         rotate: false,
       };
     }
-    if (mobileDevice) {
+    if (level === 'medium' || mobileDevice) {
       return {
         duration: 0.5,
-        blur: false, // Отключаем blur на мобильных для производительности
+        blur: false,
         scale: true,
-        rotate: false, // Отключаем rotate на мобильных
+        rotate: false,
       };
     }
     return {
@@ -73,7 +198,7 @@ export default function Home() {
       scale: true,
       rotate: true,
     };
-  }, [mobileDevice, prefersReducedMotion]);
+  }, [shouldDisableAnimations, prefersReducedMotion, level, mobileDevice]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsBooting(false), 800);
@@ -178,6 +303,12 @@ export default function Home() {
       subtitle: t('about.title'),
       description: t('about.description'),
       mission: t('about.mission.description'),
+    },
+    {
+      id: 'about-values',
+      title: '',
+      subtitle: t('about.values.title') || 'Values',
+      description: '',
       values: [
         {
           title: t('about.values.innovation.title'),
@@ -250,9 +381,7 @@ export default function Home() {
       return;
     }
 
-    // Сбрасываем состояние внутреннего скролла и armed при переключении
-    edgeArmedRef.current = null;
-    isScrollingInsideRef.current = false;
+    // Сбрасываем состояние при переключении
 
     setIsTransitioning(true);
     setTransitionDirection(direction);
@@ -272,19 +401,47 @@ export default function Home() {
     }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
   }, [isTransitioning, totalSections, currentSectionIndex, sections]);
 
-  // Обработчик touch для мобильных
+  // Обработчики touch для мобильных
   const touchStartYRef = useRef<number>(0);
   const touchStartElementRef = useRef<HTMLElement | null>(null);
   const touchScrolledInsideRef = useRef<boolean>(false);
-  const touchScrollContainerRef = useRef<HTMLElement | null>(null);
-  const touchLastScrollTopRef = useRef<number>(0);
-  const touchHasScrolledRef = useRef<boolean>(false);
 
-  const findScrollableContainer = useCallback((section: HTMLElement | null) => {
-    if (!section) return null;
-    let scrollableContainer = section.querySelector('[data-scroll-container="true"]') as HTMLElement | null;
+  // Флаг для предотвращения множественных переключений за один скролл
+  const isProcessingScrollRef = useRef<boolean>(false);
+  
+  // Обработчик скролла колесом мыши
+  const handleWheel = useCallback((e: WheelEvent) => {
+    // Если уже обрабатываем скролл или переходим, игнорируем
+    if (isProcessingScrollRef.current || isTransitioning) {
+      e.preventDefault();
+      return;
+    }
+    
+    e.preventDefault();
+    const now = Date.now();
+    const direction = e.deltaY > 0 ? 'down' : 'up';
+    
+    // Проверяем, есть ли внутренний скролл в текущей секции
+    const currentSection = sectionRefs.current[currentSectionIndex];
+    if (!currentSection) {
+      // Если секция не найдена, просто переключаем с троттлом
+      if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+      isProcessingScrollRef.current = true;
+      lastScrollTime.current = now;
+      if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+        scrollToSection(currentSectionIndex + 1, 'down');
+      } else if (direction === 'up' && currentSectionIndex > 0) {
+        scrollToSection(currentSectionIndex - 1, 'up');
+      }
+      setTimeout(() => { isProcessingScrollRef.current = false; }, SCROLL_THROTTLE);
+      return;
+    }
+    
+    // Ищем scrollable контейнер
+    let scrollableContainer: HTMLElement | null = null;
+    scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
     if (!scrollableContainer) {
-      const allDivs = section.querySelectorAll('div');
+      const allDivs = currentSection.querySelectorAll('div');
       for (const div of Array.from(allDivs)) {
         const style = window.getComputedStyle(div);
         if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
@@ -293,38 +450,6 @@ export default function Home() {
         }
       }
     }
-    return scrollableContainer;
-  }, []);
-
-  // Обработчик скролла колесом мыши
-  const handleWheel = useCallback((e: WheelEvent) => {
-    const preventScroll = () => {
-      if (e.cancelable) e.preventDefault();
-    };
-    const now = Date.now();
-    const direction = e.deltaY > 0 ? 'down' : 'up';
-    
-    if (isTransitioning) {
-      preventScroll();
-      return;
-    }
-    
-    // Проверяем, есть ли внутренний скролл в текущей секции
-    const currentSection = sectionRefs.current[currentSectionIndex];
-    if (!currentSection) {
-      // Если секция не найдена, просто переключаем
-      preventScroll();
-      if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
-      lastScrollTime.current = now;
-      if (direction === 'down' && currentSectionIndex < totalSections - 1) {
-        scrollToSection(currentSectionIndex + 1, 'down');
-      } else if (direction === 'up' && currentSectionIndex > 0) {
-        scrollToSection(currentSectionIndex - 1, 'up');
-      }
-      return;
-    }
-    
-    const scrollableContainer = findScrollableContainer(currentSection);
     
     const containerToCheck = scrollableContainer || currentSection;
     
@@ -334,75 +459,44 @@ export default function Home() {
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
       if (hasRealScroll) {
-        const maxScroll = scrollHeight - clientHeight;
-        const canScrollDown = scrollTop < maxScroll - 1;
-        const canScrollUp = scrollTop > 1;
-        const isAtTop = scrollTop <= 1;
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-        // Если можем скроллить внутрь в нужном направлении — делаем это
-        if ((direction === 'down' && canScrollDown) || (direction === 'up' && canScrollUp)) {
-          isScrollingInsideRef.current = true;
-          edgeArmedRef.current = null;
-          // Нативный скролл должен быть плавным, не блокируем его
-          return;
+        const isAtTop = scrollTop <= 10;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+        
+        // Если мы НЕ на границе - скроллим внутри БЕЗ троттла
+        if (!isAtTop && !isAtBottom) {
+          containerToCheck.scrollTop += e.deltaY;
+          return; // Одно действие выполнено - выходим
         }
         
-        // Если мы на границе секции
+        // Если мы на границе - проверяем троттл и переключаем секцию
         if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
-          preventScroll();
-          const armed = edgeArmedRef.current;
-          const isArmed = armed &&
-            armed.sectionIndex === currentSectionIndex &&
-            armed.direction === direction &&
-            now - armed.ts < 1200;
+          if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+          isProcessingScrollRef.current = true;
+          lastScrollTime.current = now;
           
-          // Первый скролл на границе - только "вооружаем", не переключаем
-          if (!isArmed) {
-            edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
-            isScrollingInsideRef.current = false;
-            return;
+          if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+            scrollToSection(currentSectionIndex + 1, 'down');
+          } else if (direction === 'up' && currentSectionIndex > 0) {
+            scrollToSection(currentSectionIndex - 1, 'up');
           }
-          
-          // Второй скролл на границе - переключаем секцию
-          if (isArmed) {
-            if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
-            lastScrollTime.current = now;
-            edgeArmedRef.current = null;
-            isScrollingInsideRef.current = false;
-            
-            if (direction === 'down' && currentSectionIndex < totalSections - 1) {
-              scrollToSection(currentSectionIndex + 1, 'down');
-            } else if (direction === 'up' && currentSectionIndex > 0) {
-              scrollToSection(currentSectionIndex - 1, 'up');
-            }
-            return;
-          }
+          setTimeout(() => { isProcessingScrollRef.current = false; }, SCROLL_THROTTLE);
+          return; // Одно действие выполнено - выходим
         }
-
-        return;
       }
     }
     
-    // Если нет внутреннего скролла или мы не на границе - переключаем секцию
-    // Сбрасываем armed состояние при смене направления или секции
-    preventScroll();
-    const armed = edgeArmedRef.current;
-    if (armed && (armed.sectionIndex !== currentSectionIndex || armed.direction !== direction)) {
-      edgeArmedRef.current = null;
-    }
-    
+    // Если нет внутреннего скролла - переключаем секцию с троттлом
     if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+    isProcessingScrollRef.current = true;
     lastScrollTime.current = now;
-    edgeArmedRef.current = null;
-    isScrollingInsideRef.current = false;
     
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
       scrollToSection(currentSectionIndex + 1, 'down');
     } else if (direction === 'up' && currentSectionIndex > 0) {
       scrollToSection(currentSectionIndex - 1, 'up');
     }
-  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs, findScrollableContainer]);
+    setTimeout(() => { isProcessingScrollRef.current = false; }, SCROLL_THROTTLE);
+  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs]);
 
   // Обработчик клавиатуры
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -437,20 +531,10 @@ export default function Home() {
   const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartYRef.current = e.touches[0].clientY;
     touchScrolledInsideRef.current = false;
-    touchHasScrolledRef.current = false;
     // Сохраняем элемент, на котором начался touch
     const target = e.target as HTMLElement;
     touchStartElementRef.current = target;
-
-    const currentSection = sectionRefs.current[currentSectionIndex];
-    const scrollableContainer = findScrollableContainer(currentSection);
-    touchScrollContainerRef.current = scrollableContainer;
-    if (scrollableContainer) {
-      touchLastScrollTopRef.current = scrollableContainer.scrollTop;
-    } else {
-      touchLastScrollTopRef.current = 0;
-    }
-  }, [currentSectionIndex, findScrollableContainer, sectionRefs]);
+  }, []);
   
   const handleTouchMove = useCallback((e: TouchEvent) => {
     if (!touchStartYRef.current) return;
@@ -463,8 +547,18 @@ export default function Home() {
     if (!currentSection) return;
     
     // Ищем scrollable контейнер
-    const scrollableContainer = touchScrollContainerRef.current || findScrollableContainer(currentSection);
-    touchScrollContainerRef.current = scrollableContainer;
+    let scrollableContainer: HTMLElement | null = null;
+    scrollableContainer = currentSection.querySelector('[data-scroll-container="true"]') as HTMLElement;
+    if (!scrollableContainer) {
+      const allDivs = currentSection.querySelectorAll('div');
+      for (const div of Array.from(allDivs)) {
+        const style = window.getComputedStyle(div);
+        if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+          scrollableContainer = div as HTMLElement;
+          break;
+        }
+      }
+    }
     
     const containerToCheck = scrollableContainer || currentSection;
     
@@ -474,106 +568,40 @@ export default function Home() {
       const hasRealScroll = scrollHeight > clientHeight + 50;
       
       if (hasRealScroll) {
-        const maxScroll = scrollHeight - clientHeight;
-        const canScrollDown = scrollTop < maxScroll - 1;
-        const canScrollUp = scrollTop > 1;
-        const isAtTop = scrollTop <= 1;
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-        const direction = diff > 0 ? 'down' : 'up';
-
-        // Если можем скроллить внутрь — разрешаем нативный скролл
-        if ((direction === 'down' && canScrollDown) || (direction === 'up' && canScrollUp)) {
-          if (scrollTop !== touchLastScrollTopRef.current) {
-            touchHasScrolledRef.current = true;
-            touchLastScrollTopRef.current = scrollTop;
-          }
+        const isAtTop = scrollTop <= 10;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+        
+        // Если мы НЕ на границе - позволяем нативному скроллу работать
+        if (!isAtTop && !isAtBottom) {
           touchScrolledInsideRef.current = true;
-          return;
+          return; // Не предотвращаем стандартное поведение
         }
         
         // Если на границе и пытаемся скроллить дальше - предотвращаем
-        if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
+        if ((diff > 0 && isAtBottom) || (diff < 0 && isAtTop)) {
           e.preventDefault();
         }
       }
     }
-  }, [currentSectionIndex, findScrollableContainer, sectionRefs]);
+  }, [currentSectionIndex, sectionRefs]);
   
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (!touchStartYRef.current) return;
     
-    const touchEndY = e.changedTouches[0].clientY;
-    const diff = touchStartYRef.current - touchEndY;
-    const now = Date.now();
-    const direction = diff > 0 ? 'down' : 'up';
-    const currentSection = sectionRefs.current[currentSectionIndex];
-    const scrollableContainer = touchScrollContainerRef.current || findScrollableContainer(currentSection);
-    const containerToCheck = scrollableContainer || currentSection;
-    const hasRealScroll = containerToCheck
-      ? containerToCheck.scrollHeight > containerToCheck.clientHeight + 50
-      : false;
-
-    if (hasRealScroll && containerToCheck) {
-      const { scrollTop, scrollHeight, clientHeight } = containerToCheck;
-      const isAtTop = scrollTop <= 1;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-      const atEdge = (direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop);
-
-      // Если был скролл внутри — не переключаем, только вооружаем границу
-      if (touchHasScrolledRef.current || touchScrolledInsideRef.current) {
-        if (atEdge) {
-          edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
-        }
-        touchStartYRef.current = 0;
-        touchScrolledInsideRef.current = false;
-        touchHasScrolledRef.current = false;
-        touchStartElementRef.current = null;
-        return;
-      }
-
-      if (atEdge) {
-        const armed = edgeArmedRef.current;
-        const isArmed = armed &&
-          armed.sectionIndex === currentSectionIndex &&
-          armed.direction === direction &&
-          now - armed.ts < 1200;
-
-        if (!isArmed) {
-          edgeArmedRef.current = { sectionIndex: currentSectionIndex, direction, ts: now };
-          touchStartYRef.current = 0;
-          touchScrolledInsideRef.current = false;
-          touchHasScrolledRef.current = false;
-          touchStartElementRef.current = null;
-          return;
-        }
-
-        if (now - lastScrollTime.current < SCROLL_THROTTLE) {
-          touchStartYRef.current = 0;
-          touchStartElementRef.current = null;
-          touchScrolledInsideRef.current = false;
-          touchHasScrolledRef.current = false;
-          return;
-        }
-
-        lastScrollTime.current = now;
-        edgeArmedRef.current = null;
-        if (direction === 'down' && currentSectionIndex < totalSections - 1) {
-          scrollToSection(currentSectionIndex + 1, 'down');
-        } else if (direction === 'up' && currentSectionIndex > 0) {
-          scrollToSection(currentSectionIndex - 1, 'up');
-        }
-
-        touchStartYRef.current = 0;
-        touchStartElementRef.current = null;
-        touchScrolledInsideRef.current = false;
-        touchHasScrolledRef.current = false;
-        return;
-      }
+    // Если был скролл внутри - не переключаем секцию
+    if (touchScrolledInsideRef.current) {
+      touchStartYRef.current = 0;
+      touchScrolledInsideRef.current = false;
+      touchStartElementRef.current = null;
+      return;
     }
     
+    const touchEndY = e.changedTouches[0].clientY;
+    const diff = touchStartYRef.current - touchEndY;
     const threshold = 50; // Минимальное расстояние для переключения
     
     if (Math.abs(diff) > threshold) {
+      const now = Date.now();
       // Проверяем троттл для переключения секций
       if (now - lastScrollTime.current < SCROLL_THROTTLE) {
         touchStartYRef.current = 0;
@@ -582,9 +610,9 @@ export default function Home() {
       }
       lastScrollTime.current = now;
       
-      if (direction === 'down' && currentSectionIndex < totalSections - 1) {
+      if (diff > 0 && currentSectionIndex < totalSections - 1) {
         scrollToSection(currentSectionIndex + 1, 'down');
-      } else if (direction === 'up' && currentSectionIndex > 0) {
+      } else if (diff < 0 && currentSectionIndex > 0) {
         scrollToSection(currentSectionIndex - 1, 'up');
       }
     }
@@ -592,7 +620,6 @@ export default function Home() {
     touchStartYRef.current = 0;
     touchStartElementRef.current = null;
     touchScrolledInsideRef.current = false;
-    touchHasScrolledRef.current = false;
   }, [currentSectionIndex, totalSections, scrollToSection]);
 
   // Установка обработчиков для screen-based navigation (после определения всех функций)
@@ -668,7 +695,7 @@ export default function Home() {
             boxSizing: 'border-box'
           }}
         >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 w-full md:col-span-1" style={{ maxHeight: 'calc(100vh - 140px)', overflowY: 'auto', boxSizing: 'border-box', width: '100%' }}>
           <div className="flex flex-col gap-2 md:gap-4 lg:gap-5 p-2 md:p-4 lg:p-6">
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, y: 0 }}
@@ -809,27 +836,26 @@ export default function Home() {
             style={{ 
               minHeight: '100vh', 
               maxHeight: '100vh',
-              paddingTop: section.id === 'cases' ? '80px' : '100px',
-              paddingBottom: '30px',
+              paddingTop: '100px',
+              paddingBottom: '40px',
               boxSizing: 'border-box',
-              overflow: 'hidden'
+              overflow: section.id === 'about' ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
             }}
           >
           <div 
             className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
-              section.id === 'cases' ? 'max-w-6xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
+              section.id === 'cases' ? 'max-w-4xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
             }`} 
-            data-scroll-container={['about', 'services', 'hub'].includes(section.id) ? 'true' : undefined}
+            data-scroll-container={section.id === 'about' ? 'true' : undefined}
             style={{ 
-              maxHeight: section.id === 'cases' ? 'calc(100vh - 90px)' : 'calc(100vh - 100px)', 
-              overflowY: ['about', 'services', 'hub'].includes(section.id) ? 'auto' : 'hidden',
+              maxHeight: 'calc(100vh - 140px)', 
+              overflowY: section.id === 'about' ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
               boxSizing: 'border-box', 
-              width: '100%',
-              scrollBehavior: 'smooth'
+              width: '100%' 
             }}
           >
             <motion.div 
-                className={`inline-block p-2 sm:p-3 md:p-4 w-full ${section.id === 'cases' ? 'mb-1 sm:mb-2' : ''}`}
+                className={`inline-block p-2 sm:p-4 md:p-6 w-full ${section.id === 'cases' ? 'mb-4 sm:mb-6' : ''}`}
                 data-scroll-id={`section-${section.id}-content`}
                 initial={{ 
                   opacity: 0, 
@@ -858,7 +884,7 @@ export default function Home() {
               {/* Cards-only экран: убираем весь текстовый блок, оставляем только карточки ниже */}
               {section.id === 'services-cards' ? null : section.id === 'cases' ? (
                 <motion.h1 
-                  className="text-3xl md:text-4xl lg:text-5xl font-mono font-light tracking-tight text-[#E0E0E0] mb-2 md:mb-4 relative"
+                  className="text-4xl md:text-6xl lg:text-7xl font-mono font-light tracking-tight text-[#E0E0E0] mb-8 md:mb-12 relative"
                   initial={{ opacity: 0, scale: 0.95, y: 0 }}
                   animate={isVisible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -985,52 +1011,71 @@ export default function Home() {
             </motion.div>
 
             {section.id === 'services-cards' && section.services && (
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-5xl mx-auto px-2 sm:px-4 w-full" style={{ boxSizing: 'border-box' }}>
-                {section.services.map((service, idx) => {
-                  // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
-                  const cardVisible = currentSectionIndex === sectionIndex;
-                  return (
-                  <motion.div
-                    key={service.id}
-                    data-scroll-id={`solution-card-${service.id}`}
-                    initial={prefersReducedMotion ? { opacity: 0, y: 0 } : { 
-                      opacity: 0, 
-                      scale: 0.9, 
-                      filter: 'blur(12px)',
-                      rotateY: -10,
-                      y: 0
-                    }}
-                    animate={cardVisible || prefersReducedMotion ? (prefersReducedMotion ? { 
-                      opacity: 1,
-                      y: 0
-                    } : { 
-                      opacity: 1, 
-                      scale: 1, 
-                      filter: 'blur(0px)',
-                      rotateY: 0,
-                      y: 0
-                    }) : { 
-                      opacity: 0, 
-                      scale: 0.9, 
-                      filter: 'blur(12px)',
-                      rotateY: -10,
-                      y: 0
-                    }}
-                    transition={prefersReducedMotion ? { 
-                      duration: 0.3
-                    } : { 
-                      duration: 0.8, 
-                      delay: mobileDevice ? idx * 0.05 : idx * 0.08,
-                      ease: [0.16, 1, 0.3, 1],
-                      filter: { duration: 0.6 }
-                    }}
-                    style={{ transformStyle: 'preserve-3d' }}
-                  >
-                    <FlippableServiceCard service={service} t={t} />
-                  </motion.div>
-                  );
-                })}
-              </div>
+              <>
+                <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
+                  {section.services.map((service, idx) => {
+                    // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
+                    const cardVisible = currentSectionIndex === sectionIndex;
+                    return (
+                    <motion.div
+                      key={service.id}
+                      data-scroll-id={`solution-card-${service.id}`}
+                      initial={prefersReducedMotion ? { opacity: 0, y: 0 } : { 
+                        opacity: 0, 
+                        scale: 0.9, 
+                        filter: 'blur(12px)',
+                        rotateY: -10,
+                        y: 0
+                      }}
+                      animate={cardVisible || prefersReducedMotion ? (prefersReducedMotion ? { 
+                        opacity: 1,
+                        y: 0
+                      } : { 
+                        opacity: 1, 
+                        scale: 1, 
+                        filter: 'blur(0px)',
+                        rotateY: 0,
+                        y: 0
+                      }) : { 
+                        opacity: 0, 
+                        scale: 0.9, 
+                        filter: 'blur(12px)',
+                        rotateY: -10,
+                        y: 0
+                      }}
+                      transition={prefersReducedMotion ? { 
+                        duration: 0.3
+                      } : { 
+                        duration: 0.8, 
+                        delay: mobileDevice ? idx * 0.05 : idx * 0.08,
+                        ease: [0.16, 1, 0.3, 1],
+                        filter: { duration: 0.6 }
+                      }}
+                      style={{ transformStyle: 'preserve-3d' }}
+                    >
+                      <FlippableServiceCard service={service} t={t} />
+                    </motion.div>
+                    );
+                  })}
+                </div>
+                {/* Service Packages */}
+                {currentSectionIndex === sectionIndex && (
+                  <div className="mt-8 md:mt-12 px-4">
+                    <ServicePackages showComplex={true} />
+                  </div>
+                )}
+              </>
+            )}
+
+            {section.id === 'services-cards' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="mt-8 md:mt-12"
+              >
+                <ServicePackages showComplex={true} />
+              </motion.div>
             )}
 
             {section.id === 'about' && (
@@ -1077,7 +1122,37 @@ export default function Home() {
                     </p>
                   </motion.div>
                 )}
+              </motion.div>
+            )}
 
+            {section.id === 'about-values' && (
+              <motion.div 
+                className="mt-12 max-w-4xl mx-auto space-y-8 px-4 w-full"
+                data-scroll-id={`section-${section.id}-content`}
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                animate={isVisible ? { 
+                  opacity: 1, 
+                  scale: 1, 
+                  filter: 'blur(0px)',
+                  y: 0
+                } : { 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                transition={{ 
+                  duration: 1, 
+                  ease: [0.16, 1, 0.3, 1],
+                  filter: { duration: 0.8 }
+                }}
+                style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
+              >
                 {/* Values */}
                 {section.values && (
                   <div className="grid md:grid-cols-2 gap-4">
@@ -1165,6 +1240,170 @@ export default function Home() {
         transition={{ delay: 1.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       />
 
+      {/* Consultation Form Button */}
+      <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsExpanded(true)}
+        className="fixed bottom-6 left-6 z-50 w-14 h-14 bg-[#E0E0E0] text-[#050505] rounded-full flex items-center justify-center shadow-lg hover:bg-[#FFFFFF] transition-colors"
+        aria-label={t('contact.consultation.title') || 'Contact us'}
+      >
+        <MessageSquare size={24} />
+      </motion.button>
+
+      <AnimatePresence>
+        {isExpanded && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsExpanded(false)}
+              className="fixed inset-0 z-[59] bg-black/80 backdrop-blur-sm"
+            />
+            <div className="fixed inset-0 z-[60] pointer-events-none overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute bottom-24 left-6 z-[60] w-[calc(100vw-3rem)] md:w-[450px] pointer-events-auto"
+              >
+                <div className="bg-[#0A0A0A] border border-white/20 overflow-hidden rounded-sm shadow-2xl">
+                  <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#050505]">
+                    <h2 className="font-mono text-sm uppercase tracking-widest text-[#E0E0E0]">
+                      {t('contact.consultation.title') || 'Связаться с нами'}
+                    </h2>
+                    <button onClick={() => setIsExpanded(false)} className="p-2 hover:bg-white/10 transition-colors rounded-full">
+                      <X size={18} className="text-[#E0E0E0]/80" />
+                    </button>
+                  </div>
+
+                <form onSubmit={handleSubmit} className="p-5 space-y-4 bg-[#0A0A0A]">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
+                        <User size={12} /> {t('contact.consultation.nameLabel') || 'Name'}
+                      </label>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        placeholder={t('contact.consultation.nameLabel') || 'Your name'}
+                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors placeholder:text-white/20"
+                      />
+                    </div>
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
+                        <Mail size={12} /> {t('contact.consultation.emailLabel') || 'Email'}
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="mail@example.com"
+                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors placeholder:text-white/20"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
+                      <Phone size={12} /> {t('contact.phoneLabel') || 'Phone'}
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={handlePhoneChange}
+                      required
+                      className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
+                        <Calendar size={12} /> {t('contact.consultation.selectDate') || 'Date'}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowCalendar(true)}
+                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs text-left flex justify-between items-center hover:bg-white/10 transition-all"
+                      >
+                        {selectedDate ? formatDateForDisplay(selectedDate) : (t('contact.consultation.selectDate') || 'Select...')}
+                        <ArrowRight size={10} className="opacity-40" />
+                      </button>
+                    </div>
+                    <div>
+                      <label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#E0E0E0]/60 mb-2">
+                        <Clock size={12} /> {t('contact.consultation.selectTime') || 'Time'}
+                      </label>
+                      <select
+                        value={selectedTime}
+                        onChange={(e) => setSelectedTime(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 bg-[#050505] border border-white/20 text-white font-mono text-xs focus:border-white/40 focus:outline-none transition-colors appearance-none cursor-pointer"
+                      >
+                        <option value="" className="bg-[#050505]">{t('contact.consultation.selectTime') || 'Select...'}</option>
+                        {timeSlots.map((time) => (
+                          <option key={time} value={time} className="bg-[#050505]">{time}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="submit"
+                      disabled={!selectedDate || !selectedTime || isSubmitting}
+                      className="flex-1 py-3 bg-[#E0E0E0] text-[#050505] font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center hover:bg-[#FFFFFF] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-[#050505]/30 border-t-[#050505] rounded-full animate-spin" />
+                          {t('common.sending') || 'Отправка...'}
+                        </>
+                      ) : (
+                        t('contact.consultation.confirm') || 'Отправить заявку'
+                      )}
+                    </button>
+                    <a
+                      href="https://t.me/FoxampyLab_contact_bot"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-3 bg-[#050505] hover:bg-[#0A0A0A] border border-white/20 transition-colors flex items-center justify-center"
+                    >
+                      <MessageSquare size={16} className="text-white" strokeWidth={1.5} />
+                    </a>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {showCalendar && (
+        <CalendarPicker
+          selectedDate={selectedDate}
+          onDateSelect={handleDateSelect}
+          availableDates={availableDates}
+          onClose={() => setShowCalendar(false)}
+        />
+      )}
+
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, error: '' })}
+        error={errorModal.error}
+        telegramMessage={errorModal.telegramMessage}
+      />
     </div>
   );
 }
