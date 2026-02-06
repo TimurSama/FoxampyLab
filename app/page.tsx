@@ -399,6 +399,7 @@ export default function Home() {
     // Сброс состояния перехода после анимации
     setTimeout(() => {
       setIsTransitioning(false);
+      scrollBlockedRef.current = false; // Разблокируем скролл после завершения перехода
     }, 1200); // Длительность анимации (чуть больше чем в SectionTransition)
   }, [isTransitioning, totalSections, currentSectionIndex, sections]);
 
