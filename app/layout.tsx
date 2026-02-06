@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import GlobalBackground from '@/components/backgrounds/GlobalBackground'
+import GlobalBackgroundWithFallback from '@/components/backgrounds/GlobalBackgroundWithFallback'
 import './globals.css'
 import '../styles/temp-animations.css'
 import { I18nProvider } from '@/lib/i18n/context'
@@ -46,7 +46,7 @@ export default function RootLayout({
           <div className="vignette" />
 
           {/* Global Liquid Background */}
-          <GlobalBackground />
+          <GlobalBackgroundWithFallback />
 
           {children}
           <FloatingContactButton />
