@@ -78,7 +78,7 @@ export default function ContactPage() {
 
   return (
     <div className="relative min-h-screen bg-ink-deep">
-      <div className="fixed inset-0 wireframe-grid pointer-events-none" />
+
       
       <Header />
       

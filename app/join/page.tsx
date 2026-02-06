@@ -101,7 +101,7 @@ export default function JoinPage() {
     <div className="relative min-h-screen bg-transparent">
       {/* Background */}
       <div className="fixed inset-0 oil-shimmer opacity-30 pointer-events-none" />
-      <div className="fixed inset-0 wireframe-grid pointer-events-none" />
+
 
       <Header />
 

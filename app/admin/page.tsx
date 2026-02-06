@@ -107,7 +107,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-ink-deep">
-      <div className="fixed inset-0 wireframe-grid pointer-events-none opacity-30" />
+
       
       {/* Header */}
       <header className="border-b border-stone-anthracite/30 bg-ink-chrome/50 backdrop-blur-xl">
