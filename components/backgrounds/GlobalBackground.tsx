@@ -15,7 +15,7 @@ export default function GlobalBackground() {
     }
     
     return (
-        <div className="fixed inset-0" style={{ pointerEvents: 'auto', zIndex: -2 }}>
+        <div className="fixed inset-0 z-[-1]" style={{ pointerEvents: 'auto' }}>
             <Canvas
                 camera={{ position: [0, 0, 1] }}
                 dpr={[1, 2]}
