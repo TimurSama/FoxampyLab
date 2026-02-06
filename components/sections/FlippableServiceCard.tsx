@@ -44,13 +44,25 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
     // Extract the first sentence or first 120 chars for the thesis
     const thesis = service.description.split('.')[0] + '.';
 
+    // Высота: базовая 200px, при развороте увеличиваем в 3 раза (адаптивно для разных экранов)
+    const getBaseHeight = () => {
+        if (typeof window === 'undefined') return 200;
+        const width = window.innerWidth;
+        if (width < 640) return 200; // mobile
+        if (width < 768) return 240; // sm
+        if (width < 1024) return 260; // md
+        return 280; // lg+
+    };
+    const baseHeight = getBaseHeight();
+    const expandedHeight = baseHeight * 3;
+    
     return (
-        <div ref={cardRef} className="relative h-[200px] sm:h-[240px] md:h-[260px] lg:h-[280px] w-full perspective-1000 group">
+        <div ref={cardRef} className="relative w-full perspective-1000 group" style={{ height: isFlipped ? `${expandedHeight}px` : `${baseHeight}px`, transition: 'height 0.8s cubic-bezier(0.23, 1, 0.32, 1)' }}>
             <motion.div
                 className="w-full h-full relative preserve-3d transition-all duration-700"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-                style={{ transformStyle: "preserve-3d" }}
+                style={{ transformStyle: "preserve-3d", height: '100%' }}
             >
                 {/* FRONT SIDE */}
                 <div
@@ -135,10 +147,10 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                 >
                     <div className="flex justify-between items-start mb-6 pb-3 border-b border-[#E0E0E0]/10">
                         <div className="max-w-[85%]">
-                            <h3 className="font-mono text-xs font-bold text-[#FFFFFF] uppercase tracking-[0.2em] mb-1">
+                            <h3 className="font-mono text-sm sm:text-base font-bold text-[#FFFFFF] uppercase tracking-[0.2em] mb-1">
                                 {service.title}
                             </h3>
-                            <p className="font-mono text-[9px] text-[#E0E0E0]/80 uppercase tracking-[0.1em]">
+                            <p className="font-mono text-[10px] sm:text-xs text-[#E0E0E0]/80 uppercase tracking-[0.1em]">
                                 {service.subtitle}
                             </p>
                         </div>
@@ -151,11 +163,11 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                         <section>
                             <div className="flex items-center gap-2 mb-4">
                                 <div className="w-1 h-[10px] bg-[#E0E0E0]"></div>
-                                <h4 className="font-mono text-[10px] text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
+                                <h4 className="font-mono text-xs sm:text-sm text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
                     // Approach Analysis
                                 </h4>
                             </div>
-                            <p className="font-mono text-[11px] text-[#E0E0E0] leading-relaxed italic">
+                            <p className="font-mono text-xs sm:text-sm text-[#E0E0E0] leading-relaxed italic">
                                 "{service.description}"
                             </p>
                         </section>
@@ -164,17 +176,17 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                             <section>
                                 <div className="flex items-center gap-2 mb-6">
                                     <div className="w-1 h-[10px] bg-[#E0E0E0]/40"></div>
-                                    <h4 className="font-mono text-[10px] text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
+                                    <h4 className="font-mono text-xs sm:text-sm text-[#E0E0E0]/80 uppercase tracking-[0.3em]">
                                         Capabilities Matrix
                                     </h4>
                                 </div>
                                 <div className="grid grid-cols-1 gap-px bg-[#E0E0E0]/10 border border-[#E0E0E0]/10">
                                     {service.features.map((feature, i) => (
                                         <div key={i} className="bg-[#050505]/03 p-4 flex items-start gap-4 hover:bg-[#E0E0E0]/5 transition-colors">
-                                            <span className="font-mono text-[9px] text-[#E0E0E0]/20 mt-0.5">
+                                            <span className="font-mono text-[10px] sm:text-xs text-[#E0E0E0]/20 mt-0.5">
                                                 {(i + 1).toString().padStart(2, '0')}
                                             </span>
-                                            <span className="font-mono text-[10px] text-[#E0E0E0]/80 leading-snug uppercase tracking-widest">
+                                            <span className="font-mono text-xs sm:text-sm text-[#E0E0E0]/80 leading-snug uppercase tracking-widest">
                                                 {feature}
                                             </span>
                                         </div>
