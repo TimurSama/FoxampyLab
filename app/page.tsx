@@ -54,7 +54,9 @@ export default function Home() {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
-  const SCROLL_THROTTLE = 800; // Защита от быстрого пролистывания
+  const scrollBlockedRef = useRef<boolean>(false); // Строгая блокировка скролла
+  // Увеличенный троттл для PC, чтобы предотвратить множественные переключения
+  const SCROLL_THROTTLE = mobileDevice ? 1000 : 1500; // Защита от быстрого пролистывания
 
   // Генерация доступных дат (следующие 30 дней)
   const availableDates = useMemo(() => {
@@ -297,11 +299,17 @@ export default function Home() {
 
   const sections = useMemo(() => [
     {
-      id: 'about',
+      id: 'about-mission',
+      title: t('about.tagline'),
+      subtitle: t('about.mission.title'),
+      description: t('about.mission.description'),
+      mission: t('about.mission.description'),
+    },
+    {
+      id: 'about-values',
       title: t('about.tagline'),
       subtitle: t('about.title'),
       description: t('about.description'),
-      mission: t('about.mission.description'),
       values: [
         {
           title: t('about.values.innovation.title'),
@@ -402,19 +410,33 @@ export default function Home() {
   // Обработчик скролла колесом мыши
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
+    
+    // СТРОГАЯ блокировка: если уже переключаемся или блокировка активна - игнорируем ВСЕ события
+    if (isTransitioning || scrollBlockedRef.current) {
+      return;
+    }
+    
     const now = Date.now();
     const direction = e.deltaY > 0 ? 'down' : 'up';
+    
+    // Блокируем скролл до завершения перехода
+    scrollBlockedRef.current = true;
     
     // Проверяем, есть ли внутренний скролл в текущей секции
     const currentSection = sectionRefs.current[currentSectionIndex];
     if (!currentSection) {
       // Если секция не найдена, просто переключаем с троттлом
-      if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+      if (now - lastScrollTime.current < SCROLL_THROTTLE) {
+        scrollBlockedRef.current = false;
+        return;
+      }
       lastScrollTime.current = now;
       if (direction === 'down' && currentSectionIndex < totalSections - 1) {
         scrollToSection(currentSectionIndex + 1, 'down');
       } else if (direction === 'up' && currentSectionIndex > 0) {
         scrollToSection(currentSectionIndex - 1, 'up');
+      } else {
+        scrollBlockedRef.current = false;
       }
       return;
     }
@@ -452,13 +474,18 @@ export default function Home() {
         
         // Если мы на границе - проверяем троттл и переключаем секцию
         if ((direction === 'down' && isAtBottom) || (direction === 'up' && isAtTop)) {
-          if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+          if (now - lastScrollTime.current < SCROLL_THROTTLE) {
+            scrollBlockedRef.current = false;
+            return;
+          }
           lastScrollTime.current = now;
           
           if (direction === 'down' && currentSectionIndex < totalSections - 1) {
             scrollToSection(currentSectionIndex + 1, 'down');
           } else if (direction === 'up' && currentSectionIndex > 0) {
             scrollToSection(currentSectionIndex - 1, 'up');
+          } else {
+            scrollBlockedRef.current = false;
           }
           return; // Одно действие выполнено - выходим
         }
@@ -466,15 +493,20 @@ export default function Home() {
     }
     
     // Если нет внутреннего скролла - переключаем секцию с троттлом
-    if (now - lastScrollTime.current < SCROLL_THROTTLE) return;
+    if (now - lastScrollTime.current < SCROLL_THROTTLE) {
+      scrollBlockedRef.current = false;
+      return;
+    }
     lastScrollTime.current = now;
     
     if (direction === 'down' && currentSectionIndex < totalSections - 1) {
       scrollToSection(currentSectionIndex + 1, 'down');
     } else if (direction === 'up' && currentSectionIndex > 0) {
       scrollToSection(currentSectionIndex - 1, 'up');
+    } else {
+      scrollBlockedRef.current = false;
     }
-  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs]);
+  }, [currentSectionIndex, totalSections, scrollToSection, isTransitioning, sectionRefs, mobileDevice]);
 
   // Обработчик клавиатуры
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -817,17 +849,17 @@ export default function Home() {
               paddingTop: '100px',
               paddingBottom: '40px',
               boxSizing: 'border-box',
-              overflow: section.id === 'about' ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
+              overflow: (section.id === 'about-mission' || section.id === 'about-values') ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
             }}
           >
           <div 
             className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
-              section.id === 'cases' ? 'max-w-4xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
+              section.id === 'cases' ? 'max-w-4xl' : (section.id === 'about-mission' || section.id === 'about-values') ? 'max-w-5xl' : 'max-w-7xl'
             }`} 
-            data-scroll-container={section.id === 'about' ? 'true' : undefined}
+            data-scroll-container={(section.id === 'about-mission' || section.id === 'about-values') ? 'true' : undefined}
             style={{ 
               maxHeight: 'calc(100vh - 140px)', 
-              overflowY: section.id === 'about' ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
+              overflowY: (section.id === 'about-mission' || section.id === 'about-values') ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
               boxSizing: 'border-box', 
               width: '100%' 
             }}
@@ -989,7 +1021,7 @@ export default function Home() {
             </motion.div>
 
             {section.id === 'services-cards' && section.services && (
-              <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 max-w-5xl mx-auto px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
+              <div className="mt-1 md:mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-1.5 max-w-6xl mx-auto px-2 sm:px-4 w-full" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
                 {section.services.map((service, idx) => {
                   // IntersectionObserver на fixed/hidden секциях может не срабатывать — показываем карточки, когда секция активна
                   const cardVisible = currentSectionIndex === sectionIndex;
@@ -1048,9 +1080,9 @@ export default function Home() {
               </motion.div>
             )}
 
-            {section.id === 'about' && (
+            {section.id === 'about-mission' && (
               <motion.div 
-                className="mt-12 max-w-4xl mx-auto space-y-8 px-4 w-full"
+                className="mt-0 max-w-4xl mx-auto px-4 w-full h-full flex items-center justify-center"
                 data-scroll-id={`section-${section.id}-content`}
                 initial={{ 
                   opacity: 0, 
@@ -1079,35 +1111,65 @@ export default function Home() {
                 {/* Mission */}
                 {section.mission && (
                   <motion.div
-                    className="p-6 bg-glass-matte border border-white/10"
+                    className="p-4 sm:p-6 md:p-8 bg-glass-matte border border-white/10 w-full"
                     initial={{ opacity: 0, y: 20 }}
                     animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ delay: 0.2, duration: 0.8 }}
                   >
-                    <h3 className="font-mono text-lg text-engrave-fresco mb-3">
+                    <h3 className="font-mono text-base sm:text-lg md:text-xl text-engrave-fresco mb-3 sm:mb-4" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 4px 40px rgba(0,0,0,0.6)' }}>
                       {t('about.mission.title')}
                     </h3>
-                    <p className="font-mono text-sm text-stone-slate leading-relaxed">
+                    <p className="font-mono text-xs sm:text-sm md:text-base text-stone-slate leading-relaxed" style={{ textShadow: '0 1px 10px rgba(0,0,0,0.7)' }}>
                       {section.mission}
                     </p>
                   </motion.div>
                 )}
+              </motion.div>
+            )}
 
+            {section.id === 'about-values' && (
+              <motion.div 
+                className="mt-0 max-w-4xl mx-auto px-4 w-full h-full flex items-center justify-center"
+                data-scroll-id={`section-${section.id}-content`}
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                animate={isVisible ? { 
+                  opacity: 1, 
+                  scale: 1, 
+                  filter: 'blur(0px)',
+                  y: 0
+                } : { 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  filter: 'blur(15px)',
+                  y: 0
+                }}
+                transition={{ 
+                  duration: 1, 
+                  ease: [0.16, 1, 0.3, 1],
+                  filter: { duration: 0.8 }
+                }}
+                style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
+              >
                 {/* Values */}
                 {section.values && (
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-2 gap-3 sm:gap-4 w-full">
                     {section.values.map((value: any, idx: number) => (
                       <motion.div
                         key={idx}
-                        className="p-6 bg-glass-matte border border-white/10"
+                        className="p-4 sm:p-5 md:p-6 bg-glass-matte border border-white/10"
                         initial={{ opacity: 0, y: 20 }}
                         animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                         transition={{ delay: 0.3 + idx * 0.1, duration: 0.8 }}
                       >
-                        <h4 className="font-mono text-base text-engrave-fresco mb-2">
+                        <h4 className="font-mono text-sm sm:text-base md:text-lg text-engrave-fresco mb-2" style={{ textShadow: '0 2px 15px rgba(0,0,0,0.7)' }}>
                           {value.title}
                         </h4>
-                        <p className="font-mono text-sm text-stone-slate leading-relaxed">
+                        <p className="font-mono text-xs sm:text-sm md:text-base text-stone-slate leading-relaxed" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
                           {value.description}
                         </p>
                       </motion.div>
