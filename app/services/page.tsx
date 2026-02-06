@@ -237,7 +237,7 @@ export default function ServicesPage() {
 
   return (
     <div className="relative min-h-screen bg-transparent">
-      <div className="fixed inset-0 wireframe-grid pointer-events-none" />
+
 
       <Header />
 
