@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, MessageCircle } from 'lucide-react';
-import { getBotUrlWithMessage } from '@/lib/telegram';
+import { TelegramService } from '@/lib/telegram';
 
 interface UnifiedContactFormProps {
     isOpen: boolean;
@@ -66,7 +66,7 @@ export default function UnifiedContactForm({ isOpen, onClose, serviceName, t }: 
             console.error('Error submitting form:', error);
             // Fallback to Telegram bot
             const telegramMessage = `Новая заявка:\n\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone}\nУслуга: ${serviceName || 'Общий запрос'}\n\nСообщение:\n${message}`;
-            window.open(getBotUrlWithMessage(telegramMessage), '_blank');
+            window.open(TelegramService.getBotUrlWithMessage(telegramMessage), '_blank');
             setName('');
             setEmail('');
             setPhone('+');
@@ -79,7 +79,7 @@ export default function UnifiedContactForm({ isOpen, onClose, serviceName, t }: 
 
     const handleTelegramClick = () => {
         const telegramMessage = `Новая заявка:\n\nИмя: ${name || 'Не указано'}\nEmail: ${email || 'Не указано'}\nТелефон: ${phone || 'Не указано'}\nУслуга: ${serviceName || 'Общий запрос'}\n\nСообщение:\n${message || 'Нет дополнительной информации'}`;
-        window.open(getBotUrlWithMessage(telegramMessage), '_blank');
+        window.open(TelegramService.getBotUrlWithMessage(telegramMessage), '_blank');
     };
 
     return (
