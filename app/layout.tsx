@@ -3,7 +3,10 @@ import GlobalBackground from '@/components/backgrounds/GlobalBackground'
 import './globals.css'
 import '../styles/temp-animations.css'
 import { I18nProvider } from '@/lib/i18n/context'
+import { PerformanceProvider } from '@/lib/context/PerformanceContext'
 import FloatingContactButton from '@/components/layout/FloatingContactButton'
+import CookieConsent from '@/components/cookies/CookieConsent'
+import Analytics from '@/components/analytics/Analytics'
 import { defaultMetadata } from '@/lib/seo/metadata'
 import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo/structured-data'
 
@@ -40,16 +43,20 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <I18nProvider>
-          {/* Atmospheric effects */}
-          <div className="noise-overlay" />
-          <div className="scanlines" />
-          <div className="vignette" />
+          <PerformanceProvider>
+            {/* Atmospheric effects */}
+            <div className="noise-overlay" />
+            <div className="scanlines" />
+            <div className="vignette" />
 
-          {/* Global Liquid Background */}
-          <GlobalBackground />
+            {/* Global Liquid Background */}
+            <GlobalBackground />
 
-          {children}
-          <FloatingContactButton />
+            {children}
+            <FloatingContactButton />
+            <CookieConsent />
+            <Analytics />
+          </PerformanceProvider>
         </I18nProvider>
       </body>
     </html>

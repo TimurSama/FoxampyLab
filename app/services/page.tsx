@@ -25,6 +25,7 @@ import {
 import Header from '@/components/layout/Header';
 import ServicesDetailModal from '@/components/sections/ServicesDetailModal';
 import ErrorModal from '@/components/modals/ErrorModal';
+import ServicePackages from '@/components/sections/ServicePackages';
 
 export default function ServicesPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -237,7 +238,7 @@ export default function ServicesPage() {
 
   return (
     <div className="relative min-h-screen bg-transparent">
-
+      <div className="fixed inset-0 wireframe-grid pointer-events-none" />
 
       <Header />
 
@@ -577,6 +578,11 @@ export default function ServicesPage() {
               })}
             </div>
           </div>
+        </section>
+
+        {/* Service Packages */}
+        <section className="px-4 mb-16">
+          <ServicePackages showComplex={true} />
         </section>
 
         {/* Contact Form */}
