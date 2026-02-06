@@ -31,8 +31,6 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
-        {/* Cache busting для автообновления */}
-        <meta name="version" content="1.0.2" />
         {/* Structured Data для поисковиков и LLM */}
         <script
           type="application/ld+json"
