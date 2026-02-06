@@ -55,8 +55,6 @@ export default function Home() {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
   const scrollBlockedRef = useRef<boolean>(false); // Строгая блокировка скролла
-  // Увеличенный троттл для PC, чтобы предотвратить множественные переключения
-  const SCROLL_THROTTLE = mobileDevice ? 1000 : 1500; // Защита от быстрого пролистывания
 
   // Генерация доступных дат (следующие 30 дней)
   const availableDates = useMemo(() => {
@@ -166,6 +164,9 @@ export default function Home() {
     if (typeof window === 'undefined') return false;
     return isMobile();
   }, []);
+
+  // Увеличенный троттл для PC, чтобы предотвратить множественные переключения
+  const SCROLL_THROTTLE = mobileDevice ? 1000 : 1500; // Защита от быстрого пролистывания
 
   // Упрощенные анимации на основе производительности устройства
   const animationConfig = useMemo(() => {
