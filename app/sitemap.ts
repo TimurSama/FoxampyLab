@@ -1,29 +1,22 @@
-import { MetadataRoute } from 'next'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://timursama.github.io/FoxampyLab'
+import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://foxampylab.vercel.app';
+  
   const routes = [
     '',
     '/services',
-    '/services/ecosystems',
-    '/services/webapp',
-    '/services/blockchain',
-    '/services/design',
-    '/services/marketing',
-    '/services/video',
-    '/services/business',
-    '/research',
-    '/hub',
     '/gallery',
+    '/hub',
     '/about',
-    '/join',
-  ]
+    '/contact',
+    '/privacy',
+  ];
 
   return routes.map((route) => ({
-    url: `${SITE_URL}${route}`,
+    url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'daily' : 'weekly',
     priority: route === '' ? 1 : 0.8,
-  }))
+  }));
 }
