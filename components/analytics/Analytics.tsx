@@ -3,6 +3,16 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
+// Расширение типов для window
+declare global {
+  interface Window {
+    dataLayer?: any[];
+    gtag?: (...args: any[]) => void;
+    fbq?: any;
+    ym?: any;
+  }
+}
+
 // Google Analytics 4
 export function GoogleAnalytics() {
   const pathname = usePathname();
@@ -19,9 +29,11 @@ export function GoogleAnalytics() {
       document.head.appendChild(script1);
 
       window.dataLayer = window.dataLayer || [];
-      function gtag(...args: any[]) {
-        window.dataLayer.push(args);
-      }
+      const gtag = (...args: any[]) => {
+        if (window.dataLayer) {
+          window.dataLayer.push(args);
+        }
+      };
       window.gtag = gtag;
       gtag('js', new Date());
       gtag('config', gaId, {
@@ -68,10 +80,14 @@ export function MetaPixel() {
     if (!pixelId || typeof window === 'undefined') return;
 
     if (!window.fbq) {
-      window.fbq = function (...args: any[]) {
-        (window.fbq.q = window.fbq.q || []).push(args);
+      const fbqFn: any = (...args: any[]) => {
+        const q = fbqFn.q || [];
+        q.push(args);
+        fbqFn.q = q;
       };
-      window.fbq.l = +new Date();
+      fbqFn.q = [];
+      fbqFn.l = +new Date();
+      window.fbq = fbqFn;
       window.fbq('init', pixelId);
       window.fbq('track', 'PageView');
     } else {
@@ -122,10 +138,14 @@ export function YandexMetrica() {
     if (!metricaId || typeof window === 'undefined') return;
 
     if (!window.ym) {
-      window.ym = function (...args: any[]) {
-        (window.ym.a = window.ym.a || []).push(args);
+      const ymFn: any = (...args: any[]) => {
+        const a = ymFn.a || [];
+        a.push(args);
+        ymFn.a = a;
       };
-      window.ym.l = +new Date();
+      ymFn.a = [];
+      ymFn.l = +new Date();
+      window.ym = ymFn;
       window.ym(metricaId, 'init', {
         clickmap: true,
         trackLinks: true,
@@ -205,13 +225,3 @@ export const trackEvent = (eventName: string, eventParams?: Record<string, any>)
     window.ym(metricaId, 'reachGoal', eventName, eventParams);
   }
 };
-
-// Расширение типов для window
-declare global {
-  interface Window {
-    dataLayer?: any[];
-    gtag?: (...args: any[]) => void;
-    fbq?: (...args: any[]) => void;
-    ym?: (...args: any[]) => void;
-  }
-}

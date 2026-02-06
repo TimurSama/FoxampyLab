@@ -102,9 +102,11 @@ export default function ServicePackages({ serviceId, showComplex = false }: Serv
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {packages.map((pkg, index) => {
-            const packageTitle = pkg.data.title || t(`services.packages.${pkg.type}`);
-            const features = Object.values(pkg.data.features).filter((f): f is string => typeof f === 'string' && f.startsWith('feature'));
-            const featureValues = features.map((key) => pkg.data.features[key as keyof PackageFeature]).filter(Boolean) as string[];
+            if (!pkg.data) return null;
+            const data = pkg.data;
+            const packageTitle = data.title || t(`services.packages.${pkg.type}`);
+            const features = Object.values(data.features).filter((f): f is string => typeof f === 'string' && f.startsWith('feature'));
+            const featureValues = features.map((key) => data.features[key as keyof PackageFeature]).filter(Boolean) as string[];
 
             return (
               <motion.div
@@ -134,9 +136,9 @@ export default function ServicePackages({ serviceId, showComplex = false }: Serv
                       {packageTitle}
                     </h3>
                   </div>
-                  {pkg.data.description && (
+                  {data.description && (
                     <p className="font-mono text-xs text-[#E0E0E0]/60 mb-4">
-                      {pkg.data.description}
+                      {data.description}
                     </p>
                   )}
                 </div>
@@ -157,10 +159,10 @@ export default function ServicePackages({ serviceId, showComplex = false }: Serv
                 <div className="mt-auto pt-6 border-t border-white/10">
                   <div className="mb-4">
                     <div className="font-mono text-2xl md:text-3xl text-[#E0E0E0] mb-2">
-                      {pkg.data.price}
+                      {data.price}
                     </div>
                     <div className="font-mono text-xs text-[#E0E0E0]/60">
-                      {t('services.packages.timeline')}: {pkg.data.timeline}
+                      {t('services.packages.timeline')}: {data.timeline}
                     </div>
                   </div>
                   <button
