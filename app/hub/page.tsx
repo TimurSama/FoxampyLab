@@ -228,7 +228,7 @@ export default function HubPage() {
 
   return (
     <div className="relative min-h-screen bg-transparent">
-      <div className="fixed inset-0 wireframe-grid pointer-events-none" aria-hidden="true" />
+
 
       <Header />
 
