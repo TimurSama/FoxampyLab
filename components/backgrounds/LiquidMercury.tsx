@@ -173,12 +173,20 @@ export default function LiquidMercury({ config }: LiquidMercuryProps) {
         uInteractionStrength: { value: currentConfig.interactionStrength }
     }), []);
 
+    const LOOP_DURATION = 20; // seconds for one way; full cycle forth-back = 40s
+
     // Sync props to uniforms
     useFrame((state) => {
         if (!meshRef.current) return;
 
-        // Update simple values
-        uniforms.uTime.value = state.clock.elapsedTime;
+        // Time: плавный цикл вперёд-назад, чтобы избежать бесконечного роста и создать ощущение зацикленности
+        const rawTime = state.clock.elapsedTime;
+        const fullCycle = LOOP_DURATION * 2;
+        let loopTime = rawTime % fullCycle;
+        if (loopTime > LOOP_DURATION) {
+            loopTime = fullCycle - loopTime;
+        }
+        uniforms.uTime.value = loopTime;
         uniforms.uResolution.value.set(size.width, size.height);
 
         // Update config-dependent uniforms constantly to allow runtime changes

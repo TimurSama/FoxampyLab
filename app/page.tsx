@@ -55,6 +55,7 @@ export default function Home() {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTime = useRef<number>(0);
   const scrollBlockedRef = useRef<boolean>(false); // Строгая блокировка скролла
+  const [aboutDetail, setAboutDetail] = useState<{ title: string; description: string } | null>(null);
 
   // Генерация доступных дат (следующие 30 дней)
   const availableDates = useMemo(() => {
@@ -300,14 +301,7 @@ export default function Home() {
 
   const sections = useMemo(() => [
     {
-      id: 'about-mission',
-      title: t('about.tagline'),
-      subtitle: t('about.mission.title'),
-      description: t('about.mission.description'),
-      mission: t('about.mission.description'),
-    },
-    {
-      id: 'about-values',
+      id: 'about',
       title: t('about.tagline'),
       subtitle: t('about.title'),
       description: t('about.description'),
@@ -851,17 +845,17 @@ export default function Home() {
               paddingTop: '100px',
               paddingBottom: '40px',
               boxSizing: 'border-box',
-              overflow: (section.id === 'about-mission' || section.id === 'about-values') ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
+              overflow: section.id === 'about' ? 'hidden' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto')
             }}
           >
           <div 
             className={`mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center w-full ${
-              section.id === 'cases' ? 'max-w-4xl' : (section.id === 'about-mission' || section.id === 'about-values') ? 'max-w-5xl' : 'max-w-7xl'
+              section.id === 'cases' ? 'max-w-4xl' : section.id === 'about' ? 'max-w-5xl' : 'max-w-7xl'
             }`} 
-            data-scroll-container={(section.id === 'about-mission' || section.id === 'about-values') ? 'true' : undefined}
+            data-scroll-container={section.id === 'about' ? 'true' : undefined}
             style={{ 
               maxHeight: 'calc(100vh - 140px)', 
-              overflowY: (section.id === 'about-mission' || section.id === 'about-values') ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
+              overflowY: section.id === 'about' ? 'auto' : (section.id === 'services-cards' || section.id === 'cases' ? 'hidden' : 'auto'),
               boxSizing: 'border-box', 
               width: '100%' 
             }}
@@ -1082,14 +1076,14 @@ export default function Home() {
               </motion.div>
             )}
 
-            {section.id === 'about-mission' && (
+            {section.id === 'about' && section.values && (
               <motion.div 
-                className="mt-0 max-w-4xl mx-auto px-4 w-full h-full flex items-center justify-center"
-                data-scroll-id={`section-${section.id}-content`}
+                className="mt-10 max-w-4xl mx-auto px-4 w-full"
+                data-scroll-id={`section-${section.id}-stages`}
                 initial={{ 
                   opacity: 0, 
-                  scale: 0.95, 
-                  filter: 'blur(15px)',
+                  scale: 0.97, 
+                  filter: 'blur(12px)',
                   y: 0
                 }}
                 animate={isVisible ? { 
@@ -1099,85 +1093,39 @@ export default function Home() {
                   y: 0
                 } : { 
                   opacity: 0, 
-                  scale: 0.95, 
-                  filter: 'blur(15px)',
+                  scale: 0.97, 
+                  filter: 'blur(12px)',
                   y: 0
                 }}
                 transition={{ 
-                  duration: 1, 
+                  duration: 0.9, 
                   ease: [0.16, 1, 0.3, 1],
-                  filter: { duration: 0.8 }
+                  filter: { duration: 0.7 }
                 }}
                 style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
-              >
-                {/* Mission */}
-                {section.mission && (
-                  <motion.div
-                    className="p-4 sm:p-6 md:p-8 bg-glass-matte border border-white/10 w-full"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                    transition={{ delay: 0.2, duration: 0.8 }}
-                  >
-                    <h3 className="font-mono text-base sm:text-lg md:text-xl text-engrave-fresco mb-3 sm:mb-4" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 4px 40px rgba(0,0,0,0.6)' }}>
-                      {t('about.mission.title')}
-                    </h3>
-                    <p className="font-mono text-xs sm:text-sm md:text-base text-stone-slate leading-relaxed" style={{ textShadow: '0 1px 10px rgba(0,0,0,0.7)' }}>
-                      {section.mission}
-                    </p>
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
-
-            {section.id === 'about-values' && (
-              <motion.div 
-                className="mt-0 max-w-4xl mx-auto px-4 w-full h-full flex items-center justify-center"
-                data-scroll-id={`section-${section.id}-content`}
-                initial={{ 
-                  opacity: 0, 
-                  scale: 0.95, 
-                  filter: 'blur(15px)',
-                  y: 0
-                }}
-                animate={isVisible ? { 
-                  opacity: 1, 
-                  scale: 1, 
-                  filter: 'blur(0px)',
-                  y: 0
-                } : { 
-                  opacity: 0, 
-                  scale: 0.95, 
-                  filter: 'blur(15px)',
-                  y: 0
-                }}
-                transition={{ 
-                  duration: 1, 
-                  ease: [0.16, 1, 0.3, 1],
-                  filter: { duration: 0.8 }
-                }}
-                style={{ willChange: 'opacity, transform, filter', maxWidth: '100%', boxSizing: 'border-box' }}
-              >
-                {/* Values */}
-                {section.values && (
-                  <div className="grid md:grid-cols-2 gap-3 sm:gap-4 w-full">
-                    {section.values.map((value: any, idx: number) => (
-                      <motion.div
-                        key={idx}
-                        className="p-4 sm:p-5 md:p-6 bg-glass-matte border border-white/10"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                        transition={{ delay: 0.3 + idx * 0.1, duration: 0.8 }}
-                      >
-                        <h4 className="font-mono text-sm sm:text-base md:text-lg text-engrave-fresco mb-2" style={{ textShadow: '0 2px 15px rgba(0,0,0,0.7)' }}>
-                          {value.title}
-                        </h4>
-                        <p className="font-mono text-xs sm:text-sm md:text-base text-stone-slate leading-relaxed" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
-                          {value.description}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
+                >
+                <div className="grid md:grid-cols-2 gap-4 w-full text-left">
+                  {section.values.map((value: any, idx: number) => (
+                    <motion.button
+                      key={idx}
+                      type="button"
+                      className="text-left p-4 sm:p-5 md:p-6 bg-glass-matte border border-white/10 w-full"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                      transition={{ delay: 0.2 + idx * 0.1, duration: 0.8 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setAboutDetail({ title: value.title, description: value.description })}
+                    >
+                      <h4 className="font-mono text-sm sm:text-base md:text-lg text-engrave-fresco mb-2">
+                        {value.title}
+                      </h4>
+                      <p className="font-mono text-xs sm:text-sm md:text-base text-stone-slate leading-relaxed line-clamp-3">
+                        {value.description}
+                      </p>
+                    </motion.button>
+                  ))}
+                </div>
               </motion.div>
             )}
 
@@ -1217,6 +1165,60 @@ export default function Home() {
         </SectionTransition>
         );
       })}
+
+      {/* Pop-up для этапов / полного комплекса (блок about) */}
+      <AnimatePresence>
+        {aboutDetail && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setAboutDetail(null)}
+            />
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <div
+                className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto border border-white/10 bg-glass-matte rounded-sm pointer-events-auto"
+                style={{
+                  background: 'rgba(5, 5, 5, 0.96)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  boxShadow: '0 16px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-start p-4 sm:p-5 md:p-6 border-b border-white/10 sticky top-0 bg-[#050505]/95 backdrop-blur-sm z-10">
+                  <div className="pr-4">
+                    <h3 className="font-mono text-lg sm:text-xl md:text-2xl text-[#FFFFFF] uppercase tracking-[0.15em] mb-2 leading-tight">
+                      {aboutDetail.title}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setAboutDetail(null)}
+                    className="text-[#E0E0E0]/40 hover:text-white transition-colors p-1.5"
+                    aria-label="Close"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+                <div className="p-4 sm:p-5 md:p-6">
+                  <p className="font-mono text-sm sm:text-base text-[#E0E0E0] leading-relaxed">
+                    {aboutDetail.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Decorations */}
       <motion.div 

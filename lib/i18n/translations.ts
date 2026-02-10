@@ -1230,7 +1230,7 @@ export const translations: Record<Language, Translations> = {
     about: {
       tagline: 'ABOUT',
       title: 'INNOVATION DEVELOPMENT LABORATORY',
-      description: 'We create solutions at the intersection of technology, business, and creativity. From concept to implementation — full cycle development of innovative products and ecosystems.',
+      description: 'Full-cycle development at the intersection of technology, business, and creativity. From concept and system design to implementation, launch, and growth of digital products and ecosystems.',
       mission: {
         title: 'MISSION',
         description: 'Develop innovative solutions that combine business strategy, creative art, and cutting-edge technologies. Create ecosystems and products that shape the future of digital space and open new opportunities for business and creativity.',
@@ -1239,19 +1239,19 @@ export const translations: Record<Language, Translations> = {
         title: 'VALUES',
         innovation: {
           title: 'INNOVATION',
-          description: 'We experiment with cutting-edge technologies and create solutions that don\'t exist yet.',
+          description: 'Exploration and use of cutting-edge technologies to design solutions that have no direct analogues on the market.',
         },
         result: {
           title: 'FOCUS ON RESULTS',
-          description: 'Every project is aimed at achieving specific business goals and measurable results.',
+          description: 'Each project is aligned with clear business goals, measurable metrics, and long-term value.',
         },
         team: {
           title: 'EXPERT TEAM',
-          description: 'We unite specialists from different fields: development, design, business, science.',
+          description: 'Specialists from different domains: development, design, business, and science, integrated into a single product pipeline.',
         },
         speed: {
           title: 'SPEED AND QUALITY',
-          description: 'We balance between fast implementation and high quality execution.',
+          description: 'Balanced delivery: reasonable time-to-market without sacrificing robustness, reliability, and quality.',
         },
       },
       expertise: {
@@ -1923,11 +1923,11 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       tagline: 'MULTIDISCIPLINARY LAB // IT × DESIGN × ARCHITECTURE × CINEMA × R&D',
-      title: 'Лаборатория междисциплинарных решений',
+      title: 'ЛАБОРАТОРИЯ УНИКАЛЬНЫХ РЕШЕНИЙ',
       titleHighlight: 'РАЗРАБОТОК',
       titleEnd: 'ИННОВАЦИЙ',
-      subtitle: 'Синтез технологий, дизайна и науки для создания уникальных продуктов',
-      description: 'Мы объединяем экспертизу в IT, архитектуре, дизайне, кинематографе и научных исследованиях для решения сложных задач. Каждый проект — это многоуровневый подход, где технологии переплетаются с творчеством, а инженерные решения дополняются художественным видением.',
+      subtitle: 'синтез решений на стыке технологий, бизнеса и творчества для создания уникальных проектов и продуктов',
+      description: 'Комплексная разработка полного цикла объединяет экспертизу в IT, архитектуре, дизайне, кинематографе и научных исследованиях для решения сложных задач. Каждый проект строится как многоуровневая система, где технологии переплетаются с творчеством, а инженерные решения дополняются художественным видением.',
       tags: 'Экосистемы · Блокчейн · Дизайн · Маркетинг · AI · R&D',
       whyTitle: 'МНОГООБРАЗИЕ ЭКСПЕРТИЗЫ',
       whySubtitle: 'Почему междисциплинарный подход',
@@ -1997,9 +1997,9 @@ export const translations: Record<Language, Translations> = {
         cta: 'Войти в ядро',
       },
       solutions: {
-        title: 'SYNERGETIC SOLUTIONS',
-        subtitle: 'Мультидисциплинарный синтез',
-        description: 'Мы не просто комбинируем разные области знаний — мы создаем уникальные решения через глубокую интеграцию IT, архитектуры, дизайна, кинематографа и научных исследований. Каждая задача рассматривается с множества углов зрения, что позволяет находить нестандартные подходы и создавать продукты, которые невозможно разработать в рамках одной дисциплины. Наш мультидисциплинарный многоуровневый подход — это инструмент поиска уникальных и лучших решений для каждой конкретной задачи.',
+      title: 'SYNERGETIC SOLUTIONS',
+      subtitle: 'Мультидисциплинарный синтез',
+      description: 'Комплексные решения формируются через глубокую интеграцию IT, архитектуры, дизайна, кинематографа и научных исследований. Каждая задача рассматривается с множества углов зрения, что открывает нестандартные подходы и позволяет создавать продукты, недоступные в рамках одной дисциплины. Мультидисциплинарный многоуровневый подход становится инструментом поиска уникальных и оптимальных решений для каждого проекта.',
         services: [
           {
             id: 'business',
@@ -2150,9 +2150,9 @@ export const translations: Record<Language, Translations> = {
         ],
       },
       intelligence: {
-        title: 'DISTRIBUTED INTELLIGENCE',
-        subtitle: 'Распределенный интеллект',
-        description: 'Мы не показываем лица — мы транслируем компетенции. Архитекторы мировых бюро, блокчейн-инженеры и креативные директоры в децентрализованной сети исполнения. Специалисты и команды со всего мира готовы взяться за реализацию ваших идей и заказов, а также продолжают мечтать и создавать собственные концепции, проекты, продукты и решения. Каждый участник сети — это узел в распределенной системе интеллекта, где компетенции переплетаются и усиливают друг друга.',
+      title: 'DISTRIBUTED INTELLIGENCE',
+      subtitle: 'Распределенный интеллект',
+      description: 'Фокус смещен с персоналий на компетенции: архитекторы мировых бюро, блокчейн-инженеры и креативные директоры объединены в децентрализованную сеть исполнения. Специалисты и команды со всего мира подключаются к реализации проектов и продолжают развивать собственные концепции, продукты и решения. Каждый участник сети — это узел в распределенной системе интеллекта, где компетенции переплетаются и усиливают друг друга.',
       },
     },
     services: {
@@ -2173,7 +2173,7 @@ export const translations: Record<Language, Translations> = {
       more: 'Больше',
       title: 'УСЛУГИ',
       subtitle: 'Наши решения',
-      description: 'Мы предлагаем комплексные услуги разработки в различных областях.',
+      description: 'Комплексные услуги разработки охватывают все ключевые направления: от экосистем и приложений до брендинга, маркетинга, документов и видеопродакшна.',
       notFound: 'Нужно индивидуальное решение?',
       notFoundDesc: 'Не нашли то, что искали? Обсудим ваши уникальные требования.',
       packages: {
@@ -2427,29 +2427,29 @@ export const translations: Record<Language, Translations> = {
     },
     about: {
       tagline: 'О НАС',
-      title: 'ЛАБОРАТОРИЯ РАЗРАБОТОК ИННОВАЦИЙ',
-      description: 'Создаём решения на стыке технологий, бизнеса и творчества. От концепции до реализации — полный цикл разработки инновационных продуктов и экосистем.',
+      title: 'полный цикл разработок',
+      description: 'от концепции и проецирования до реализации и продвижения',
       mission: {
         title: 'МИССИЯ',
         description: 'Разрабатывать инновационные решения, которые объединяют бизнес-стратегию, креативное искусство и передовые технологии. Создавать экосистемы и продукты, которые формируют будущее цифрового пространства и открывают новые возможности для бизнеса и творчества.',
       },
       values: {
-        title: 'ЦЕННОСТИ',
+        title: 'КЛЮЧЕВЫЕ ЭТАПЫ РАЗРАБОТКИ',
         innovation: {
-          title: 'ИННОВАЦИИ',
-          description: 'Экспериментируем с передовыми технологиями и создаём решения, которых ещё не существует.',
+          title: 'ИССЛЕДОВАНИЕ И КОНЦЕПЦИЯ',
+          description: 'Собираем вводные, анализируем рынок и формируем концепцию продукта, его ценность и роль в экосистеме.',
         },
         result: {
-          title: 'ФОКУС НА РЕЗУЛЬТАТ',
-          description: 'Каждый проект нацелен на достижение конкретных бизнес-целей и измеримых результатов.',
+          title: 'ПРОЕКТИРОВАНИЕ И ДИЗАЙН',
+          description: 'Прорабатываем архитектуру, пользовательские сценарии, визуальный язык и точки контакта с аудиторией.',
         },
         team: {
-          title: 'КОМАНДА ЭКСПЕРТОВ',
-          description: 'Объединяем специалистов из разных областей: разработка, дизайн, бизнес, наука.',
+          title: 'РАЗРАБОТКА И ЗАПУСК',
+          description: 'Собираем продукт: пишем код, настраиваем инфраструктуру, интеграции и готовим систему к запуску.',
         },
         speed: {
-          title: 'СКОРОСТЬ И КАЧЕСТВО',
-          description: 'Балансируем между быстрой реализацией и высоким качеством исполнения.',
+          title: 'РОСТ И МАСШТАБИРОВАНИЕ',
+          description: 'Анализируем метрики, усиливаем маркетинг, расширяем функциональность и выводим продукт на новые рынки.',
         },
       },
       expertise: {
