@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TelegramService } from '@/lib/telegram';
 import { submitLead } from '@/lib/forms/submitLead';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -175,6 +175,31 @@ export default function ServicesPage() {
       setExpandedServiceId(id);
     }
   };
+
+  // Блокируем скролл страницы когда карточка открыта и добавляем обработчик ESC
+  useEffect(() => {
+    if (expandedServiceId) {
+      document.body.style.overflow = 'hidden';
+      
+      // Закрытие по ESC
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setExpandedServiceId(null);
+        }
+      };
+      
+      window.addEventListener('keydown', handleEscape);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleEscape);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [expandedServiceId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -494,82 +519,126 @@ export default function ServicesPage() {
                             </ul>
                           </motion.div>
 
-                          {/* Desktop версия - оверлей */}
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.7, y: 50 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: -50 }}
-                            transition={{ 
-                              type: "spring", 
-                              stiffness: 300, 
-                              damping: 30,
-                              mass: 0.8
-                            }}
-                            className="hidden md:block fixed inset-0 z-40 flex items-center justify-center p-8 bg-[#030303]/95 backdrop-blur-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleService(service.id);
-                            }}
-                          >
+                          {/* Desktop версия - оверлей поверх всего контента */}
+                          <>
+                            {/* Overlay с затемнением - закрытие по клику в любое место */}
                             <motion.div
-                              initial={{ opacity: 0, scale: 0.7, y: 50 }}
-                              animate={{ opacity: 1, scale: 1, y: 0 }}
-                              exit={{ opacity: 0, scale: 0.9, y: -50 }}
-                              transition={{ 
-                                type: "spring", 
-                                stiffness: 300, 
-                                damping: 30,
-                                mass: 0.8
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                              className="hidden md:block fixed inset-0 bg-black/85 backdrop-blur-md"
+                              onClick={() => toggleService(service.id)}
+                              style={{ 
+                                cursor: 'pointer',
+                                zIndex: 9998
                               }}
-                              className="max-w-2xl w-full bg-[#050505] border border-[#E0E0E0]/30 p-8"
-                              onClick={(e) => e.stopPropagation()}
+                            />
+                            
+                            <motion.div
+                              initial={{ 
+                                opacity: 0, 
+                                scale: 0.75, 
+                                y: 40,
+                                filter: 'blur(20px)'
+                              }}
+                              animate={{ 
+                                opacity: 1, 
+                                scale: 1, 
+                                y: 0,
+                                filter: 'blur(0px)'
+                              }}
+                              exit={{ 
+                                opacity: 0, 
+                                scale: 0.85, 
+                                y: -20,
+                                filter: 'blur(15px)'
+                              }}
+                              transition={{ 
+                                duration: 0.5, 
+                                ease: [0.16, 1, 0.3, 1],
+                                filter: { duration: 0.4 }
+                              }}
+                              className="hidden md:flex fixed inset-0 items-center justify-center p-4 pointer-events-none"
+                              onClick={() => toggleService(service.id)}
+                              style={{ 
+                                cursor: 'pointer',
+                                zIndex: 9999
+                              }}
                             >
-                              <div className="flex items-center justify-between mb-6">
-                                <div className="flex items-center gap-4">
-                                  <div className="text-[#E0E0E0]">
-                                    {service.icon}
+                              <motion.div
+                                className="relative max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[#050505] border border-[#E0E0E0]/25 rounded-sm pointer-events-auto"
+                                style={{
+                                  background: 'rgba(5, 5, 5, 0.96)',
+                                  backdropFilter: 'blur(24px)',
+                                  WebkitBackdropFilter: 'blur(24px)',
+                                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+                                  cursor: 'default'
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {/* Заголовок с кнопкой закрытия */}
+                                <div className="flex items-center justify-between p-4 sm:p-5 md:p-6 border-b border-[#E0E0E0]/10 sticky top-0 bg-[#050505]/98 backdrop-blur-sm z-10">
+                                  <div className="flex items-center gap-4 max-w-[85%] pr-2">
+                                    <div className="text-[#E0E0E0] flex-shrink-0">
+                                      {service.icon}
+                                    </div>
+                                    <h3 className="font-mono text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[#FFFFFF] uppercase tracking-[0.12em] leading-tight" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)' }}>
+                                      {service.title}
+                                    </h3>
                                   </div>
-                                  <h3 className="font-mono text-xl text-[#E0E0E0]">
-                                    {service.title}
-                                  </h3>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleService(service.id);
+                                    }}
+                                    className="text-[#E0E0E0]/40 hover:text-white transition-colors p-2 -mt-2 -mr-2 flex-shrink-0"
+                                    aria-label="Close"
+                                  >
+                                    <X size={18} />
+                                  </button>
                                 </div>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleService(service.id);
-                                  }}
-                                  className="p-2 hover:bg-[#E0E0E0]/10 transition-colors"
-                                >
-                                  <X size={20} className="text-[#E0E0E0]" />
-                                </button>
-                              </div>
 
-                              <p className="font-mono text-sm text-[#E0E0E0]/80 mb-6 leading-relaxed">
-                                {service.description}
-                              </p>
+                                {/* Контент с уменьшенными шрифтами */}
+                                <div className="p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4 md:space-y-5">
+                                  {/* Описание */}
+                                  <section>
+                                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                                      <div className="w-1 h-[8px] sm:h-[10px] bg-[#E0E0E0]"></div>
+                                      <h4 className="font-mono text-[9px] sm:text-[10px] md:text-xs text-[#E0E0E0]/80 uppercase tracking-[0.2em] sm:tracking-[0.25em]">
+                                        // Approach Analysis
+                                      </h4>
+                                    </div>
+                                    <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#E0E0E0] leading-relaxed italic px-1" style={{ textShadow: '0 1px 5px rgba(0, 0, 0, 0.7)' }}>
+                                      "{service.description}"
+                                    </p>
+                                  </section>
 
-                              <ul className="space-y-2">
-                                {service.features.map((feature, idx) => (
-                                  <li key={idx} className="font-mono text-sm text-[#E0E0E0]/70 flex items-start">
-                                    <span className="w-1.5 h-1.5 bg-[#E0E0E0]/50 rounded-full mr-3 mt-2 flex-shrink-0"></span>
-                                    {feature}
-                                  </li>
-                                ))}
-                              </ul>
-
-                              <div className="mt-8 flex justify-center">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleService(service.id);
-                                  }}
-                                  className="px-6 py-2 border border-[#E0E0E0]/40 text-[#E0E0E0] font-mono text-sm hover:border-[#E0E0E0] hover:bg-[#E0E0E0]/10 transition-all"
-                                >
-                                  Закрыть
-                                </button>
-                              </div>
+                                  {/* Features */}
+                                  <section>
+                                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                                      <div className="w-1 h-[8px] sm:h-[10px] bg-[#E0E0E0]/40"></div>
+                                      <h4 className="font-mono text-[9px] sm:text-[10px] md:text-xs text-[#E0E0E0]/80 uppercase tracking-[0.2em] sm:tracking-[0.25em]">
+                                        Capabilities Matrix
+                                      </h4>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-px bg-[#E0E0E0]/10 border border-[#E0E0E0]/10">
+                                      {service.features.map((feature, idx) => (
+                                        <div key={idx} className="bg-[#050505]/30 p-2 sm:p-2.5 md:p-3 flex items-start gap-2 sm:gap-3 hover:bg-[#E0E0E0]/5 transition-colors">
+                                          <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-[#E0E0E0]/20 mt-0.5 flex-shrink-0">
+                                            {(idx + 1).toString().padStart(2, '0')}
+                                          </span>
+                                          <span className="font-mono text-[9px] sm:text-[10px] md:text-xs text-[#E0E0E0]/80 leading-snug uppercase tracking-wider">
+                                            {feature}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </section>
+                                </div>
+                              </motion.div>
                             </motion.div>
-                          </motion.div>
+                          </>
                         </>
                       )}
                     </AnimatePresence>

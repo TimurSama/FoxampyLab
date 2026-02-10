@@ -40,10 +40,23 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
         return () => observer.disconnect();
     }, []);
 
-    // Блокируем скролл страницы когда карточка открыта
+    // Блокируем скролл страницы когда карточка открыта и добавляем обработчик ESC
     useEffect(() => {
         if (isExpanded) {
             document.body.style.overflow = 'hidden';
+            
+            // Закрытие по ESC
+            const handleEscape = (e: KeyboardEvent) => {
+                if (e.key === 'Escape') {
+                    setIsExpanded(false);
+                }
+            };
+            
+            window.addEventListener('keydown', handleEscape);
+            return () => {
+                document.body.style.overflow = '';
+                window.removeEventListener('keydown', handleEscape);
+            };
         } else {
             document.body.style.overflow = '';
         }
@@ -126,9 +139,12 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md"
+                            className="fixed inset-0 bg-black/85 backdrop-blur-md"
                             onClick={() => setIsExpanded(false)}
-                            style={{ cursor: 'pointer' }}
+                            style={{ 
+                                cursor: 'pointer',
+                                zIndex: 9998
+                            }}
                         />
 
                         {/* Увеличенная карточка с красивой анимацией */}
@@ -157,9 +173,12 @@ export default function FlippableServiceCard({ service, t }: FlippableServiceCar
                                 ease: [0.16, 1, 0.3, 1],
                                 filter: { duration: 0.4 }
                             }}
-                            className="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+                            className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none"
                             onClick={() => setIsExpanded(false)}
-                            style={{ cursor: 'pointer' }}
+                            style={{ 
+                                cursor: 'pointer',
+                                zIndex: 9999
+                            }}
                         >
                             <motion.div
                                 className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-white/10 bg-glass-matte rounded-sm pointer-events-auto"
