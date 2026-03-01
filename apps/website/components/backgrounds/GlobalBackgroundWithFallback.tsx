@@ -28,7 +28,7 @@ export default function GlobalBackgroundWithFallback() {
         const checkPerformance = () => {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const cores = navigator.hardwareConcurrency || 2;
-            const memory = (navigator as any).deviceMemory || 4;
+            const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 4;
             
             // Отключаем WebGL на слабых устройствах
             return !isMobile && cores >= 4 && memory >= 4;
