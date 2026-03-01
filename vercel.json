@@ -1,7 +1,5 @@
 {
-  "functions": {
-    "app/api/telegram/webhook/route.ts": {
-      "maxDuration": 30
-    }
-  }
+  "buildCommand": "cd apps/website && npm run build",
+  "outputDirectory": "apps/website/.next",
+  "installCommand": "npm install"
 }
