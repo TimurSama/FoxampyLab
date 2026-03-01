@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Явно указываем директорию сборки
+  distDir: '.next',
   // Для Vercel не используем статический экспорт (нужны API routes)
   // Для GitHub Pages используем статический экспорт
   // Vercel автоматически устанавливает переменную VERCEL=1
