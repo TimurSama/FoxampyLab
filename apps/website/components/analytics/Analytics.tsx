@@ -3,26 +3,19 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-// Типы для аналитики
-type GtagArgs = [string, Date] | [string, string, Record<string, unknown>] | [string, string, Record<string, unknown>?];
-type FbqArgs = [string, string] | [string, string, Record<string, unknown>?];
-type YmArgs = [number, string, string] | [number, string, string, Record<string, unknown>?];
-
 // Расширение типов для window
 declare global {
   interface Window {
     dataLayer?: unknown[];
-    gtag?: (...args: GtagArgs) => void;
+    gtag?: (command: string, ...args: unknown[]) => void;
     fbq?: {
-      (...args: FbqArgs): void;
-      q?: unknown[];
-      l?: number;
+      (command: string, eventName: string, params?: Record<string, unknown>): void;
+      callMethod?: (...args: unknown[]) => void;
+      queue?: unknown[];
+      loaded?: boolean;
+      version?: string;
     };
-    ym?: {
-      (...args: YmArgs): void;
-      a?: unknown[];
-      l?: number;
-    };
+    ym?: (id: number, command: string, ...args: unknown[]) => void;
   }
 }
 
@@ -34,7 +27,6 @@ export function GoogleAnalytics() {
     const gaId = process.env.NEXT_PUBLIC_GA4_ID;
     if (!gaId || typeof window === 'undefined') return;
 
-    // Загружаем GA4 скрипт
     if (!window.gtag) {
       const script1 = document.createElement('script');
       script1.async = true;
@@ -42,14 +34,13 @@ export function GoogleAnalytics() {
       document.head.appendChild(script1);
 
       window.dataLayer = window.dataLayer || [];
-      const gtag = (...args: GtagArgs) => {
+      window.gtag = function(...args: unknown[]) {
         if (window.dataLayer) {
           window.dataLayer.push(args);
         }
       };
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', gaId, {
+      window.gtag('js', new Date());
+      window.gtag('config', gaId, {
         page_path: pathname,
       });
     } else {
@@ -93,16 +84,20 @@ export function MetaPixel() {
     if (!pixelId || typeof window === 'undefined') return;
 
     if (!window.fbq) {
-      const fbqFn = (...args: FbqArgs) => {
-        const q = fbqFn.q || [];
-        q.push(args);
-        fbqFn.q = q;
-      };
-      fbqFn.q = [];
-      fbqFn.l = +new Date();
-      window.fbq = fbqFn;
-      window.fbq('init', pixelId);
-      window.fbq('track', 'PageView');
+      const script = document.createElement('script');
+      script.innerHTML = `
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '${pixelId}');
+        fbq('track', 'PageView');
+      `;
+      document.head.appendChild(script);
     } else {
       window.fbq('track', 'PageView');
     }
@@ -113,22 +108,6 @@ export function MetaPixel() {
 
   return (
     <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${pixelId}');
-            fbq('track', 'PageView');
-          `,
-        }}
-      />
       <noscript>
         <img
           height="1"
@@ -153,21 +132,22 @@ export function YandexMetrica() {
     const metricaIdNum = parseInt(metricaId, 10);
 
     if (!window.ym) {
-      const ymFn = (...args: YmArgs) => {
-        const a = ymFn.a || [];
-        a.push(args);
-        ymFn.a = a;
-      };
-      ymFn.a = [];
-      ymFn.l = +new Date();
-      window.ym = ymFn;
-      window.ym(metricaIdNum, 'init', {
-        clickmap: true,
-        trackLinks: true,
-        accurateTrackBounce: true,
-        webvisor: true,
-      });
-      window.ym(metricaIdNum, 'hit', pathname);
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.innerHTML = `
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(${metricaIdNum}, "init", {
+          clickmap:true,
+          trackLinks:true,
+          accurateTrackBounce:true,
+          webvisor:true
+        });
+      `;
+      document.head.appendChild(script);
     } else {
       window.ym(metricaIdNum, 'hit', pathname);
     }
@@ -178,24 +158,6 @@ export function YandexMetrica() {
 
   return (
     <>
-      <script
-        type="text/javascript"
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-            ym(${metricaId}, "init", {
-              clickmap:true,
-              trackLinks:true,
-              accurateTrackBounce:true,
-              webvisor:true
-            });
-          `,
-        }}
-      />
       <noscript>
         <div>
           <img
@@ -226,7 +188,7 @@ export const trackEvent = (eventName: string, eventParams?: Record<string, unkno
 
   // Google Analytics
   if (window.gtag) {
-    window.gtag('event', eventName, eventParams);
+    window.gtag('event', eventName, eventParams ?? {});
   }
 
   // Meta Pixel
