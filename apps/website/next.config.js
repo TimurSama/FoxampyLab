@@ -17,11 +17,11 @@ const nextConfig = {
   // Оптимизация bundle
   webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
-      // Tree shaking для Three.js (отключено - не используем Three.js)
-      // config.resolve.alias = {
-      //   ...config.resolve.alias,
-      //   'three': require.resolve('three'),
-      // };
+      // Tree shaking для Three.js
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'three': require.resolve('three'),
+      };
 
       // Исключаем node-telegram-bot-api из клиентской сборки
       config.resolve.fallback = {
