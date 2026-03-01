@@ -3,13 +3,26 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
+// Типы для аналитики
+type GtagArgs = [string, Date] | [string, string, Record<string, unknown>] | [string, string, Record<string, unknown>?];
+type FbqArgs = [string, string] | [string, string, Record<string, unknown>?];
+type YmArgs = [number, string, string] | [number, string, string, Record<string, unknown>?];
+
 // Расширение типов для window
 declare global {
   interface Window {
-    dataLayer?: any[];
-    gtag?: (...args: any[]) => void;
-    fbq?: any;
-    ym?: any;
+    dataLayer?: unknown[];
+    gtag?: (...args: GtagArgs) => void;
+    fbq?: {
+      (...args: FbqArgs): void;
+      q?: unknown[];
+      l?: number;
+    };
+    ym?: {
+      (...args: YmArgs): void;
+      a?: unknown[];
+      l?: number;
+    };
   }
 }
 
@@ -29,7 +42,7 @@ export function GoogleAnalytics() {
       document.head.appendChild(script1);
 
       window.dataLayer = window.dataLayer || [];
-      const gtag = (...args: any[]) => {
+      const gtag = (...args: GtagArgs) => {
         if (window.dataLayer) {
           window.dataLayer.push(args);
         }
@@ -80,7 +93,7 @@ export function MetaPixel() {
     if (!pixelId || typeof window === 'undefined') return;
 
     if (!window.fbq) {
-      const fbqFn: any = (...args: any[]) => {
+      const fbqFn = (...args: FbqArgs) => {
         const q = fbqFn.q || [];
         q.push(args);
         fbqFn.q = q;
@@ -137,8 +150,10 @@ export function YandexMetrica() {
     const metricaId = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID;
     if (!metricaId || typeof window === 'undefined') return;
 
+    const metricaIdNum = parseInt(metricaId, 10);
+
     if (!window.ym) {
-      const ymFn: any = (...args: any[]) => {
+      const ymFn = (...args: YmArgs) => {
         const a = ymFn.a || [];
         a.push(args);
         ymFn.a = a;
@@ -146,15 +161,15 @@ export function YandexMetrica() {
       ymFn.a = [];
       ymFn.l = +new Date();
       window.ym = ymFn;
-      window.ym(metricaId, 'init', {
+      window.ym(metricaIdNum, 'init', {
         clickmap: true,
         trackLinks: true,
         accurateTrackBounce: true,
         webvisor: true,
       });
-      window.ym(metricaId, 'hit', pathname);
+      window.ym(metricaIdNum, 'hit', pathname);
     } else {
-      window.ym(metricaId, 'hit', pathname);
+      window.ym(metricaIdNum, 'hit', pathname);
     }
   }, [pathname]);
 
@@ -206,7 +221,7 @@ export default function Analytics() {
 }
 
 // Утилита для отслеживания событий
-export const trackEvent = (eventName: string, eventParams?: Record<string, any>) => {
+export const trackEvent = (eventName: string, eventParams?: Record<string, unknown>) => {
   if (typeof window === 'undefined') return;
 
   // Google Analytics
@@ -222,6 +237,7 @@ export const trackEvent = (eventName: string, eventParams?: Record<string, any>)
   // Yandex Metrica
   const metricaId = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID;
   if (window.ym && metricaId) {
-    window.ym(metricaId, 'reachGoal', eventName, eventParams);
+    const metricaIdNum = parseInt(metricaId, 10);
+    window.ym(metricaIdNum, 'reachGoal', eventName, eventParams);
   }
 };

@@ -88,7 +88,7 @@ export default function GlobalBackground() {
                     console.log('[GlobalBackground] Canvas created, WebGL context:', gl.getContext());
                     // Обработка потери WebGL контекста
                     const canvas = gl.domElement;
-                    canvas.addEventListener('webglcontextlost', (e) => {
+                    canvas.addEventListener('webglcontextlost', (e: Event) => {
                         e.preventDefault();
                         console.log('[GlobalBackground] WebGL context lost');
                         setWebGLLost(true);

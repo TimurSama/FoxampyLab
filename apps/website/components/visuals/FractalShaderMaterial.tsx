@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { shaderMaterial } from '@react-three/drei';
@@ -57,7 +57,7 @@ extend({ FractalMaterial });
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      fractalMaterial: any;
+      fractalMaterial: React.DetailedHTMLProps<React.HTMLAttributes<unknown>, unknown> & { ref?: React.Ref<unknown> };
     }
   }
 }
@@ -68,7 +68,7 @@ interface FractalShaderMaterialProps {
 }
 
 export default function FractalShaderMaterial({ color = '#00F0FF', intensity = 0.5 }: FractalShaderMaterialProps) {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
 
   useFrame((state) => {
     if (materialRef.current) {
