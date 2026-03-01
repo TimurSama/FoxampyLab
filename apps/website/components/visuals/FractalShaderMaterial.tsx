@@ -57,7 +57,12 @@ extend({ FractalMaterial });
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      fractalMaterial: React.DetailedHTMLProps<React.HTMLAttributes<unknown>, unknown> & { ref?: React.Ref<unknown> };
+      fractalMaterial: React.DetailedHTMLProps<React.HTMLAttributes<unknown>, unknown> & { 
+        ref?: React.Ref<unknown>;
+        uTime?: number;
+        uColor?: THREE.Color;
+        uIntensity?: number;
+      };
     }
   }
 }
@@ -67,8 +72,10 @@ interface FractalShaderMaterialProps {
   intensity?: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function FractalShaderMaterial({ color = '#00F0FF', intensity = 0.5 }: FractalShaderMaterialProps) {
-  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const materialRef = useRef<any>(null);
 
   useFrame((state) => {
     if (materialRef.current) {
@@ -80,4 +87,3 @@ export default function FractalShaderMaterial({ color = '#00F0FF', intensity = 0
 
   return <fractalMaterial ref={materialRef} />;
 }
-
