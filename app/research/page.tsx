@@ -5,10 +5,7 @@ import {
   Atom,
   Brain,
   Dna,
-  Cpu,
-  Microscope,
   Lightbulb,
-  Rocket,
   ArrowRight,
   BookOpen,
   FlaskConical,
@@ -17,7 +14,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import TerrainGrid from '@/components/visuals/TerrainGrid';
+// import TerrainGrid from '@/components/visuals/TerrainGrid';
 import { useI18n } from '@/lib/i18n/context';
 
 export default function ResearchPage() {
@@ -248,16 +245,13 @@ export default function ResearchPage() {
         {/* Visualization */}
         <section className="px-4 mb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="h-[300px] relative border border-stone-anthracite/20">
-              <TerrainGrid className="w-full h-full" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center bg-ink-deep/80 px-8 py-6 border border-stone-anthracite/30">
-                  <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
-                    {t('research.visualization.title')}
-                  </div>
-                  <div className="font-mono text-lg text-engrave-fresco">
-                    {t('research.visualization.subtitle')}
-                  </div>
+            <div className="h-[300px] relative border border-stone-anthracite/20 flex items-center justify-center">
+              <div className="text-center bg-ink-deep/80 px-8 py-6 border border-stone-anthracite/30">
+                <div className="font-mono text-[10px] text-stone-slate tracking-widest mb-2">
+                  {t('research.visualization.title')}
+                </div>
+                <div className="font-mono text-lg text-engrave-fresco">
+                  {t('research.visualization.subtitle')}
                 </div>
               </div>
             </div>

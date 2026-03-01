@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header';
 import { X, Network, Users, Box, Database, Shield, Zap, Globe, Code, Layers, FileText } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
-import ArchitectureVisualization from '@/components/visuals/ArchitectureVisualization';
+// import ArchitectureVisualization from '@/components/visuals/ArchitectureVisualization';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n/context';
 
@@ -368,33 +368,14 @@ function DetailModal({ block, isOpen, onClose }: { block: ReturnType<typeof getA
   );
 }
 
-// Компонент визуализации для блока
+// Компонент визуализации для блока (временно отключен)
 function BlockVisualization({ type, color }: { type: string; color: string }) {
-  // Маппинг ID блоков на типы визуализации
-  const visualizationTypeMap: Record<string, 'platform' | 'objects' | 'subjects' | 'products' | 'projects' | 'infrastructure'> = {
-    'platform-architecture': 'platform',
-    'objects': 'objects',
-    'subjects': 'subjects',
-    'products': 'products',
-    'projects': 'projects',
-    'infrastructure': 'infrastructure',
-  };
-
-  const visualizationType = visualizationTypeMap[type] || 'platform';
-
   return (
-    <div className="w-full h-full relative">
-      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-        <Suspense fallback={null}>
-          <ambientLight intensity={0.4} />
-          <pointLight position={[5, 5, 5]} intensity={1} color={color} />
-          <pointLight position={[-5, -5, -5]} intensity={0.5} color={color} />
-          <ArchitectureVisualization
-            type={visualizationType}
-            color={color}
-          />
-        </Suspense>
-      </Canvas>
+    <div className="w-full h-full relative flex items-center justify-center">
+      <div 
+        className="w-32 h-32 rounded-lg opacity-20"
+        style={{ backgroundColor: color }}
+      />
     </div>
   );
 }

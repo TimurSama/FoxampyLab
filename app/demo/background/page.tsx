@@ -1,96 +1,79 @@
 "use client";
 
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
 import { useState } from 'react';
-import InteractiveOilBackground from '@/components/visuals/InteractiveOilBackground';
-import SmartOilBackground from '@/components/visuals/SmartOilBackground';
-import OilCSSBackground from '@/components/visuals/OilCSSBackground';
+import NoirPixelBackground from '@/components/backgrounds/NoirPixelBackground';
 
 export default function BackgroundDemo() {
-  const [variant, setVariant] = useState<'smart' | 'webgl' | 'css'>('smart');
+  const [variant, setVariant] = useState<'film' | 'rain' | 'static' | 'fog'>('film');
 
   return (
     <div className="relative w-full h-screen bg-[#030303] overflow-hidden">
       {/* Выбор варианта фона */}
       <div className="absolute top-4 left-4 z-50 flex gap-2">
         <button
-          onClick={() => setVariant('smart')}
+          onClick={() => setVariant('film')}
           className={`px-4 py-2 font-mono text-xs transition-all ${
-            variant === 'smart' 
+            variant === 'film' 
               ? 'bg-[#E0E0E0] text-[#030303]' 
               : 'border border-[#E0E0E0]/40 text-[#E0E0E0] hover:border-[#E0E0E0]'
           }`}
         >
-          Smart (Auto)
+          Film
         </button>
         <button
-          onClick={() => setVariant('webgl')}
+          onClick={() => setVariant('rain')}
           className={`px-4 py-2 font-mono text-xs transition-all ${
-            variant === 'webgl' 
+            variant === 'rain' 
               ? 'bg-[#E0E0E0] text-[#030303]' 
               : 'border border-[#E0E0E0]/40 text-[#E0E0E0] hover:border-[#E0E0E0]'
           }`}
         >
-          WebGL
+          Rain
         </button>
         <button
-          onClick={() => setVariant('css')}
+          onClick={() => setVariant('static')}
           className={`px-4 py-2 font-mono text-xs transition-all ${
-            variant === 'css' 
+            variant === 'static' 
               ? 'bg-[#E0E0E0] text-[#030303]' 
               : 'border border-[#E0E0E0]/40 text-[#E0E0E0] hover:border-[#E0E0E0]'
           }`}
         >
-          CSS
+          Static
+        </button>
+        <button
+          onClick={() => setVariant('fog')}
+          className={`px-4 py-2 font-mono text-xs transition-all ${
+            variant === 'fog' 
+              ? 'bg-[#E0E0E0] text-[#030303]' 
+              : 'border border-[#E0E0E0]/40 text-[#E0E0E0] hover:border-[#E0E0E0]'
+          }`}
+        >
+          Fog
         </button>
       </div>
 
       {/* Информация о текущем варианте */}
       <div className="absolute top-4 right-4 z-50 font-mono text-xs text-[#E0E0E0]/60">
-        {variant === 'smart' && 'Автоматический выбор (WebGL на десктопе, CSS на мобильных)'}
-        {variant === 'webgl' && 'WebGL с шейдерами (высокая производительность)'}
-        {variant === 'css' && 'CSS анимации (максимальная совместимость)'}
+        Noir Pixel Background — {variant} variant
       </div>
 
       {/* Контент поверх фона */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <div className="text-center max-w-2xl mx-auto px-6">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-mono text-[#E0E0E0] leading-tight mb-6">
-            Интерактивный Жидкостной Фон
+            Noir Pixel Background
           </h1>
           <p className="text-lg md:text-xl font-mono text-[#E0E0E0]/80 leading-relaxed mb-8">
-            Эффект тягучей нефти/ртути с реакцией на движение мыши
+            CSS-only фон с эффектом старой пленки
           </p>
           <div className="font-mono text-xs text-[#E0E0E0]/60">
-            Перемещайте мышь для взаимодействия с фоном
+            60fps на всех устройствах • Zero WebGL
           </div>
         </div>
       </div>
 
-      {/* Выбранный вариант фона */}
-      {variant === 'smart' && <SmartOilBackground />}
-      
-      {variant === 'webgl' && (
-        <div className="absolute inset-0">
-          <Canvas
-            camera={{ position: [0, 0, 1], fov: 75 }}
-            gl={{
-              alpha: false,
-              antialias: true,
-              powerPreference: "high-performance"
-            }}
-            dpr={Math.min(window.devicePixelRatio, 2)}
-            performance={{ min: 0.5, max: 1 }}
-          >
-            <Suspense fallback={null}>
-              <InteractiveOilBackground />
-            </Suspense>
-          </Canvas>
-        </div>
-      )}
-      
-      {variant === 'css' && <OilCSSBackground />}
+      {/* Фон */}
+      <NoirPixelBackground variant={variant} intensity="medium" />
 
       {/* Декоративные углы */}
       <div className="fixed top-4 left-4 w-8 h-8 border-t border-l border-[#E0E0E0]/20 pointer-events-none z-20" />

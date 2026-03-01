@@ -1,0 +1,512 @@
+/* ABOUT PAGE STYLES */
+
+.container {
+  min-height: 100vh;
+  background: #030303;
+  color: #f0f0f5;
+  padding-top: 80px;
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 4rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  width: 100%;
+}
+
+.heroText {
+  max-width: 600px;
+}
+
+.greeting {
+  font-size: 1.2rem;
+  color: #606068;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.name {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  color: #909098;
+  margin: 1.5rem 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #c0c0c8;
+  margin-bottom: 2rem;
+}
+
+.ctaGroup {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #f0f0f5;
+  color: #030303;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.ctaPrimary:hover {
+  background: #c0c0c8;
+  transform: translateX(4px);
+}
+
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  border: 1px solid #606068;
+  color: #f0f0f5;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.ctaSecondary:hover {
+  border-color: #f0f0f5;
+  background: rgba(240, 240, 245, 0.05);
+}
+
+/* HERO IMAGE */
+.heroImage {
+  position: relative;
+}
+
+.imageFrame {
+  position: relative;
+  border: 1px solid #2a2a2e;
+  padding: 8px;
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  filter: grayscale(100%) contrast(1.1);
+  display: block;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 8px;
+  background: linear-gradient(
+    180deg,
+    transparent 60%,
+    rgba(3, 3, 3, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+.imageDeco {
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2e;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+
+.imageDeco span:first-child {
+  font-size: 1.5rem;
+  color: #f0f0f5;
+}
+
+.imageDeco span:not(:first-child) {
+  color: #606068;
+}
+
+/* ===== SECTIONS ===== */
+.sectionTitle {
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  color: #606068;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+/* ===== ФИЛОСОФИЯ ===== */
+.philosophy {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.philosophyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.philosophyCard {
+  background: linear-gradient(145deg, #0a0a0a 0%, #121215 100%);
+  border: 1px solid #1a1a1c;
+  padding: 2.5rem;
+  transition: all 0.3s;
+}
+
+.philosophyCard:hover {
+  border-color: #2a2a2e;
+  transform: translateY(-4px);
+}
+
+.philosophyIcon {
+  font-size: 2rem;
+  color: #f0f0f5;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.philosophyCard h3 {
+  font-size: 1.2rem;
+  color: #f0f0f5;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.philosophyCard p {
+  color: #909098;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* ===== ЭКСПЕРТИЗА ===== */
+.expertise {
+  padding: 6rem 2rem;
+  background: #08080a;
+}
+
+.expertiseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.expertiseCard {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1c;
+  padding: 2rem;
+}
+
+.expertiseCard h3 {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: #606068;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1a1a1c;
+}
+
+.expertiseCard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.expertiseCard li {
+  padding: 0.6rem 0;
+  color: #c0c0c8;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #0f0f0f;
+}
+
+.expertiseCard li:last-child {
+  border-bottom: none;
+}
+
+/* ===== ОПЫТ (TIMELINE) ===== */
+.experience {
+  padding: 6rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 100px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    #2a2a2e 10%,
+    #2a2a2e 90%,
+    transparent 100%
+  );
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.timelinePeriod {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #606068;
+  text-align: right;
+  padding-top: 0.5rem;
+}
+
+.timelineContent {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1c;
+  padding: 2rem;
+  position: relative;
+}
+
+.timelineContent::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 24px;
+  width: 8px;
+  height: 8px;
+  background: #606068;
+  border: 2px solid #030303;
+}
+
+.timelineHeader h3 {
+  font-size: 1.1rem;
+  color: #f0f0f5;
+  margin-bottom: 0.5rem;
+}
+
+.company {
+  display: block;
+  color: #c0c0c8;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.location {
+  display: block;
+  font-size: 0.75rem;
+  color: #606068;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.timelineDescription {
+  color: #909098;
+  margin: 1.5rem 0;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.achievements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.achievements li {
+  padding: 0.4rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  color: #c0c0c8;
+  font-size: 0.9rem;
+}
+
+.achievements li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #606068;
+}
+
+/* ===== ДОСТИЖЕНИЯ ===== */
+.achievementsSection {
+  padding: 6rem 2rem;
+  background: #08080a;
+}
+
+.achievementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.achievementCard {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1c;
+  padding: 2.5rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: default;
+}
+
+.achievementCard:hover {
+  border-color: #2a2a2e;
+}
+
+.achievementNumber {
+  display: block;
+  font-size: 3rem;
+  font-weight: 300;
+  color: #f0f0f5;
+  margin-bottom: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.achievementCard h3 {
+  font-size: 1rem;
+  color: #f0f0f5;
+  margin-bottom: 1rem;
+}
+
+.achievementCard p {
+  color: #909098;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ===== CONTACT CTA ===== */
+.contactCTA {
+  padding: 6rem 2rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contactCTA h2 {
+  font-size: 2rem;
+  color: #f0f0f5;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+.contactCTA p {
+  color: #909098;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+.contactOptions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.contactLink {
+  color: #c0c0c8;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #2a2a2e;
+  padding-bottom: 2px;
+  transition: all 0.3s;
+}
+
+.contactLink:hover {
+  color: #f0f0f5;
+  border-color: #f0f0f5;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .heroImage {
+    order: -1;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .timeline::before {
+    left: 0;
+  }
+  
+  .timelineItem {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .timelinePeriod {
+    text-align: left;
+    font-size: 0.7rem;
+  }
+  
+  .timelineContent::before {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2rem 1rem;
+  }
+  
+  .philosophy,
+  .expertise,
+  .experience,
+  .achievementsSection {
+    padding: 4rem 1rem;
+  }
+  
+  .philosophyCard,
+  .expertiseCard,
+  .achievementCard {
+    padding: 1.5rem;
+  }
+  
+  .timelineContent {
+    padding: 1.5rem;
+  }
+}
